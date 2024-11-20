@@ -31,6 +31,8 @@
 		<jsoup.version>1.18.1</jsoup.version>
 		<sqlite-jdbc.version>3.47.0.0</sqlite-jdbc.version>
 		<hibernate-community-dialects.version>6.6.2.Final</hibernate-community-dialects.version>
+		<htmlcleaner.version>2.29</htmlcleaner.version>
+		<commons-text.version>1.12.0</commons-text.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -46,6 +48,16 @@
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>${jsoup.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.htmlcleaner</groupId>
+			<artifactId>htmlcleaner</artifactId>
+			<version>${htmlcleaner.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>${commons-text.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xerial</groupId>
