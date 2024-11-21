@@ -4,7 +4,6 @@ import com.bierchitekt.concerts.persistence.ConcertEntity;
 import com.bierchitekt.concerts.persistence.ConcertRepository;
 import com.bierchitekt.concerts.venues.BackstageService;
 import com.bierchitekt.concerts.venues.ZenithService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,9 +31,9 @@ public class ConcertService {
     }
 
     public void notifyNewConcerts() {
-
-        for (ConcertEntity concertEntity: concertRepository.findByNotified(false)) {
-            String message = "<b>" + concertEntity.getTitle() + "</b> \n" +
+        log.info("notifying for new concerts");
+        for (ConcertEntity concertEntity : concertRepository.findByNotified(false)) {
+            String message = concertEntity.getTitle() + " \n" +
                     "playing at " + concertEntity.getLocation() + " \n" +
                     "on " + concertEntity.getDate() + " \n" +
                     "price is " + concertEntity.getPrice() + " \n" +

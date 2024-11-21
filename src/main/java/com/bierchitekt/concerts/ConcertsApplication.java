@@ -14,20 +14,8 @@ import javax.sql.DataSource;
 @EnableScheduling
 public class ConcertsApplication {
 
-	@Autowired
-	Environment env;
-
 	public static void main(String[] args) {
 		SpringApplication.run(ConcertsApplication.class, args);
 	}
 
-	@Bean
-	public DataSource dataSource() {
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName(this.env.getProperty("driverClassName"));
-		dataSource.setUrl(this.env.getProperty("url"));
-		dataSource.setUsername(this.env.getProperty("user"));
-		dataSource.setPassword(this.env.getProperty("password"));
-		return dataSource;
-	}
 }
