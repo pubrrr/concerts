@@ -1,4 +1,4 @@
-package com.bierchitekt.concerts;
+package com.bierchitekt.concerts.persistence;
 
 
 import jakarta.persistence.Entity;

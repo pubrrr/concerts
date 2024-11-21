@@ -1,6 +1,7 @@
-package com.bierchitekt.concerts;
+package com.bierchitekt.concerts.venues;
 
 
+import com.bierchitekt.concerts.ConcertDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.StringEscapeUtils;
 import org.htmlcleaner.CleanerProperties;
@@ -24,7 +25,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-public class Backstage {
+public class BackstageService {
 
     private static final Map<String, Integer> calendarMap = Map.ofEntries(Map.entry("Januar", 1), Map.entry("Februar", 2), Map.entry("März", 3), Map.entry("April", 4), Map.entry("Mai", 5), Map.entry("Juni", 6), Map.entry("Juli", 7), Map.entry("August", 8), Map.entry("September", 9), Map.entry("Oktober", 10), Map.entry("November", 11), Map.entry("Dezember", 12));
     private static final int itemsPerPage = 25;
@@ -77,7 +78,7 @@ public class Backstage {
             XPathFactory xPathFactory = XPathFactory.newInstance();
             XPath xPath = xPathFactory.newXPath();
 
-            for (int i = 0; i <= 25; i++) {
+            for (int i = 0; i <= itemsPerPage; i++) {
                 String xpathTitle = "//ol/li[" + i + "]//a[@class='product-item-link']";
                 XPathExpression expression = xPath.compile(xpathTitle);
                 NodeList nodeList = (NodeList) expression.evaluate(xmlDocument, XPathConstants.NODESET);
