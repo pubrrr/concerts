@@ -8,11 +8,21 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class CleanupService {
+public class SchedulerService {
     private final ConcertService concertService;
 
-    @Scheduled(cron = "15 5 * * *")
+    @Scheduled(cron = "15 5 * * * *")
     public void deleteOldConcerts(){
         concertService.deleteOldConcerts();
+    }
+
+    @Scheduled(cron = "${notify.cron}")
+    public void notifyNewConcerts(){
+        concertService.notifyNewConcerts();
+    }
+
+    @Scheduled(cron = "${getConcerts.cron}")
+    public void getNewConcerts(){
+        concertService.getNewConcerts();
     }
 }

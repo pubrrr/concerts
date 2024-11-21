@@ -31,31 +31,35 @@ public class BackstageService {
     private static final int itemsPerPage = 25;
     private static final String overviewUrl = "https://backstage.eu/veranstaltungen/live.html?product_list_limit=";
 
-    public List<ConcertDTO> getConcerts() throws IOException, ParserConfigurationException, XPathExpressionException {
-        List<ConcertDTO> allConcerts = new ArrayList<>();
-        String url = overviewUrl + itemsPerPage;
-        int totalElements = getPages(url);
-        log.info("" + totalElements);
-        int totalPages = totalElements / itemsPerPage + 2;
-        log.info("" + totalPages);
+    public List<ConcertDTO> getConcerts() {
+        try {
+            List<ConcertDTO> allConcerts = new ArrayList<>();
+            String url = overviewUrl + itemsPerPage;
+            int totalElements = getPages(url);
+            log.info("" + totalElements);
+            int totalPages = totalElements / itemsPerPage + 2;
+            log.info("" + totalPages);
 
-        for (int i = 1; i < totalPages; ++i) {
-            log.info("getting page " + i + " of " + totalPages);
-            url = overviewUrl + itemsPerPage + "&p=" + i;
-            log.info(url);
-            List<ConcertDTO> concerts = getConcerts(url);
-            allConcerts.addAll(concerts);
+            for (int i = 1; i < totalPages; ++i) {
+                log.info("getting page " + i + " of " + totalPages);
+                url = overviewUrl + itemsPerPage + "&p=" + i;
+                log.info(url);
+                List<ConcertDTO> concerts = getConcerts(url);
+                allConcerts.addAll(concerts);
 
+            }
+
+            log.info("saved {} concerts", allConcerts.size());
+            return allConcerts;
+        } catch (Exception ex) {
+            return List.of();
         }
-
-        log.info("saved {} concerts", allConcerts.size());
-        return allConcerts;
     }
 
     public String getPrice(String url) {
         try {
             Optional<Document> documentOptional = getDocument(url);
-            if(documentOptional.isEmpty()){
+            if (documentOptional.isEmpty()) {
                 return null;
             }
             Document document = documentOptional.get();

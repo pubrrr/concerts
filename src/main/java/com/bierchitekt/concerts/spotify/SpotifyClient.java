@@ -4,8 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -19,8 +21,15 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 @Slf4j
 public class SpotifyClient {
 
-    private static final String CLIENT_ID = "xxx";
-    private static final String CLIENT_SECRET = "xxx";
+
+    @Value("${spotify.clientId}")
+    @NotEmpty
+    private String clientId;
+
+    @Value("${spotify.clientSecret}")
+    @NotEmpty
+    private String clientSecret;
+
     private SpotifyResponse spotifyResponse;
 
     RestClient restClient = RestClient.create();
@@ -67,7 +76,7 @@ public class SpotifyClient {
         String result = restClient.post()
                 .uri("https://accounts.spotify.com/api/token")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .body("grant_type=client_credentials&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET)
+                .body("grant_type=client_credentials&client_id=" + clientId + "&client_secret=" + clientSecret)
                 .retrieve()
                 .body(String.class);
         if (StringUtils.isEmpty(result)) {
