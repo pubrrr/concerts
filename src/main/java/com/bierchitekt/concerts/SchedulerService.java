@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class SchedulerService {
     private final ConcertService concertService;
 
-    @Scheduled(cron = "15 5 * * * *")
+    @Scheduled(cron = "* 15 5 * * * ")
     public void deleteOldConcerts(){
         concertService.deleteOldConcerts();
     }
