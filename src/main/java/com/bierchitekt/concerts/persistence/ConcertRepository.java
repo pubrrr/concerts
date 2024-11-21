@@ -11,4 +11,6 @@ public interface ConcertRepository extends JpaRepository<ConcertEntity, String> 
     List<ConcertEntity> findAllByDateBefore(LocalDate now);
 
     List<ConcertEntity> findAllByPriceIsNull();
+
+    List<ConcertEntity> findByNotified(boolean notified);
 }

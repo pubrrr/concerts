@@ -24,6 +24,6 @@ public class ConcertEntity {
     private List<String> genre;
     private String location;
     private String price;
-    private Boolean notified;
+    private boolean notified;
 
 }

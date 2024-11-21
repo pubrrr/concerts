@@ -25,6 +25,7 @@ public class ConcertCrawlerService {
     private final ConcertRepository concertRepository;
     private final BackstageService backstageService;
     private final ZenithService zenithService;
+    private final TelegramService telegramService;
 
     @PostConstruct
     public void saveConcerts() throws XPathExpressionException, IOException, ParserConfigurationException {
@@ -59,5 +60,18 @@ public class ConcertCrawlerService {
             }
         });
 
+        List<ConcertEntity> byNotified = concertRepository.findByNotified(false);
+        for (int i = 0; i < 5; i++) {
+            ConcertEntity concertEntity = byNotified.get(i);
+            String message = concertEntity.getTitle() + " \n" +
+                    "playing at " + concertEntity.getLocation() + " \n" +
+                    "on " + concertEntity.getDate() + " \n" +
+                    "price is " + concertEntity.getPrice() + " \n" +
+                    "link is " + concertEntity.getLink();
+
+            telegramService.sendMessage(message);
+            concertEntity.setNotified(true);
+            concertRepository.save(concertEntity);
+        }
     }
 }
