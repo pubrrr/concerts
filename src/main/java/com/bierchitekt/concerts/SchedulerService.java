@@ -1,6 +1,5 @@
 package com.bierchitekt.concerts;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,8 +21,7 @@ public class SchedulerService {
         concertService.notifyNewMetalConcerts();
     }
 
-  //  @Scheduled(cron = "${getConcerts.cron}")
-    @PostConstruct
+    @Scheduled(cron = "${getConcerts.cron}")
     public void getNewConcerts() {
         concertService.getNewConcerts();
     }
