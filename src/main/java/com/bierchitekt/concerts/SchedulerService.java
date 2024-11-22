@@ -1,5 +1,6 @@
 package com.bierchitekt.concerts;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,17 +13,19 @@ public class SchedulerService {
     private final ConcertService concertService;
 
     @Scheduled(cron = "* 15 5 * * * ")
-    public void deleteOldConcerts(){
+    public void deleteOldConcerts() {
         concertService.deleteOldConcerts();
     }
 
     @Scheduled(cron = "${notify.cron}")
-    public void notifyNewConcerts(){
-        concertService.notifyNewConcerts();
+    public void notifyNewConcerts() {
+        concertService.notifyNewMetalConcerts();
     }
 
-    @Scheduled(cron = "${getConcerts.cron}")
-    public void getNewConcerts(){
+  //  @Scheduled(cron = "${getConcerts.cron}")
+    @PostConstruct
+    public void getNewConcerts() {
         concertService.getNewConcerts();
     }
+
 }
