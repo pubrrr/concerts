@@ -3,17 +3,18 @@ package com.bierchitekt.concerts;
 import com.bierchitekt.concerts.persistence.ConcertEntity;
 import com.bierchitekt.concerts.persistence.ConcertRepository;
 import com.bierchitekt.concerts.spotify.SpotifyClient;
-import com.bierchitekt.concerts.venues.BackstageService;
-import com.bierchitekt.concerts.venues.MuffathalleService;
-import com.bierchitekt.concerts.venues.StromService;
-import com.bierchitekt.concerts.venues.ZenithService;
+import com.bierchitekt.concerts.venues.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -27,6 +28,7 @@ public class ConcertService {
     private final ZenithService zenithService;
     private final StromService stromService;
     private final MuffathalleService muffathalleService;
+    private final FeierwerkService feierwerkService;
 
 
     private final SpotifyClient spotifyClient;
@@ -61,15 +63,35 @@ public class ConcertService {
         }
     }
 
+    public void notifyNextWeekConcerts() {
+        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBefore(LocalDate.now(), LocalDate.now().plusDays(7))) {
+            List<String> genres = concertEntity.getGenre();
+            for (String genre : genres) {
+                if (genre.toLowerCase().contains("rock") || genre.toLowerCase().contains("metal")  || genre.toLowerCase().contains("punk") ) {
+                    String message = concertEntity.getTitle() + " \n" +
+                            "playing at " + concertEntity.getLocation() + " \n" +
+                            "on " + concertEntity.getDate() + " \n" +
+                            "price is " + concertEntity.getPrice() + " \n" +
+                            "genre is " + concertEntity.getGenre() + " \n" +
+                            concertEntity.getLink();
+
+                    telegramService.sendMessage(message);
+                    break;
+                }
+            }
+        }
+    }
+@PostConstruct
     public void getNewConcerts() {
         log.info("starting");
 
         List<ConcertDTO> allConcerts = new ArrayList<>();
 
-        allConcerts.addAll(getStromKonzerts());
-        allConcerts.addAll(getBackstageConcerts());
-        allConcerts.addAll(getMuffathalleConcerts());
-        allConcerts.addAll(getZenithConcerts());
+        // allConcerts.addAll(getStromKonzerts());
+        //allConcerts.addAll(getBackstageConcerts());
+        //allConcerts.addAll(getMuffathalleConcerts());
+        //allConcerts.addAll(getZenithConcerts());
+        allConcerts.addAll(getFeierwerkConcerts());
 
         List<ConcertEntity> concertEntities = new ArrayList<>();
         log.info("found {} concerts, saving now", allConcerts.size());
@@ -88,6 +110,16 @@ public class ConcertService {
             }
         }
         concertRepository.saveAll(concertEntities);
+    }
+
+    public Collection<ConcertDTO> getFeierwerkConcerts() {
+        List<ConcertDTO> feierwerkConcerts = new ArrayList<>();
+        feierwerkService.getConcerts().forEach(concert -> {
+            if (concertRepository.findById(concert.title()).isEmpty()) { // new concert, query for price
+                feierwerkConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), null));
+            }
+        });
+        return feierwerkConcerts;
     }
 
     List<ConcertDTO> getBackstageConcerts() {
@@ -151,6 +183,31 @@ public class ConcertService {
             log.warn("error getting Muffathalle concerts", ex);
         }
         return List.of();
+    }
+
+    public void generateHtml() throws FileNotFoundException {
+        String result = "<table>" +
+                "  <tr>" +
+                "    <th>Datum</th>" +
+                "    <th>Band</th>" +
+                "    <th>Genre</th>\n" +
+                "    <th>Location</th>\n" +
+                "  </tr>\" ";
+        for (ConcertEntity concertEntity : concertRepository.findAllByOrderByDate()) {
+            result += "<tr>";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+
+            result += "<td>" + concertEntity.getDate().format(formatter) + "</td>";
+            result += "<td><a href=" + concertEntity.getLink() + ">" + concertEntity.getTitle() + "</a></td>";
+
+            result += "<td>" + concertEntity.getGenre() + "</td>";
+            result += "<td>" + concertEntity.getLocation() + "</td>";
+            result += "</tr>";
+        }
+        result += "</table>";
+        try (PrintWriter out = new PrintWriter("result.html")) {
+            out.println(result);
+        }
     }
 }
 

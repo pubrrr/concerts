@@ -36,6 +36,7 @@
         <gson.version>2.11.0</gson.version>
         <telegrambots.version>7.11.0</telegrambots.version>
         <jakarta.validation-api.version>3.1.0</jakarta.validation-api.version>
+        <versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -115,10 +116,14 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.18.0</version>
+                <version>${versions-maven-plugin.version}</version>
                 <configuration>
                     <rulesUri>file:///${project.basedir}/versions-rules.xml</rulesUri>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

@@ -25,12 +25,12 @@ public class MuffathalleService {
         List<ConcertDTO> concerts = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(URL).get();
-            Elements newsHeadlines = doc.select("div[id~=event[0-9]+]");
-            for (Element headline : newsHeadlines) {
-                if (!"Konzert".equalsIgnoreCase(headline.select("div.circle").first().text())) {
+            Elements allEvents = doc.select("div[id~=event[0-9]+]");
+            for (Element event : allEvents) {
+                if (!"Konzert".equalsIgnoreCase(event.select("div.circle").first().text())) {
                     continue;
                 }
-                Element firstElement = headline.select("div.entry-data.center").first();
+                Element firstElement = event.select("div.entry-data.center").first();
 
                 if (firstElement != null) {
                     String title = firstElement.text().replace("ausverkauft", "").trim();
@@ -38,7 +38,7 @@ public class MuffathalleService {
                     if (title.contains("abgesagt")) {
                         continue;
                     }
-                    Elements select = headline.select("div.entry-data.right");
+                    Elements select = event.select("div.entry-data.right");
                     String link = BASE_URL + select.select("a[href]").getFirst().attr("href");
 
 
