@@ -2,80 +2,76 @@ package com.bierchitekt.concerts.venues;
 
 import com.bierchitekt.concerts.ConcertDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.htmlcleaner.CleanerProperties;
-import org.htmlcleaner.DomSerializer;
-import org.htmlcleaner.HtmlCleaner;
-import org.htmlcleaner.TagNode;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.w3c.dom.NodeList;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
-import javax.xml.xpath.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@Service
 public class MuffathalleService {
 
-    private  static final String url = "https://www.muffatwerk.de/de/events/concert";
+    private static final String URL = "https://www.muffatwerk.de/de/events/concert";
 
+    private static final String BASE_URL = "https://www.muffatwerk.de/";
 
-    public static void main(String... args){
-        getConcerts();
-    }
-
-    public static List<ConcertDTO> getConcerts() {
+    public List<ConcertDTO> getConcerts() {
+        List<ConcertDTO> concerts = new ArrayList<>();
         try {
-            org.jsoup.nodes.Document document = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(URL).get();
+            Elements newsHeadlines = doc.select("div[id~=event[0-9]+]");
+            for (Element headline : newsHeadlines) {
+                if (!"Konzert".equalsIgnoreCase(headline.select("div.circle").first().text())) {
+                    continue;
+                }
+                Element firstElement = headline.select("div.entry-data.center").first();
 
-            org.jsoup.nodes.Document.OutputSettings settings = new org.jsoup.nodes.Document.OutputSettings();
-            settings.syntax(Document.OutputSettings.Syntax.xml);
-            String xml = document.outputSettings(settings).html();
-            TagNode tagNode = new HtmlCleaner().clean(xml);
-            org.w3c.dom.Document doc = new DomSerializer(new CleanerProperties()).createDOM(tagNode);
-            List<ConcertDTO> concerts = new ArrayList<>();
-
-            String xpathTitxle = "/html/body/table/tbody/tr[283]/td[2]/span[1]/a";
-
-
-            String xpathTitle = "/html/body/div[2]/div[4]/div/div/div/div[2]/div[2][@onClick]";
-            //                  "/html/body/div[2]/div[5]//a[@class='entry-data']"
-//                              "/html/body/div[2]/div[4]/div/div/div/div[2]/div[2]/span[1]/"
-            String title = extractXpath(xpathTitle, doc);
-
-            XPathFactory xPathFactory = XPathFactory.newInstance();
-            XPath xPath = xPathFactory.newXPath();
+                if (firstElement != null) {
+                    String title = firstElement.text().replace("ausverkauft", "").trim();
+                    title = title.replaceAll("verlegt auf \\d\\d\\.\\d\\d.\\d\\d ", "").trim();
+                    if (title.contains("abgesagt")) {
+                        continue;
+                    }
+                    Elements select = headline.select("div.entry-data.right");
+                    String link = BASE_URL + select.select("a[href]").getFirst().attr("href");
 
 
-            String xpathLink = "/html/body/table/tbody/tr[588]/td[2]/span[1]/a/@href";
+                    ConcertDTO concertDTO = new ConcertDTO(title, null, link, null, "muffathalle", null);
 
-            XPathExpression expression  = xPath.compile(xpathLink);
-            NodeList nodeList = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
-
-            String link = "";
-
-            for (int j = 0; j < nodeList.getLength(); ++j) {
-                link = nodeList.item(j).getTextContent();
+                    concerts.add(concertDTO);
+                }
             }
-
-            //<td class="line-content">						<span class="html-tag">&lt;a <span class="html-attribute-name">href</span>="<a class="html-attribute-value html-external-link" target="_blank" href="/de/events/view/6789/dis-m" rel="noreferrer noopener">/de/events/view/6789/dis-m</a>"&gt;</span>Info<span class="html-tag">&lt;/a&gt;</span></td>
-
-            log.info(title);
-
+            return concerts;
         } catch (Exception ex) {
             return List.of();
         }
-        return List.of();
     }
 
+    public LocalDate getDate(String url) {
+        try {
+            Document doc = Jsoup.connect(url).get();
+            String dateString = doc.select("div.date").text();
+            if ("heute".equalsIgnoreCase(dateString)) {
+                return LocalDate.now();
+            }
+            if ("morgen".equalsIgnoreCase(dateString)) {
+                return LocalDate.now().plusDays(1);
+            }
 
+            String substring = dateString.substring(3);
 
-    private static String extractXpath(String xpathGenre, org.w3c.dom.Document xmlDocument) throws XPathExpressionException {
-        XPathFactory xPathFactory = XPathFactory.newInstance();
-        XPath xPath = xPathFactory.newXPath();
-        XPathExpression expression = xPath.compile(xpathGenre);
-        NodeList nodeList = (NodeList) expression.evaluate(xmlDocument, XPathConstants.NODESET);
-        log.info(nodeList.getLength() + "");
-        return nodeList.item(0) == null ? "" : nodeList.item(0).getTextContent();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM yy");
+            return LocalDate.parse(substring, formatter);
+        } catch (Exception e) {
+            log.warn(url, e);
+            return null;
+        }
+
     }
 }

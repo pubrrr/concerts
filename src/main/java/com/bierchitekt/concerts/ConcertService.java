@@ -4,8 +4,10 @@ import com.bierchitekt.concerts.persistence.ConcertEntity;
 import com.bierchitekt.concerts.persistence.ConcertRepository;
 import com.bierchitekt.concerts.spotify.SpotifyClient;
 import com.bierchitekt.concerts.venues.BackstageService;
+import com.bierchitekt.concerts.venues.MuffathalleService;
 import com.bierchitekt.concerts.venues.StromService;
 import com.bierchitekt.concerts.venues.ZenithService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,9 @@ public class ConcertService {
     private final BackstageService backstageService;
     private final ZenithService zenithService;
     private final StromService stromService;
+    private final MuffathalleService muffathalleService;
+
+
     private final SpotifyClient spotifyClient;
 
     public void deleteOldConcerts() {
@@ -63,7 +68,7 @@ public class ConcertService {
 
         allConcerts.addAll(getStromKonzerts());
         allConcerts.addAll(getBackstageConcerts());
-
+        allConcerts.addAll(getMuffathalleConcerts());
         allConcerts.addAll(getZenithConcerts());
 
         List<ConcertEntity> concertEntities = new ArrayList<>();
@@ -124,6 +129,26 @@ public class ConcertService {
             return stromConcerts;
         } catch (Exception ex) {
             log.warn("error getting Strom concerts", ex);
+        }
+        return List.of();
+    }
+
+
+    List<ConcertDTO> getMuffathalleConcerts() {
+        List<ConcertDTO> muffatHalleConcerts = new ArrayList<>();
+
+        try {
+            for (ConcertDTO muffathalleConcert : muffathalleService.getConcerts()) {
+                if (concertRepository.findById(muffathalleConcert.title()).isEmpty()) { // new Concert found, need to get date and genre
+                    LocalDate date = muffathalleService.getDate(muffathalleConcert.link());
+                    List<String> genres = spotifyClient.getGenres(muffathalleConcert.title());
+                    ConcertDTO concertDTO = new ConcertDTO(muffathalleConcert.title(), date, muffathalleConcert.link(), genres, "Muffathalle", null);
+                    muffatHalleConcerts.add(concertDTO);
+                }
+            }
+            return muffatHalleConcerts;
+        } catch (Exception ex) {
+            log.warn("error getting Muffathalle concerts", ex);
         }
         return List.of();
     }
