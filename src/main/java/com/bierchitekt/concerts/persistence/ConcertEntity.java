@@ -2,6 +2,7 @@ package com.bierchitekt.concerts.persistence;
 
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +18,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConcertEntity {
+
     @Id
+    @GeneratedValue
+    private Long id;
     private String title;
     private LocalDate date;
     private String link;

@@ -6,18 +6,14 @@ import com.bierchitekt.concerts.spotify.SpotifyClient;
 import com.bierchitekt.concerts.venues.BackstageService;
 import com.bierchitekt.concerts.venues.FeierwerkService;
 import com.bierchitekt.concerts.venues.MuffathalleService;
+import com.bierchitekt.concerts.venues.OlympiaparkService;
 import com.bierchitekt.concerts.venues.StromService;
 import com.bierchitekt.concerts.venues.ZenithService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -37,6 +33,7 @@ public class ConcertService {
     private final StromService stromService;
     private final MuffathalleService muffathalleService;
     private final FeierwerkService feierwerkService;
+    private final OlympiaparkService olympiaparkService;
 
 
     private final SpotifyClient spotifyClient;
@@ -72,16 +69,20 @@ public class ConcertService {
     }
 
     public void notifyNextWeekConcerts() {
-        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBefore(LocalDate.now(), LocalDate.now().plusDays(7))) {
+        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now(), LocalDate.now().plusDays(7))) {
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+
             List<String> genres = concertEntity.getGenre();
             for (String genre : genres) {
                 if (genre.toLowerCase().contains("rock") || genre.toLowerCase().contains("metal") || genre.toLowerCase().contains("punk")) {
-                    String message = concertEntity.getTitle() + " \n" +
-                            "playing at " + concertEntity.getLocation() + " \n" +
-                            "on " + concertEntity.getDate() + " \n" +
-                            "price is " + concertEntity.getPrice() + " \n" +
+                    String message = "<b>" + concertEntity.getTitle() + "</b> \n" +
+                            "playing at <b>" + concertEntity.getLocation() + "</b> \n" +
+                            "on " + concertEntity.getDate().format(formatter) + " \n" +
                             "genre is " + concertEntity.getGenre() + " \n" +
-                            concertEntity.getLink();
+
+                            "playing at <a href=\"" + concertEntity.getLink() + "\">" + concertEntity.getLocation() + "</a>";
+
 
                     telegramService.sendMessage(message);
                     break;
@@ -90,13 +91,13 @@ public class ConcertService {
         }
     }
 
-    @PostConstruct
     public void getNewConcerts() {
         log.info("starting");
 
         List<ConcertDTO> allConcerts = new ArrayList<>();
 
         allConcerts.addAll(getStromKonzerts());
+        allConcerts.addAll(getOlympiaparkConcerts());
         allConcerts.addAll(getBackstageConcerts());
         allConcerts.addAll(getMuffathalleConcerts());
         allConcerts.addAll(getZenithConcerts());
@@ -105,7 +106,7 @@ public class ConcertService {
         List<ConcertEntity> concertEntities = new ArrayList<>();
         log.info("found {} concerts, saving now", allConcerts.size());
         for (ConcertDTO concertDTO : allConcerts) {
-            if (concertRepository.findById(concertDTO.title()).isEmpty()) {
+            if (concertRepository.findByTitle(concertDTO.title()).isEmpty()) {
                 log.info("new concert found. Title: {}", concertDTO.title());
                 ConcertEntity concertEntity = ConcertEntity.builder()
                         .date(concertDTO.date())
@@ -121,10 +122,21 @@ public class ConcertService {
         concertRepository.saveAll(concertEntities);
     }
 
+    private Collection<ConcertDTO> getOlympiaparkConcerts() {
+        List<ConcertDTO> olypiaparkConcerts = new ArrayList<>();
+        olympiaparkService.getConcerts().forEach(concert -> {
+            if (concertRepository.findByTitle(concert.title()).isEmpty()) { // new concert, query for price
+                List<String> genres = spotifyClient.getGenres(concert.title());
+                olypiaparkConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), null));
+            }
+        });
+        return olypiaparkConcerts;
+    }
+
     public Collection<ConcertDTO> getFeierwerkConcerts() {
         List<ConcertDTO> feierwerkConcerts = new ArrayList<>();
         feierwerkService.getConcerts().forEach(concert -> {
-            if (concertRepository.findById(concert.title()).isEmpty()) { // new concert, query for price
+            if (concertRepository.findByTitle(concert.title()).isEmpty()) { // new concert, query for price
                 feierwerkConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), null));
             }
         });
@@ -136,7 +148,7 @@ public class ConcertService {
         List<ConcertDTO> concerts = backstageService.getConcerts();
 
         concerts.forEach(concert -> {
-            if (concertRepository.findById(concert.title()).isEmpty()) { // new concert, query for price
+            if (concertRepository.findByTitle(concert.title()).isEmpty()) { // new concert, query for price
                 String price = backstageService.getPrice(concert.link());
                 backstageConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), price));
             }
@@ -147,7 +159,7 @@ public class ConcertService {
     List<ConcertDTO> getZenithConcerts() {
         List<ConcertDTO> zenithConcerts = new ArrayList<>();
         zenithService.getConcerts().forEach(concert -> {
-            if (concertRepository.findById(concert.title()).isEmpty()) { // new concert, query for price
+            if (concertRepository.findByTitle(concert.title()).isEmpty()) { // new concert, query for price
                 List<String> genres = spotifyClient.getGenres(concert.title());
                 zenithConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), null));
 
@@ -160,7 +172,7 @@ public class ConcertService {
         List<ConcertDTO> stromConcerts = new ArrayList<>();
         try {
             for (ConcertDTO stromConcert : stromService.getConcerts()) {
-                if (concertRepository.findById(stromConcert.title()).isEmpty()) { // new Concert found, need to get date and genre
+                if (concertRepository.findByTitle(stromConcert.title()).isEmpty()) { // new Concert found, need to get date and genre
                     LocalDate date = stromService.getDate(stromConcert.link());
                     List<String> genres = spotifyClient.getGenres(stromConcert.title());
                     ConcertDTO concertDTO = new ConcertDTO(stromConcert.title(), date, stromConcert.link(), genres, "Strom", null);
@@ -180,7 +192,7 @@ public class ConcertService {
 
         try {
             for (ConcertDTO muffathalleConcert : muffathalleService.getConcerts()) {
-                if (concertRepository.findById(muffathalleConcert.title()).isEmpty()) { // new Concert found, need to get date and genre
+                if (concertRepository.findByTitle(muffathalleConcert.title()).isEmpty()) { // new Concert found, need to get date and genre
                     LocalDate date = muffathalleService.getDate(muffathalleConcert.link());
                     List<String> genres = spotifyClient.getGenres(muffathalleConcert.title());
                     ConcertDTO concertDTO = new ConcertDTO(muffathalleConcert.title(), date, muffathalleConcert.link(), genres, "Muffathalle", null);
@@ -216,39 +228,6 @@ public class ConcertService {
         result += "</table>";
         try (PrintWriter out = new PrintWriter("result.html")) {
             out.println(result);
-        }
-    }
-
-    public void main() {
-        try {
-
-            Runtime rt = Runtime.getRuntime();
-            String[] commands = {new ClassPathResource("feierwerk-downloader.sh").getFile().getAbsolutePath()};
-
-            Process proc = rt.exec(commands);
-
-            BufferedReader stdInput = new BufferedReader(new
-                    InputStreamReader(proc.getInputStream()));
-
-            BufferedReader stdError = new BufferedReader(new
-                    InputStreamReader(proc.getErrorStream()));
-
-// Read the output from the command
-            System.out.println("Here is the standard output of the command:\n");
-            String s = null;
-            while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
-            }
-
-// Read any errors from the attempted command
-            System.out.println("Here is the standard error of the command (if any):\n");
-            while ((s = stdError.readLine()) != null) {
-                System.out.println(s);
-            }
-
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 }

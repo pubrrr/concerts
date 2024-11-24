@@ -19,12 +19,11 @@ import static com.bierchitekt.concerts.venues.XmlUtils.extractXpath;
 public class ZenithService {
 
     String url = "https://muenchen.motorworld.de/";
-    private final DocumentService documentService;
 
     public List<ConcertDTO> getConcerts() {
         try {
 
-            org.w3c.dom.Document doc = documentService.getDocument(url);
+            org.w3c.dom.Document doc = XmlUtils.getDocument(url);
             List<ConcertDTO> concerts = new ArrayList<>();
             for (int i = 1; i < 99; i++) {
                 String xpathTitle = "/html/body/main/div/div/div[6]/div/div/div[1]/div/div/div[" + i + "]/a/div/div[2]/div/div[1]/div/h1";

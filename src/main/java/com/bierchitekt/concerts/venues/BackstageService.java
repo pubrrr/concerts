@@ -5,6 +5,8 @@ import com.bierchitekt.concerts.ConcertDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.StringEscapeUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,8 +27,6 @@ public class BackstageService {
     private static final Map<String, Integer> calendarMap = Map.ofEntries(Map.entry("Januar", 1), Map.entry("Februar", 2), Map.entry("März", 3), Map.entry("April", 4), Map.entry("Mai", 5), Map.entry("Juni", 6), Map.entry("Juli", 7), Map.entry("August", 8), Map.entry("September", 9), Map.entry("Oktober", 10), Map.entry("November", 11), Map.entry("Dezember", 12));
     private static final int ITEMS_PER_PAGE = 25;
     private static final String OVERVIEW_URL = "https://backstage.eu/veranstaltungen/live.html?product_list_limit=";
-
-    private final DocumentService documentService;
 
     public List<ConcertDTO> getConcerts() {
         try {
@@ -54,7 +54,7 @@ public class BackstageService {
 
     public String getPrice(String url) {
         try {
-            org.w3c.dom.Document document = documentService.getDocument(url);
+            org.w3c.dom.Document document = XmlUtils.getDocument(url);
             String xpathPrice = "//span[@class='price']";
 
             return extractXpath(xpathPrice, document).trim().replace(".", "");
@@ -68,7 +68,7 @@ public class BackstageService {
     @SuppressWarnings("java:S1192")
     private List<ConcertDTO> getConcerts(String url) throws XPathExpressionException, IOException, ParserConfigurationException {
         try {
-            org.w3c.dom.Document xmlDocument = documentService.getDocument(url);
+            org.w3c.dom.Document xmlDocument = XmlUtils.getDocument(url);
             List<ConcertDTO> concerts = new ArrayList<>();
 
             for (int i = 0; i <= ITEMS_PER_PAGE; i++) {
@@ -119,13 +119,12 @@ public class BackstageService {
     }
 
 
-    private int getPages(String url) throws IOException, ParserConfigurationException, XPathExpressionException {
+    public int getPages(String url) {
         try {
-            org.w3c.dom.Document xmlDocument = documentService.getDocument(url);
-            String pagesXpath = "//div[contains(@class, 'amount-wrap')]/span[@class='toolbar-number'][3]/text()";
-            String pages = extractXpath(pagesXpath, xmlDocument);
+            Document document = Jsoup.connect(url).get();
+            String pages = document.select("span.toolbar-number").get(2).text();
             return Integer.parseInt(pages);
-        } catch (CannotDownloadDocumentException ex) {
+        } catch (IOException ex) {
             return 0;
         }
     }

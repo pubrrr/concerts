@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import static com.pengrad.telegrambot.model.request.ParseMode.MarkdownV2;
+import static com.pengrad.telegrambot.model.request.ParseMode.HTML;
 
 @Service
 public class TelegramService {
@@ -22,9 +22,8 @@ public class TelegramService {
 
     public void sendMessage(String message) {
 
-
         SendMessage request = new SendMessage(telegramChannel, message)
-                .parseMode(MarkdownV2);
+                .parseMode(HTML);
         bot.execute(request);
 
     }

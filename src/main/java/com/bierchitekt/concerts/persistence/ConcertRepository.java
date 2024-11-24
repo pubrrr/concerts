@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface ConcertRepository extends JpaRepository<ConcertEntity, String> {
+public interface ConcertRepository extends JpaRepository<ConcertEntity, Long> {
     List<ConcertEntity> findAllByDateBefore(LocalDate now);
 
     List<ConcertEntity> findAllByPriceIsNull();
@@ -16,5 +16,7 @@ public interface ConcertRepository extends JpaRepository<ConcertEntity, String> 
 
     List<ConcertEntity> findAllByOrderByDate();
 
-    List<ConcertEntity> findByDateAfterAndDateBefore(LocalDate now, LocalDate localDate);
+    List<ConcertEntity> findByDateAfterAndDateBeforeOrderByDate(LocalDate now, LocalDate localDate);
+
+    List<ConcertEntity> findByTitle(String title);
 }
