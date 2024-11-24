@@ -31,7 +31,7 @@ public class FeierwerkService {
 
         strings.forEach(file -> {
             File input = new File(feierwerkDirectory + file);
-            Document doc = null;
+            Document doc;
             try {
                 doc = Jsoup.parse(input, "UTF-8", "https://www.feierwerk.de/");
             } catch (IOException e) {

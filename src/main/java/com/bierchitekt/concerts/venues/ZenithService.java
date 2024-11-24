@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.bierchitekt.concerts.venues.XmlUtils.extractXpath;
-import static com.bierchitekt.concerts.venues.XmlUtils.getDocument;
 
 @Slf4j
 @Service
@@ -21,11 +19,12 @@ import static com.bierchitekt.concerts.venues.XmlUtils.getDocument;
 public class ZenithService {
 
     String url = "https://muenchen.motorworld.de/";
+    private final DocumentService documentService;
 
     public List<ConcertDTO> getConcerts() {
         try {
 
-            Document doc = getDocument(url);
+            org.w3c.dom.Document doc = documentService.getDocument(url);
             List<ConcertDTO> concerts = new ArrayList<>();
             for (int i = 1; i < 99; i++) {
                 String xpathTitle = "/html/body/main/div/div/div[6]/div/div/div[1]/div/div/div[" + i + "]/a/div/div[2]/div/div[1]/div/h1";

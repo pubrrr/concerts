@@ -3,13 +3,21 @@ package com.bierchitekt.concerts;
 import com.bierchitekt.concerts.persistence.ConcertEntity;
 import com.bierchitekt.concerts.persistence.ConcertRepository;
 import com.bierchitekt.concerts.spotify.SpotifyClient;
-import com.bierchitekt.concerts.venues.*;
+import com.bierchitekt.concerts.venues.BackstageService;
+import com.bierchitekt.concerts.venues.FeierwerkService;
+import com.bierchitekt.concerts.venues.MuffathalleService;
+import com.bierchitekt.concerts.venues.StromService;
+import com.bierchitekt.concerts.venues.ZenithService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -67,7 +75,7 @@ public class ConcertService {
         for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBefore(LocalDate.now(), LocalDate.now().plusDays(7))) {
             List<String> genres = concertEntity.getGenre();
             for (String genre : genres) {
-                if (genre.toLowerCase().contains("rock") || genre.toLowerCase().contains("metal")  || genre.toLowerCase().contains("punk") ) {
+                if (genre.toLowerCase().contains("rock") || genre.toLowerCase().contains("metal") || genre.toLowerCase().contains("punk")) {
                     String message = concertEntity.getTitle() + " \n" +
                             "playing at " + concertEntity.getLocation() + " \n" +
                             "on " + concertEntity.getDate() + " \n" +
@@ -81,16 +89,17 @@ public class ConcertService {
             }
         }
     }
-@PostConstruct
+
+    @PostConstruct
     public void getNewConcerts() {
         log.info("starting");
 
         List<ConcertDTO> allConcerts = new ArrayList<>();
 
-        // allConcerts.addAll(getStromKonzerts());
-        //allConcerts.addAll(getBackstageConcerts());
-        //allConcerts.addAll(getMuffathalleConcerts());
-        //allConcerts.addAll(getZenithConcerts());
+        allConcerts.addAll(getStromKonzerts());
+        allConcerts.addAll(getBackstageConcerts());
+        allConcerts.addAll(getMuffathalleConcerts());
+        allConcerts.addAll(getZenithConcerts());
         allConcerts.addAll(getFeierwerkConcerts());
 
         List<ConcertEntity> concertEntities = new ArrayList<>();
@@ -207,6 +216,39 @@ public class ConcertService {
         result += "</table>";
         try (PrintWriter out = new PrintWriter("result.html")) {
             out.println(result);
+        }
+    }
+
+    public void main() {
+        try {
+
+            Runtime rt = Runtime.getRuntime();
+            String[] commands = {new ClassPathResource("feierwerk-downloader.sh").getFile().getAbsolutePath()};
+
+            Process proc = rt.exec(commands);
+
+            BufferedReader stdInput = new BufferedReader(new
+                    InputStreamReader(proc.getInputStream()));
+
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(proc.getErrorStream()));
+
+// Read the output from the command
+            System.out.println("Here is the standard output of the command:\n");
+            String s = null;
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
+            }
+
+// Read any errors from the attempted command
+            System.out.println("Here is the standard error of the command (if any):\n");
+            while ((s = stdError.readLine()) != null) {
+                System.out.println(s);
+            }
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

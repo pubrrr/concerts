@@ -2,10 +2,10 @@ package com.bierchitekt.concerts.venues;
 
 
 import com.bierchitekt.concerts.ConcertDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -16,15 +16,17 @@ import java.util.List;
 import java.util.Map;
 
 import static com.bierchitekt.concerts.venues.XmlUtils.extractXpath;
-import static com.bierchitekt.concerts.venues.XmlUtils.getDocument;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class BackstageService {
 
     private static final Map<String, Integer> calendarMap = Map.ofEntries(Map.entry("Januar", 1), Map.entry("Februar", 2), Map.entry("März", 3), Map.entry("April", 4), Map.entry("Mai", 5), Map.entry("Juni", 6), Map.entry("Juli", 7), Map.entry("August", 8), Map.entry("September", 9), Map.entry("Oktober", 10), Map.entry("November", 11), Map.entry("Dezember", 12));
     private static final int ITEMS_PER_PAGE = 25;
     private static final String OVERVIEW_URL = "https://backstage.eu/veranstaltungen/live.html?product_list_limit=";
+
+    private final DocumentService documentService;
 
     public List<ConcertDTO> getConcerts() {
         try {
@@ -52,7 +54,7 @@ public class BackstageService {
 
     public String getPrice(String url) {
         try {
-            Document document = getDocument(url);
+            org.w3c.dom.Document document = documentService.getDocument(url);
             String xpathPrice = "//span[@class='price']";
 
             return extractXpath(xpathPrice, document).trim().replace(".", "");
@@ -66,7 +68,7 @@ public class BackstageService {
     @SuppressWarnings("java:S1192")
     private List<ConcertDTO> getConcerts(String url) throws XPathExpressionException, IOException, ParserConfigurationException {
         try {
-            Document xmlDocument = getDocument(url);
+            org.w3c.dom.Document xmlDocument = documentService.getDocument(url);
             List<ConcertDTO> concerts = new ArrayList<>();
 
             for (int i = 0; i <= ITEMS_PER_PAGE; i++) {
@@ -119,7 +121,7 @@ public class BackstageService {
 
     private int getPages(String url) throws IOException, ParserConfigurationException, XPathExpressionException {
         try {
-            Document xmlDocument = getDocument(url);
+            org.w3c.dom.Document xmlDocument = documentService.getDocument(url);
             String pagesXpath = "//div[contains(@class, 'amount-wrap')]/span[@class='toolbar-number'][3]/text()";
             String pages = extractXpath(pagesXpath, xmlDocument);
             return Integer.parseInt(pages);

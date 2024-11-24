@@ -25,15 +25,4 @@ public class XmlUtils {
         return nodeList.item(0) == null ? "" : nodeList.item(0).getTextContent();
     }
 
-    public static Document getDocument(String url) throws IOException, ParserConfigurationException, CannotDownloadDocumentException {
-        org.jsoup.nodes.Document.OutputSettings settings = new org.jsoup.nodes.Document.OutputSettings();
-        settings.syntax(org.jsoup.nodes.Document.OutputSettings.Syntax.xml);
-        String xml = Jsoup.connect(url).get().outputSettings(settings).html();
-        TagNode tagNode = new HtmlCleaner().clean(xml);
-        Document doc = new DomSerializer(new CleanerProperties()).createDOM(tagNode);
-        if (doc == null) {
-            throw new CannotDownloadDocumentException();
-        }
-        return doc;
-    }
 }

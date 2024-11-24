@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.bierchitekt.concerts.venues.XmlUtils.extractXpath;
-import static com.bierchitekt.concerts.venues.XmlUtils.getDocument;
 
 @Slf4j
 @Service
@@ -22,6 +21,7 @@ import static com.bierchitekt.concerts.venues.XmlUtils.getDocument;
 public class StromService {
 
     private static final String URL = "https://strom-muc.de/";
+    private final DocumentService documentService;
 
     @SuppressWarnings("java:S1192")
     public List<ConcertDTO> getConcerts() {
@@ -29,7 +29,7 @@ public class StromService {
 
         try {
             log.info("getting Strom concerts");
-            Document doc = getDocument(URL);
+            Document doc = documentService.getDocument(URL);
             for (int i = 3; i < 99; i++) {
                 String xpathTitle = "/html/body/div/div[2]/div[1]/div/section/div/div[3]/div/div[" + i + "]/div/h3/a";
                 String xpathLink = "/html/body/div/div[2]/div[1]/div/section/div/div[3]/div/div[" + i + "]/div/h3/a/@href";
@@ -60,7 +60,7 @@ public class StromService {
     @SuppressWarnings("java:S1075")
     public LocalDate getDate(String link) {
         try {
-            Document detailDoc = getDocument(link);
+            Document detailDoc = documentService.getDocument(link);
 
             String xpathDate = "/html/body/div/div[2]/div[1]/div/div/div[1]/div[1]/div/div[1]/div[1]/div[2]/div[1]";
 

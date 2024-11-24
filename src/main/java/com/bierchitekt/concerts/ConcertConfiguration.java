@@ -1,5 +1,6 @@
 package com.bierchitekt.concerts;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +11,10 @@ import javax.sql.DataSource;
 import java.util.Objects;
 
 @Configuration
+@RequiredArgsConstructor
 public class ConcertConfiguration {
 
-    @Autowired
-    private Environment env;
+    private final  Environment env;
 
     @Bean
     public DataSource dataSource() {
