@@ -11,19 +11,24 @@ import org.springframework.stereotype.Service;
 public class SchedulerService {
     private final ConcertService concertService;
 
-    @Scheduled(cron = "* 15 5 * * * ")
+    @Scheduled(cron = "1 15 5 3 * * ")
     public void deleteOldConcerts() {
         concertService.deleteOldConcerts();
     }
 
     @Scheduled(cron = "${notify.cron}")
-    public void notifyNewConcerts() {
+    public void notifyNewMetalConcerts() {
         concertService.notifyNewMetalConcerts();
     }
 
     @Scheduled(cron = "${getConcerts.cron}")
     public void getNewConcerts() {
         concertService.getNewConcerts();
+    }
+
+    @Scheduled(cron = "${notify-metal-concerts.cron}")
+    public void notifyNextWeekMetalConcerts() {
+        concertService.notifyNextWeekMetalConcerts();
     }
 
 }

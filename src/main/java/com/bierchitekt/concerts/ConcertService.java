@@ -51,7 +51,7 @@ public class ConcertService {
         for (ConcertEntity concertEntity : concertRepository.findByNotified(false)) {
             List<String> genres = concertEntity.getGenre();
             for (String genre : genres) {
-                if (genre.toLowerCase().contains("rock") || genre.toLowerCase().contains("metal")) {
+                if (genre.toLowerCase().contains("rock") || genre.toLowerCase().contains("metal") || genre.toLowerCase().contains("punk")) {
                     String message = concertEntity.getTitle() + " \n" +
                             "playing at " + concertEntity.getLocation() + " \n" +
                             "on " + concertEntity.getDate() + " \n" +
@@ -68,8 +68,8 @@ public class ConcertService {
         }
     }
 
-    public void notifyNextWeekConcerts() {
-        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now(), LocalDate.now().plusDays(7))) {
+    public void notifyNextWeekMetalConcerts() {
+        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now(), LocalDate.now().plusDays(8))) {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
 
@@ -103,6 +103,7 @@ public class ConcertService {
         allConcerts.addAll(getZenithConcerts());
         allConcerts.addAll(getFeierwerkConcerts());
 
+
         List<ConcertEntity> concertEntities = new ArrayList<>();
         log.info("found {} concerts, saving now", allConcerts.size());
         for (ConcertDTO concertDTO : allConcerts) {
@@ -120,6 +121,7 @@ public class ConcertService {
             }
         }
         concertRepository.saveAll(concertEntities);
+        log.info("saved all {} new concerts", concertEntities.size());
     }
 
     private Collection<ConcertDTO> getOlympiaparkConcerts() {
