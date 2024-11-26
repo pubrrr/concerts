@@ -3,6 +3,7 @@ package com.bierchitekt.concerts.persistence;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import org.hibernate.type.SqlTypes;
 import java.time.LocalDate;
 import java.util.Set;
 
+
 @Entity
 @Builder
 @Data
@@ -22,8 +24,8 @@ import java.util.Set;
 public class ConcertEntity {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
     private String title;
     private LocalDate date;
     private String link;

@@ -3,6 +3,7 @@ package com.bierchitekt.concerts.venues;
 import com.bierchitekt.concerts.ConcertDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -45,6 +46,9 @@ public class ZenithService {
                 title = title.replace("(ausverkauft)", "").trim();
                 title = title.replace("(Doppelshow)", "").trim();
                 title = title.replace("(Zusatzshow)", "").trim();
+
+                title = StringUtils.substringBefore(title, " x ").trim();
+                title = StringUtils.substringBefore(title, " + ").trim();
 
                 title = StringUtil.capitalizeWords(title);
                 if (ignoredEvents.contains(title)) {

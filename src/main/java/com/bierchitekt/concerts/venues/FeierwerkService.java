@@ -28,7 +28,7 @@ public class FeierwerkService {
     private static final String VENUE_NAME = "Feierwerk";
 
     public List<ConcertDTO> getConcerts() {
-        log.info("getting {}} concerts", VENUE_NAME);
+        log.info("getting {} concerts", VENUE_NAME);
         List<ConcertDTO> allConcerts = new ArrayList<>();
 
 
@@ -63,7 +63,7 @@ public class FeierwerkService {
 
                 String genre = StringUtils.substringBetween(concertDetail, "[", "…").trim();
 
-                if (genre.contains("Illustrationen")) {
+                if (genre.contains("Illustrationen") || genre.contains("Ausstellung")|| genre.contains("Malerei")) {
                     continue;
                 }
 
@@ -90,5 +90,18 @@ public class FeierwerkService {
                 .filter(file -> !file.isDirectory())
                 .map(File::getName)
                 .collect(Collectors.toSet());
+    }
+
+
+    public String getPrice(String url) {
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(url).get();
+        } catch (IOException e) {
+            return null;
+        }
+        String details = doc.select("div.further-details").getFirst().text();
+        return StringUtils.substringBetween(details, "VVK: ", "zzgl.");
+
     }
 }

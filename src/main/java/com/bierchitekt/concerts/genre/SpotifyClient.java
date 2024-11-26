@@ -1,9 +1,8 @@
 package com.bierchitekt.concerts.genre;
 
-import com.google.gson.Gson;
+import com.bierchitekt.concerts.venues.StringUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -11,8 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -64,9 +63,11 @@ public class SpotifyClient {
                     .get("genres")
                     .getAsJsonArray();
 
-            Type listType = new TypeToken<Set<String>>() {
-            }.getType();
-            return new Gson().fromJson(asJsonArray, listType);
+            Set<String> genres = new HashSet<>();
+            for (int i = 0; i < asJsonArray.size(); i++) {
+                genres.add(StringUtil.capitalizeWords(asJsonArray.get(i).getAsString()));
+            }
+            return genres;
         } catch (Exception ex) {
 
             return Set.of();

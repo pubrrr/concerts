@@ -9,6 +9,7 @@ import com.bierchitekt.concerts.venues.MuffathalleService;
 import com.bierchitekt.concerts.venues.OlympiaparkService;
 import com.bierchitekt.concerts.venues.StromService;
 import com.bierchitekt.concerts.venues.ZenithService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,8 +42,8 @@ public class ConcertService {
 
     public void deleteOldConcerts() {
         List<ConcertEntity> allByDateBefore = concertRepository.findAllByDateBefore(LocalDate.now());
-        log.info("deleting {} old concerts", allByDateBefore.size());
         if (!allByDateBefore.isEmpty()) {
+            log.info("deleting {} old concerts", allByDateBefore.size());
             concertRepository.deleteAll(allByDateBefore);
         }
     }
@@ -97,12 +98,12 @@ public class ConcertService {
 
         List<ConcertDTO> allConcerts = new ArrayList<>();
         allConcerts.addAll(getZenithConcerts());
-        allConcerts.addAll(getStromKonzerts());
+
+        allConcerts.addAll(getStromConzerts());
         allConcerts.addAll(getOlympiaparkConcerts());
         allConcerts.addAll(getBackstageConcerts());
         allConcerts.addAll(getMuffathalleConcerts());
         allConcerts.addAll(getFeierwerkConcerts());
-
 
         List<ConcertEntity> concertEntities = new ArrayList<>();
         log.info("found {} concerts, saving now", allConcerts.size());
@@ -127,7 +128,7 @@ public class ConcertService {
     private Collection<ConcertDTO> getOlympiaparkConcerts() {
         List<ConcertDTO> olypiaparkConcerts = new ArrayList<>();
         olympiaparkService.getConcerts().forEach(concert -> {
-            if (concertRepository.findByTitle(concert.title()).isEmpty()) { // new concert, query for price
+            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) { // new concert, query for price
                 Set<String> genres = genreService.getGenres(concert.title());
                 olypiaparkConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), null));
             }
@@ -138,8 +139,9 @@ public class ConcertService {
     public Collection<ConcertDTO> getFeierwerkConcerts() {
         List<ConcertDTO> feierwerkConcerts = new ArrayList<>();
         feierwerkService.getConcerts().forEach(concert -> {
-            if (concertRepository.findByTitle(concert.title()).isEmpty()) { // new concert, query for price
-                feierwerkConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), null));
+            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) { // new concert, query for price
+                String price = feierwerkService.getPrice(concert.link());
+                feierwerkConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), price));
             }
         });
         return feierwerkConcerts;
@@ -150,9 +152,9 @@ public class ConcertService {
         List<ConcertDTO> concerts = backstageService.getConcerts();
 
         concerts.forEach(concert -> {
-            if (concertRepository.findByTitle(concert.title()).isEmpty()) { // new concert, query for price
-                // String price = backstageService.getPrice(concert.link());
-                backstageConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), null));
+            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) { // new concert, query for price
+                String price = backstageService.getPrice(concert.link());
+                backstageConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), price));
             }
         });
         return backstageConcerts;
@@ -170,41 +172,32 @@ public class ConcertService {
         return zenithConcerts;
     }
 
-    List<ConcertDTO> getStromKonzerts() {
+    List<ConcertDTO> getStromConzerts() {
         List<ConcertDTO> stromConcerts = new ArrayList<>();
-        try {
-            for (ConcertDTO stromConcert : stromService.getConcerts()) {
-                if (concertRepository.findByTitle(stromConcert.title()).isEmpty()) {
-                    Set<String> genres = genreService.getGenres(stromConcert.title());
-                    ConcertDTO concertDTO = new ConcertDTO(stromConcert.title(), stromConcert.date(), stromConcert.link(), genres, "Strom", null);
-                    stromConcerts.add(concertDTO);
-                }
+        for (ConcertDTO concert : stromService.getConcerts()) {
+            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
+                Set<String> genres = genreService.getGenres(concert.title());
+                ConcertDTO concertDTO = new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, "Strom", null);
+                stromConcerts.add(concertDTO);
             }
-            return stromConcerts;
-        } catch (Exception ex) {
-            log.warn("error getting Strom concerts", ex);
         }
-        return List.of();
-    }
+        return stromConcerts;
 
+    }
 
     List<ConcertDTO> getMuffathalleConcerts() {
         List<ConcertDTO> muffatHalleConcerts = new ArrayList<>();
 
-        try {
-            for (ConcertDTO muffathalleConcert : muffathalleService.getConcerts()) {
-                if (concertRepository.findByTitle(muffathalleConcert.title()).isEmpty()) { // new Concert found, need to get date and genre
-                    LocalDate date = muffathalleService.getDate(muffathalleConcert.link());
-                    Set<String> genres = genreService.getGenres(muffathalleConcert.title());
-                    ConcertDTO concertDTO = new ConcertDTO(muffathalleConcert.title(), date, muffathalleConcert.link(), genres, "Muffathalle", null);
-                    muffatHalleConcerts.add(concertDTO);
-                }
+        for (ConcertDTO muffathalleConcert : muffathalleService.getConcerts()) {
+            if (concertRepository.findByTitle(muffathalleConcert.title()).isEmpty()) { // new Concert found, need to get date and genre
+                LocalDate date = muffathalleService.getDate(muffathalleConcert.link());
+                Set<String> genres = genreService.getGenres(muffathalleConcert.title());
+                ConcertDTO concertDTO = new ConcertDTO(muffathalleConcert.title(), date, muffathalleConcert.link(), genres, muffathalleConcert.location(), null);
+                muffatHalleConcerts.add(concertDTO);
             }
-            return muffatHalleConcerts;
-        } catch (Exception ex) {
-            log.warn("error getting Muffathalle concerts", ex);
         }
-        return List.of();
+        return muffatHalleConcerts;
+
     }
 
     public void generateHtml() throws FileNotFoundException {

@@ -20,7 +20,7 @@ public class OlympiaparkService {
     private static final String VENUE_NAME = "Olympiapark";
 
     public List<ConcertDTO> getConcerts() {
-        log.info("getting {}} concerts", VENUE_NAME);
+        log.info("getting {} concerts", VENUE_NAME);
 
         RestClient restClient = RestClient.create();
         String result = restClient.get()

@@ -1,5 +1,6 @@
 package com.bierchitekt.concerts.genre;
 
+import com.bierchitekt.concerts.venues.StringUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -41,7 +42,7 @@ public class LastFMClient {
 
             Set<String> genres = new HashSet<>();
             for (int i = 0; i < asJsonArray.size(); i++) {
-                genres.add(asJsonArray.get(0).getAsJsonObject().get("name").getAsString());
+                genres.add(StringUtil.capitalizeWords(asJsonArray.get(i).getAsJsonObject().get("name").getAsString()));
             }
             return genres;
         } catch (Exception ex) {

@@ -29,7 +29,7 @@ public class BackstageService {
     private static final String VENUE_NAME = "Backstage";
 
     public List<ConcertDTO> getConcerts() {
-        log.info("getting {}} concerts", VENUE_NAME);
+        log.info("getting {} concerts", VENUE_NAME);
         try {
             List<ConcertDTO> allConcerts = new ArrayList<>();
             String url = OVERVIEW_URL + ITEMS_PER_PAGE;
@@ -46,7 +46,7 @@ public class BackstageService {
 
             }
 
-            log.info("received {} {}} concerts", VENUE_NAME, allConcerts.size());
+            log.info("received {} {} concerts", allConcerts.size(), VENUE_NAME );
             return allConcerts;
         } catch (Exception ex) {
             log.error("exception: ", ex);

@@ -10,8 +10,6 @@ import java.util.List;
 public interface ConcertRepository extends JpaRepository<ConcertEntity, Long> {
     List<ConcertEntity> findAllByDateBefore(LocalDate now);
 
-    List<ConcertEntity> findAllByPriceIsNull();
-
     List<ConcertEntity> findByNotified(boolean notified);
 
     List<ConcertEntity> findAllByOrderByDate();
