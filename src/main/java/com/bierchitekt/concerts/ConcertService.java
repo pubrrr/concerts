@@ -1,15 +1,14 @@
 package com.bierchitekt.concerts;
 
+import com.bierchitekt.concerts.genre.GenreService;
 import com.bierchitekt.concerts.persistence.ConcertEntity;
 import com.bierchitekt.concerts.persistence.ConcertRepository;
-import com.bierchitekt.concerts.genre.GenreService;
 import com.bierchitekt.concerts.venues.BackstageService;
 import com.bierchitekt.concerts.venues.FeierwerkService;
 import com.bierchitekt.concerts.venues.MuffathalleService;
 import com.bierchitekt.concerts.venues.OlympiaparkService;
 import com.bierchitekt.concerts.venues.StromService;
 import com.bierchitekt.concerts.venues.ZenithService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -93,7 +92,6 @@ public class ConcertService {
         }
     }
 
-    @PostConstruct
     public void getNewConcerts() {
         log.info("starting");
 
@@ -153,7 +151,7 @@ public class ConcertService {
 
         concerts.forEach(concert -> {
             if (concertRepository.findByTitle(concert.title()).isEmpty()) { // new concert, query for price
-               // String price = backstageService.getPrice(concert.link());
+                // String price = backstageService.getPrice(concert.link());
                 backstageConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), null));
             }
         });
