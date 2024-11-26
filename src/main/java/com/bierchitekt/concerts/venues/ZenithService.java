@@ -3,15 +3,16 @@ package com.bierchitekt.concerts.venues;
 import com.bierchitekt.concerts.ConcertDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.text.StringEscapeUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.bierchitekt.concerts.venues.XmlUtils.extractXpath;
 
 @Slf4j
 @Service
@@ -20,35 +21,63 @@ public class ZenithService {
 
     String url = "https://muenchen.motorworld.de/";
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+    List<String> ignoredEvents = List.of("Midnightbazar", "Kinky Galore");
+
+    private static final String VENUE_NAME = "Zenith";
+
     public List<ConcertDTO> getConcerts() {
+        log.info("getting {} concerts", VENUE_NAME);
+        List<ConcertDTO> allConcerts = new ArrayList<>();
         try {
 
-            org.w3c.dom.Document doc = XmlUtils.getDocument(url);
-            List<ConcertDTO> concerts = new ArrayList<>();
-            for (int i = 1; i < 99; i++) {
-                String xpathTitle = "/html/body/main/div/div/div[6]/div/div/div[1]/div/div/div[" + i + "]/a/div/div[2]/div/div[1]/div/h1";
-                String xpathDate = "/html/body/main/div/div/div[6]/div/div/div[1]/div/div/div[" + i + "]/a/div/div[3]/div/div/div";
-                String xpathLink = "/html/body/main/div/div/div[6]/div/div/div[1]/div/div/div[" + i + "]/a/@href";
-                String title = extractXpath(xpathTitle, doc);
-                if (title.isEmpty()) {
-                    break;
+            Document document = Jsoup.connect(url).get();
+            Elements allEvents = document.select("a.elementor-element.e-flex.e-con-boxed.e-con.e-parent");
+            for (Element concert : allEvents) {
+
+
+                if ("Programm Motorworld München".equals(concert.text())) {
+                    continue;
                 }
-                title = StringEscapeUtils.unescapeHtml4(title);
-                String date = extractXpath(xpathDate, doc).trim();
-                String link = extractXpath(xpathLink, doc);
+                String title = concert.select("h1.elementor-heading-title.elementor-size-default").text();
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                title = title.replace("(ausverkauft)", "").trim();
+                title = title.replace("(Doppelshow)", "").trim();
+                title = title.replace("(Zusatzshow)", "").trim();
 
-                LocalDate localDate = LocalDate.parse(date, formatter);
+                title = StringUtil.capitalizeWords(title);
+                if (ignoredEvents.contains(title)) {
+                    continue;
+                }
+                String link = concert.select("a[href]").getFirst().attr("href");
+                Elements details = concert.select("div.elementor-element.elementor-widget.elementor-widget-text-editor");
 
-                ConcertDTO concertDTO = new ConcertDTO(title, localDate, link, null, "zenith", null);
-                log.info("title {} date {}", title, date);
-                concerts.add(concertDTO);
+                LocalDate date = getDate(details);
+
+                if (date == null) {
+                    continue;
+                }
+
+                ConcertDTO concertDTO = new ConcertDTO(title, date, link, null, VENUE_NAME, null);
+                allConcerts.add(concertDTO);
             }
-
-            return concerts;
         } catch (Exception ex) {
-            return List.of();
+            log.warn("Error getting {} concerts", VENUE_NAME, ex);
+            return allConcerts;
         }
+        log.info("received {} {} concerts", VENUE_NAME, allConcerts.size());
+        return allConcerts;
+    }
+
+    private LocalDate getDate(Elements details) {
+        for (Element dateElement : details) {
+            try {
+                return LocalDate.parse(dateElement.text(), formatter);
+            } catch (Exception ignored) {
+                // ignored
+            }
+        }
+        return null;
     }
 }

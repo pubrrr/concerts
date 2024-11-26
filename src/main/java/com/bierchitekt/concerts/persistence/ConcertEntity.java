@@ -8,9 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -25,7 +27,8 @@ public class ConcertEntity {
     private String title;
     private LocalDate date;
     private String link;
-    private List<String> genre;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Set<String> genre;
     private String location;
     private String price;
     private boolean notified;

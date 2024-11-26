@@ -1,4 +1,4 @@
-package com.bierchitekt.concerts.spotify;
+package com.bierchitekt.concerts.genre;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -13,7 +13,7 @@ import org.springframework.web.client.RestClient;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 
@@ -35,36 +35,43 @@ public class SpotifyClient {
     RestClient restClient = RestClient.create();
 
 
-    public List<String> getGenres(String artist) {
+    public Set<String> getGenres(String artist) {
+        try {
 
-        String accessToken = getAccessToken();
+            if (StringUtils.isEmpty(artist)) {
+                return Set.of();
+            }
+            String accessToken = getAccessToken();
 
-        if(StringUtils.isEmpty(accessToken)){
-            return List.of();
+            if (StringUtils.isEmpty(accessToken)) {
+                return Set.of();
+            }
+
+            String escapedArtist = artist.replace(" ", "+");
+            String result = restClient.get()
+                    .uri("https://api.spotify.com/v1/search?q=" + escapedArtist + "&type=artist")
+                    .header("Authorization", "Bearer " + accessToken)
+                    .retrieve()
+                    .body(String.class);
+            if (StringUtils.isEmpty(result)) {
+                return Set.of();
+            }
+
+            JsonArray asJsonArray = JsonParser.parseString(result).getAsJsonObject()
+                    .get("artists").getAsJsonObject()
+                    .get("items").getAsJsonArray()
+                    .get(0).getAsJsonObject()
+                    .get("genres")
+                    .getAsJsonArray();
+
+            Type listType = new TypeToken<Set<String>>() {
+            }.getType();
+            return new Gson().fromJson(asJsonArray, listType);
+        } catch (Exception ex) {
+
+            return Set.of();
         }
 
-        String escapedArtist = artist.replace(" ", "+");
-        String result = restClient.get()
-                .uri("https://api.spotify.com/v1/search?q=" + escapedArtist + "&type=artist")
-                .header("Authorization", "Bearer " + accessToken)
-                .retrieve()
-                .body(String.class);
-        if (StringUtils.isEmpty(result)) {
-            return List.of();
-        }
-
-        JsonArray asJsonArray = JsonParser.parseString(result).getAsJsonObject()
-                .get("artists").getAsJsonObject()
-                .get("items").getAsJsonArray()
-                .get(0).getAsJsonObject()
-                .get("genres")
-                .getAsJsonArray();
-
-        Type listType = new TypeToken<List<String>>() {
-        }.getType();
-        List<String> genres = new Gson().fromJson(asJsonArray, listType);
-        log.info("got genres {} for artist {}", genres, artist);
-        return new Gson().fromJson(asJsonArray, listType);
     }
 
     private String getAccessToken() {

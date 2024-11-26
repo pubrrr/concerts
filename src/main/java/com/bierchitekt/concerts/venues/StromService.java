@@ -1,19 +1,23 @@
 package com.bierchitekt.concerts.venues;
 
 import com.bierchitekt.concerts.ConcertDTO;
+import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bierchitekt.concerts.venues.XmlUtils.extractXpath;
+import static com.bierchitekt.concerts.venues.StringUtil.capitalizeWords;
 
 @Slf4j
 @Service
@@ -21,60 +25,50 @@ import static com.bierchitekt.concerts.venues.XmlUtils.extractXpath;
 public class StromService {
 
     private static final String URL = "https://strom-muc.de/";
+    private static final String VENUE_NAME = "Strom";
 
-    @SuppressWarnings("java:S1192")
     public List<ConcertDTO> getConcerts() {
+        log.info("getting {} concerts", VENUE_NAME);
+
         List<ConcertDTO> concerts = new ArrayList<>();
-
         try {
-            log.info("getting Strom concerts");
-            Document doc = XmlUtils.getDocument(URL);
-            for (int i = 3; i < 99; i++) {
-                String xpathTitle = "/html/body/div/div[2]/div[1]/div/section/div/div[3]/div/div[" + i + "]/div/h3/a";
-                String xpathLink = "/html/body/div/div[2]/div[1]/div/section/div/div[3]/div/div[" + i + "]/div/h3/a/@href";
-                String xpathType = "/html/body/div/div[2]/div[1]/div/section/div/div[3]/div/div[" + i + "]/div/div[2]/a";
 
-                String type = extractXpath(xpathType, doc);
+            Document doc = Jsoup.connect(URL).get();
 
-                if (!"konzert".equalsIgnoreCase(type)) {
-                    continue;
+            Elements scriptElements = doc.getElementsByTag("script");
+
+            for (Element element : scriptElements) {
+                if (element.data().contains("events.push")) {
+                    String data = element.data();
+                    String answer = data.substring(data.indexOf("(") + 1, data.indexOf(")"));
+
+                    String type = JsonParser.parseString(answer).getAsJsonObject().get("location").getAsString();
+
+                    if (!"KONZERT".equalsIgnoreCase(type)) {
+                        continue;
+                    }
+                    String datetime = JsonParser.parseString(answer).getAsJsonObject().get("datetime").getAsString();
+
+                    LocalDate date = Instant.ofEpochMilli(Long.parseLong(datetime)).atZone(ZoneId.systemDefault()).toLocalDate();
+
+
+                    String title = JsonParser.parseString(answer).getAsJsonObject().get("title").getAsString();
+                    title = StringEscapeUtils.unescapeHtml4(title);
+                    title = capitalizeWords(title);
+                    String link = JsonParser.parseString(answer).getAsJsonObject().get("permalink").getAsString();
+
+                    ConcertDTO concertDTO = new ConcertDTO(title, date, link, null, VENUE_NAME, null);
+                    concerts.add(concertDTO);
                 }
-                String title = extractXpath(xpathTitle, doc);
 
-                title = StringEscapeUtils.unescapeHtml4(title);
-                String link = extractXpath(xpathLink, doc);
-
-                getDate(link);
-                ConcertDTO concertDTO = new ConcertDTO(title, null, link, null, "Strom", null);
-                concerts.add(concertDTO);
             }
-
         } catch (Exception ex) {
-            log.error("ex", ex);
-            return List.of();
+            log.warn("error getting {} concerts", VENUE_NAME, ex);
+            return concerts;
         }
+        log.info("received {} {} concerts", concerts.size(), VENUE_NAME);
+
         return concerts;
-    }
-
-    @SuppressWarnings("java:S1075")
-    public LocalDate getDate(String link) {
-        try {
-            Document detailDoc = XmlUtils.getDocument(link);
-
-            String xpathDate = "/html/body/div/div[2]/div[1]/div/div/div[1]/div[1]/div/div[1]/div[1]/div[2]/div[1]";
-
-            String date = extractXpath(xpathDate, detailDoc).trim();
-            date = StringUtils.remove(date, "Datum:").trim();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            LocalDate localDate = LocalDate.MIN;
-            if (StringUtils.isNotEmpty(date)) {
-                return LocalDate.parse(date, formatter);
-            }
-            return localDate;
-        } catch (Exception ex) {
-            log.warn("exception", ex);
-        }
-        return LocalDate.MIN;
 
     }
 }

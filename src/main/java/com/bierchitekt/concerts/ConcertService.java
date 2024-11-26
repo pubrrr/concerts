@@ -2,13 +2,14 @@ package com.bierchitekt.concerts;
 
 import com.bierchitekt.concerts.persistence.ConcertEntity;
 import com.bierchitekt.concerts.persistence.ConcertRepository;
-import com.bierchitekt.concerts.spotify.SpotifyClient;
+import com.bierchitekt.concerts.genre.GenreService;
 import com.bierchitekt.concerts.venues.BackstageService;
 import com.bierchitekt.concerts.venues.FeierwerkService;
 import com.bierchitekt.concerts.venues.MuffathalleService;
 import com.bierchitekt.concerts.venues.OlympiaparkService;
 import com.bierchitekt.concerts.venues.StromService;
 import com.bierchitekt.concerts.venues.ZenithService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,7 +38,7 @@ public class ConcertService {
     private final OlympiaparkService olympiaparkService;
 
 
-    private final SpotifyClient spotifyClient;
+    private final GenreService genreService;
 
     public void deleteOldConcerts() {
         List<ConcertEntity> allByDateBefore = concertRepository.findAllByDateBefore(LocalDate.now());
@@ -49,7 +51,7 @@ public class ConcertService {
     public void notifyNewMetalConcerts() {
         log.info("notifying for new concerts");
         for (ConcertEntity concertEntity : concertRepository.findByNotified(false)) {
-            List<String> genres = concertEntity.getGenre();
+            Set<String> genres = concertEntity.getGenre();
             for (String genre : genres) {
                 if (genre.toLowerCase().contains("rock") || genre.toLowerCase().contains("metal") || genre.toLowerCase().contains("punk")) {
                     String message = concertEntity.getTitle() + " \n" +
@@ -73,7 +75,7 @@ public class ConcertService {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
 
-            List<String> genres = concertEntity.getGenre();
+            Set<String> genres = concertEntity.getGenre();
             for (String genre : genres) {
                 if (genre.toLowerCase().contains("rock") || genre.toLowerCase().contains("metal") || genre.toLowerCase().contains("punk")) {
                     String message = "<b>" + concertEntity.getTitle() + "</b> \n" +
@@ -91,23 +93,23 @@ public class ConcertService {
         }
     }
 
+    @PostConstruct
     public void getNewConcerts() {
         log.info("starting");
 
         List<ConcertDTO> allConcerts = new ArrayList<>();
-
+        allConcerts.addAll(getZenithConcerts());
         allConcerts.addAll(getStromKonzerts());
         allConcerts.addAll(getOlympiaparkConcerts());
         allConcerts.addAll(getBackstageConcerts());
         allConcerts.addAll(getMuffathalleConcerts());
-        allConcerts.addAll(getZenithConcerts());
         allConcerts.addAll(getFeierwerkConcerts());
 
 
         List<ConcertEntity> concertEntities = new ArrayList<>();
         log.info("found {} concerts, saving now", allConcerts.size());
         for (ConcertDTO concertDTO : allConcerts) {
-            if (concertRepository.findByTitle(concertDTO.title()).isEmpty()) {
+            if (concertRepository.findByTitleAndDate(concertDTO.title(), concertDTO.date()).isEmpty()) {
                 log.info("new concert found. Title: {}", concertDTO.title());
                 ConcertEntity concertEntity = ConcertEntity.builder()
                         .date(concertDTO.date())
@@ -128,7 +130,7 @@ public class ConcertService {
         List<ConcertDTO> olypiaparkConcerts = new ArrayList<>();
         olympiaparkService.getConcerts().forEach(concert -> {
             if (concertRepository.findByTitle(concert.title()).isEmpty()) { // new concert, query for price
-                List<String> genres = spotifyClient.getGenres(concert.title());
+                Set<String> genres = genreService.getGenres(concert.title());
                 olypiaparkConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), null));
             }
         });
@@ -151,8 +153,8 @@ public class ConcertService {
 
         concerts.forEach(concert -> {
             if (concertRepository.findByTitle(concert.title()).isEmpty()) { // new concert, query for price
-                String price = backstageService.getPrice(concert.link());
-                backstageConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), price));
+               // String price = backstageService.getPrice(concert.link());
+                backstageConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), null));
             }
         });
         return backstageConcerts;
@@ -162,7 +164,7 @@ public class ConcertService {
         List<ConcertDTO> zenithConcerts = new ArrayList<>();
         zenithService.getConcerts().forEach(concert -> {
             if (concertRepository.findByTitle(concert.title()).isEmpty()) { // new concert, query for price
-                List<String> genres = spotifyClient.getGenres(concert.title());
+                Set<String> genres = genreService.getGenres(concert.title());
                 zenithConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), null));
 
             }
@@ -174,10 +176,9 @@ public class ConcertService {
         List<ConcertDTO> stromConcerts = new ArrayList<>();
         try {
             for (ConcertDTO stromConcert : stromService.getConcerts()) {
-                if (concertRepository.findByTitle(stromConcert.title()).isEmpty()) { // new Concert found, need to get date and genre
-                    LocalDate date = stromService.getDate(stromConcert.link());
-                    List<String> genres = spotifyClient.getGenres(stromConcert.title());
-                    ConcertDTO concertDTO = new ConcertDTO(stromConcert.title(), date, stromConcert.link(), genres, "Strom", null);
+                if (concertRepository.findByTitle(stromConcert.title()).isEmpty()) {
+                    Set<String> genres = genreService.getGenres(stromConcert.title());
+                    ConcertDTO concertDTO = new ConcertDTO(stromConcert.title(), stromConcert.date(), stromConcert.link(), genres, "Strom", null);
                     stromConcerts.add(concertDTO);
                 }
             }
@@ -196,7 +197,7 @@ public class ConcertService {
             for (ConcertDTO muffathalleConcert : muffathalleService.getConcerts()) {
                 if (concertRepository.findByTitle(muffathalleConcert.title()).isEmpty()) { // new Concert found, need to get date and genre
                     LocalDate date = muffathalleService.getDate(muffathalleConcert.link());
-                    List<String> genres = spotifyClient.getGenres(muffathalleConcert.title());
+                    Set<String> genres = genreService.getGenres(muffathalleConcert.title());
                     ConcertDTO concertDTO = new ConcertDTO(muffathalleConcert.title(), date, muffathalleConcert.link(), genres, "Muffathalle", null);
                     muffatHalleConcerts.add(concertDTO);
                 }

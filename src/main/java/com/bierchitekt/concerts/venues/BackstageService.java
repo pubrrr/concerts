@@ -1,23 +1,21 @@
 package com.bierchitekt.concerts.venues;
 
-
 import com.bierchitekt.concerts.ConcertDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
-import static com.bierchitekt.concerts.venues.XmlUtils.extractXpath;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -28,98 +26,85 @@ public class BackstageService {
     private static final int ITEMS_PER_PAGE = 25;
     private static final String OVERVIEW_URL = "https://backstage.eu/veranstaltungen/live.html?product_list_limit=";
 
+    private static final String VENUE_NAME = "Backstage";
+
     public List<ConcertDTO> getConcerts() {
+        log.info("getting {}} concerts", VENUE_NAME);
         try {
             List<ConcertDTO> allConcerts = new ArrayList<>();
             String url = OVERVIEW_URL + ITEMS_PER_PAGE;
             int totalElements = getPages(url);
-            log.info("Backstage total elements: {}", totalElements);
+            log.debug("Backstage total elements: {}", totalElements);
             int totalPages = totalElements / ITEMS_PER_PAGE + 2;
-            log.info("Backstage total pages: {}", totalPages);
+            log.debug("Backstage total pages: {}", totalPages);
 
             for (int i = 1; i < totalPages; ++i) {
-                log.info("Backstage getting page {} of {}", i, totalPages);
+                log.debug("Backstage getting page {} of {}", i, totalPages);
                 url = OVERVIEW_URL + ITEMS_PER_PAGE + "&p=" + i;
                 List<ConcertDTO> concerts = getConcerts(url);
                 allConcerts.addAll(concerts);
 
             }
 
-            log.info("received {} Backstage concerts", allConcerts.size());
+            log.info("received {} {}} concerts", VENUE_NAME, allConcerts.size());
             return allConcerts;
         } catch (Exception ex) {
+            log.error("exception: ", ex);
             return List.of();
         }
     }
 
     public String getPrice(String url) {
         try {
-            org.w3c.dom.Document document = XmlUtils.getDocument(url);
-            String xpathPrice = "//span[@class='price']";
-
-            return extractXpath(xpathPrice, document).trim().replace(".", "");
-
-        } catch (CannotDownloadDocumentException | IOException | ParserConfigurationException |
-                 XPathExpressionException e) {
+            Document doc = Jsoup.connect(url).get();
+            return doc.select("span.price").text();
+        } catch (IOException e) {
             return null;
         }
+
     }
 
     @SuppressWarnings("java:S1192")
-    private List<ConcertDTO> getConcerts(String url) throws XPathExpressionException, IOException, ParserConfigurationException {
-        try {
-            org.w3c.dom.Document xmlDocument = XmlUtils.getDocument(url);
-            List<ConcertDTO> concerts = new ArrayList<>();
+    private List<ConcertDTO> getConcerts(String url) throws IOException {
+        List<ConcertDTO> concerts = new ArrayList<>();
 
-            for (int i = 0; i <= ITEMS_PER_PAGE; i++) {
+        Document doc = Jsoup.connect(url).get();
+        Elements allEvents = doc.select("div.product.details.product-item-details");
 
-                String xpathTitle = "//ol/li[" + i + "]//a[@class='product-item-link']";
-
-                String title = extractXpath(xpathTitle, xmlDocument);
-
-                if (!"".equals(title)) {
-                    String xpathLink = "//ol/li[" + i + "]//a[@class='product-item-link']/@href";
-
-                    String link = extractXpath(xpathLink, xmlDocument);
-
-                    String xpathDay = "//ol/li[" + i + "]//strong[@class='product name product-item-name eventdate']/span[@class='day']";
-                    String xpathMonth = "//ol/li[" + i + "]//strong[@class='product name product-item-name eventdate']/span[@class='month']";
-                    String xpathYear = "//ol/li[" + i + "]//strong[@class='product name product-item-name eventdate']/span[@class='year']";
-                    String xpathGenre = "//ol/li[" + i + "]//div[@class='product description product-item-description']";
-                    String xpathLocation = "//ol/li[" + i + "]//strong[@class='product name product-item-name eventlocation']";
-
-                    String genre = extractXpath(xpathGenre, xmlDocument).trim().replace("Learn More", "");
-                    String[] split = genre.split(",");
-                    List<String> allGenres = new ArrayList<>();
-
-                    for (String genres : split) {
-                        allGenres.add(genres.trim());
-                    }
-
-                    String day = extractXpath(xpathDay, xmlDocument).trim().replace(".", "");
-                    String month = extractXpath(xpathMonth, xmlDocument).trim();
-                    String year = extractXpath(xpathYear, xmlDocument).trim().replace(".", "");
-
-                    String location = extractXpath(xpathLocation, xmlDocument).trim().replace(".", "");
-                    LocalDate date = LocalDate.of(Integer.parseInt(year), calendarMap.get(month), Integer.parseInt(day));
-
-                    title = StringEscapeUtils.unescapeHtml4(title);
-                    title = title.trim();
-                    ConcertDTO concert = new ConcertDTO(title, date, link, allGenres, location, null);
-                    concerts.add(concert);
-                }
+        for (Element concert : allEvents) {
+            Elements detail = concert.select("a.product-item-link");
+            String title = detail.text().trim();
+            if (title.isEmpty()) {
+                continue;
             }
 
-            return concerts;
+            title = StringUtil.capitalizeWords(title);
+            String link = detail.select("a[href]").getFirst().attr("href");
+            String day = concert.select("span.day").first().text().replace(".", "");
+            String month = concert.select("span.month").first().text();
+            String year = concert.select("span.year").first().text();
 
-        } catch (CannotDownloadDocumentException ex) {
-            return List.of();
+            LocalDate date = LocalDate.of(Integer.parseInt(year), calendarMap.get(month), Integer.parseInt(day));
+
+            String location = concert.select("strong.eventlocation").text();
+            location = StringUtil.capitalizeWords(location);
+            String genre = concert.select("div.product-item-description").text().trim().replace("Learn More", "");
+            String[] split = genre.split(",");
+            Set<String> allGenres = new HashSet<>();
+
+            for (String genres : split) {
+                allGenres.add(genres.trim());
+            }
+
+            ConcertDTO concertDto = new ConcertDTO(title, date, link, allGenres, location, null);
+            concerts.add(concertDto);
         }
 
+        return concerts;
     }
 
 
-    public int getPages(String url) {
+    private int getPages(String url) {
         try {
             Document document = Jsoup.connect(url).get();
             String pages = document.select("span.toolbar-number").get(2).text();

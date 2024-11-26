@@ -1,4 +1,4 @@
-package com.bierchitekt.concerts.spotify;
+package com.bierchitekt.concerts.genre;
 
 import java.time.LocalDateTime;
 

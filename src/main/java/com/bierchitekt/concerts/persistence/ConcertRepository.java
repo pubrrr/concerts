@@ -19,4 +19,6 @@ public interface ConcertRepository extends JpaRepository<ConcertEntity, Long> {
     List<ConcertEntity> findByDateAfterAndDateBeforeOrderByDate(LocalDate now, LocalDate localDate);
 
     List<ConcertEntity> findByTitle(String title);
+
+    List<ConcertEntity> findByTitleAndDate(String title, LocalDate date);
 }

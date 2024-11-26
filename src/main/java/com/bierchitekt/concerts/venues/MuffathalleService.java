@@ -21,7 +21,11 @@ public class MuffathalleService {
 
     private static final String BASE_URL = "https://www.muffatwerk.de/";
 
+    private static final String VENUE_NAME = "Muffathalle";
+
     public List<ConcertDTO> getConcerts() {
+        log.info("getting {} concerts", VENUE_NAME);
+
         List<ConcertDTO> concerts = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(URL).get();
@@ -42,11 +46,13 @@ public class MuffathalleService {
                     String link = BASE_URL + select.select("a[href]").getFirst().attr("href");
 
 
-                    ConcertDTO concertDTO = new ConcertDTO(title, null, link, null, "muffathalle", null);
+                    ConcertDTO concertDTO = new ConcertDTO(title, null, link, null, VENUE_NAME, null);
 
                     concerts.add(concertDTO);
                 }
             }
+            log.info("received {} {} concerts", concerts.size(), VENUE_NAME);
+
             return concerts;
         } catch (Exception ex) {
             return List.of();
@@ -72,6 +78,5 @@ public class MuffathalleService {
             log.warn(url, e);
             return null;
         }
-
     }
 }

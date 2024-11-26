@@ -1,9 +1,13 @@
 package com.bierchitekt.concerts;
 
 
+import lombok.Builder;
+
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
-public record ConcertDTO(String title, LocalDate date, String link, List<String> genre, String location, String price) implements Serializable {
+@Builder
+public record ConcertDTO(String title, LocalDate date, String link, Set<String> genre, String location,
+                         String price) implements Serializable {
 }
