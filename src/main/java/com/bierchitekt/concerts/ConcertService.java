@@ -9,7 +9,6 @@ import com.bierchitekt.concerts.venues.MuffathalleService;
 import com.bierchitekt.concerts.venues.OlympiaparkService;
 import com.bierchitekt.concerts.venues.StromService;
 import com.bierchitekt.concerts.venues.ZenithService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -105,7 +104,6 @@ public class ConcertService {
         allConcerts.addAll(getMuffathalleConcerts());
         allConcerts.addAll(getFeierwerkConcerts());
 
-        List<ConcertEntity> concertEntities = new ArrayList<>();
         log.info("found {} concerts, saving now", allConcerts.size());
         for (ConcertDTO concertDTO : allConcerts) {
             if (concertRepository.findByTitleAndDate(concertDTO.title(), concertDTO.date()).isEmpty()) {
@@ -118,11 +116,10 @@ public class ConcertService {
                         .link(concertDTO.link())
                         .price(concertDTO.price())
                         .build();
-                concertEntities.add(concertEntity);
+                concertRepository.save(concertEntity);
             }
         }
-        concertRepository.saveAll(concertEntities);
-        log.info("saved all {} new concerts", concertEntities.size());
+
     }
 
     private Collection<ConcertDTO> getOlympiaparkConcerts() {
