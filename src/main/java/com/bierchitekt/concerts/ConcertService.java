@@ -8,6 +8,7 @@ import com.bierchitekt.concerts.venues.FeierwerkService;
 import com.bierchitekt.concerts.venues.MuffathalleService;
 import com.bierchitekt.concerts.venues.OlympiaparkService;
 import com.bierchitekt.concerts.venues.StromService;
+import com.bierchitekt.concerts.venues.Theaterfabrik;
 import com.bierchitekt.concerts.venues.ZenithService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,9 @@ public class ConcertService {
     private final MuffathalleService muffathalleService;
     private final FeierwerkService feierwerkService;
     private final OlympiaparkService olympiaparkService;
+    private final Theaterfabrik theaterfabrikService;
 
+    private final ConcertMapper concertMapper;
 
     private final GenreService genreService;
 
@@ -98,7 +101,8 @@ public class ConcertService {
         List<ConcertDTO> allConcerts = new ArrayList<>();
         allConcerts.addAll(getZenithConcerts());
 
-        allConcerts.addAll(getStromConzerts());
+        allConcerts.addAll(getTheaterfabrikConcerts());
+        allConcerts.addAll(getStromConcerts());
         allConcerts.addAll(getOlympiaparkConcerts());
         allConcerts.addAll(getBackstageConcerts());
         allConcerts.addAll(getMuffathalleConcerts());
@@ -108,24 +112,28 @@ public class ConcertService {
         for (ConcertDTO concertDTO : allConcerts) {
             if (concertRepository.findByTitleAndDate(concertDTO.title(), concertDTO.date()).isEmpty()) {
                 log.info("new concert found. Title: {}", concertDTO.title());
-                ConcertEntity concertEntity = ConcertEntity.builder()
-                        .date(concertDTO.date())
-                        .genre(concertDTO.genre())
-                        .title(concertDTO.title())
-                        .location(concertDTO.location())
-                        .link(concertDTO.link())
-                        .price(concertDTO.price())
-                        .build();
+                ConcertEntity concertEntity = concertMapper.toConcertEntity(concertDTO);
                 concertRepository.save(concertEntity);
             }
         }
 
     }
 
+    private Collection<ConcertDTO> getTheaterfabrikConcerts() {
+        List<ConcertDTO> theaterfabrikConcerts = new ArrayList<>();
+        theaterfabrikService.getConcerts().forEach(concert -> {
+            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
+                Set<String> genres = genreService.getGenres(concert.title());
+                theaterfabrikConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), concert.price()));
+            }
+        });
+        return theaterfabrikConcerts;
+    }
+
     private Collection<ConcertDTO> getOlympiaparkConcerts() {
         List<ConcertDTO> olypiaparkConcerts = new ArrayList<>();
         olympiaparkService.getConcerts().forEach(concert -> {
-            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) { // new concert, query for price
+            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
                 Set<String> genres = genreService.getGenres(concert.title());
                 olypiaparkConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), null));
             }
@@ -169,7 +177,7 @@ public class ConcertService {
         return zenithConcerts;
     }
 
-    List<ConcertDTO> getStromConzerts() {
+    List<ConcertDTO> getStromConcerts() {
         List<ConcertDTO> stromConcerts = new ArrayList<>();
         for (ConcertDTO concert : stromService.getConcerts()) {
             if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
@@ -221,5 +229,13 @@ public class ConcertService {
             out.println(result);
         }
     }
+
+    public List<ConcertDTO> getNextWeekConcerts() {
+
+        List<ConcertEntity> byDateAfterAndDateBeforeOrderByDate = concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now(), LocalDate.now().plusDays(8));
+
+        return concertMapper.toConcertDto(byDateAfterAndDateBeforeOrderByDate);
+    }
+
 }
 
