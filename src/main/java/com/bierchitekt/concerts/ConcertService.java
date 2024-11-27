@@ -11,7 +11,6 @@ import com.bierchitekt.concerts.venues.OlympiaparkService;
 import com.bierchitekt.concerts.venues.StromService;
 import com.bierchitekt.concerts.venues.Theaterfabrik;
 import com.bierchitekt.concerts.venues.ZenithService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
@@ -93,56 +92,39 @@ public class ConcertService {
     }
 
 
+    public void notifyNextWeekConcerts() {
+        notifyNextWeekMetalConcerts();
+        notifyNextWeekRockConcerts();
+        notifyNextWeekPunkConcerts();
+    }
+
+
     public void notifyNextWeekMetalConcerts() {
-        TreeSet<ConcertEntity> metalConcerts = new TreeSet<>();
-
-        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now(), LocalDate.now().plusDays(8))) {
-
-            Set<String> genres = concertEntity.getGenre();
-            for (String genre : genres) {
-                if (genre.toLowerCase().contains("metal")) {
-                    metalConcerts.add(concertEntity);
-                    break;
-                }
-            }
-        }
-        notifyNewConcerts("Upcoming metal concerts for next week: \n\n", metalConcerts, "@MunichMetalConcerts");
+        notifyConcerts("metal", "@MunichMetalConcerts");
     }
 
 
     public void notifyNextWeekRockConcerts() {
-        TreeSet<ConcertEntity> rockConcerts = new TreeSet<>();
-
-        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now(), LocalDate.now().plusDays(8))) {
-
-            Set<String> genres = concertEntity.getGenre();
-            for (String genre : genres) {
-                if (genre.toLowerCase().contains("rock")) {
-                    rockConcerts.add(concertEntity);
-                    break;
-                }
-            }
-        }
-
-        notifyNewConcerts("Upcoming rock concerts for next week: \n\n", rockConcerts, "@MunichRockConcerts");
+        notifyConcerts("rock", "@MunichRockConcerts");
     }
 
     public void notifyNextWeekPunkConcerts() {
-        TreeSet<ConcertEntity> punkConcerts = new TreeSet<>();
+        notifyConcerts("punk", "@MunichPunkConcerts");
+    }
 
-        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now(), LocalDate.now().plusDays(8))) {
-
+    private void notifyConcerts(String genreName, String channelName) {
+        TreeSet<ConcertEntity> concerts = new TreeSet<>();
+        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now().minusDays(1), LocalDate.now().plusDays(8))) {
 
             Set<String> genres = concertEntity.getGenre();
             for (String genre : genres) {
-                if (genre.toLowerCase().contains("punk")) {
-                    punkConcerts.add(concertEntity);
+                if (genre.toLowerCase().contains(genreName)) {
+                    concerts.add(concertEntity);
                     break;
                 }
             }
         }
-
-        notifyNewConcerts("Upcoming punk concerts for next week: \n\n", punkConcerts, "@MunichPunkConcerts");
+        notifyNewConcerts("Upcoming " + genreName + " concerts for next week: \n\n", concerts, channelName);
     }
 
     public void getNewConcerts() {
@@ -265,7 +247,6 @@ public class ConcertService {
 
     }
 
-    @PostConstruct
     public void generateHtml() throws FileNotFoundException {
 
         String tdOpenTag = "<td>";

@@ -16,19 +16,19 @@ public class SchedulerService {
         concertService.deleteOldConcerts();
     }
 
-    @Scheduled(cron = "${notify.cron}")
-    public void notifyNewMetalConcerts() {
+    @Scheduled(cron = "${notify-new-concerts.cron}")
+    public void notifyNewConcerts() {
         concertService.notifyNewConcerts();
     }
 
-    @Scheduled(cron = "${getConcerts.cron}")
+    @Scheduled(cron = "${download-concerts.cron}")
     public void getNewConcerts() {
         concertService.getNewConcerts();
     }
 
-    @Scheduled(cron = "${notify-metal-concerts.cron}")
-    public void notifyNextWeekMetalConcerts() {
-        concertService.notifyNextWeekMetalConcerts();
+    @Scheduled(cron = "${notify-nextweek-concerts.cron}")
+    public void notifyNextWeekConcerts() {
+        concertService.notifyNextWeekConcerts();
     }
 
 }

@@ -1,0 +1,13 @@
+[Unit]
+Description=Concert Downloader
+
+[Service]
+User=myusr
+Group=myusr
+WorkingDirectory=/path/to/your/app
+ExecStart=/usr/bin/java -jar your_app.jar
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
