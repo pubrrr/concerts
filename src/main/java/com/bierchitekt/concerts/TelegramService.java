@@ -12,17 +12,14 @@ import static com.pengrad.telegrambot.model.request.ParseMode.HTML;
 public class TelegramService {
 
     private final TelegramBot bot;
-    private final String telegramChannel;
 
-    public TelegramService(@NotEmpty @Value("${telegram.auth}") String telegramAuth,
-                           @Value("${telegram.channel}") @NotEmpty String telegramChannel) {
+    public TelegramService(@NotEmpty @Value("${telegram.auth}") String telegramAuth) {
         bot = new TelegramBot(telegramAuth);
-        this.telegramChannel = telegramChannel;
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(String channelName, String message) {
 
-        SendMessage request = new SendMessage(telegramChannel, message)
+        SendMessage request = new SendMessage(channelName, message)
                 .parseMode(HTML);
         bot.execute(request);
 

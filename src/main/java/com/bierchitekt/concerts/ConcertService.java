@@ -5,14 +5,18 @@ import com.bierchitekt.concerts.persistence.ConcertEntity;
 import com.bierchitekt.concerts.persistence.ConcertRepository;
 import com.bierchitekt.concerts.venues.BackstageService;
 import com.bierchitekt.concerts.venues.FeierwerkService;
+import com.bierchitekt.concerts.venues.Kult9Service;
 import com.bierchitekt.concerts.venues.MuffathalleService;
 import com.bierchitekt.concerts.venues.OlympiaparkService;
 import com.bierchitekt.concerts.venues.StromService;
 import com.bierchitekt.concerts.venues.Theaterfabrik;
 import com.bierchitekt.concerts.venues.ZenithService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -21,7 +25,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,73 +43,117 @@ public class ConcertService {
     private final FeierwerkService feierwerkService;
     private final OlympiaparkService olympiaparkService;
     private final Theaterfabrik theaterfabrikService;
+    private final Kult9Service kult9Service;
 
     private final ConcertMapper concertMapper;
 
     private final GenreService genreService;
 
-    public void deleteOldConcerts() {
-        List<ConcertEntity> allByDateBefore = concertRepository.findAllByDateBefore(LocalDate.now());
-        if (!allByDateBefore.isEmpty()) {
-            log.info("deleting {} old concerts", allByDateBefore.size());
-            concertRepository.deleteAll(allByDateBefore);
-        }
-    }
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
 
-    public void notifyNewMetalConcerts() {
+
+    public void notifyNewConcerts() {
         log.info("notifying for new concerts");
+        TreeSet<ConcertEntity> newMetalConcerts = new TreeSet<>();
+        TreeSet<ConcertEntity> newRockConcerts = new TreeSet<>();
+        TreeSet<ConcertEntity> newPunkConcerts = new TreeSet<>();
         for (ConcertEntity concertEntity : concertRepository.findByNotified(false)) {
             Set<String> genres = concertEntity.getGenre();
             for (String genre : genres) {
-                if (genre.toLowerCase().contains("rock") || genre.toLowerCase().contains("metal") || genre.toLowerCase().contains("punk")) {
-                    String message = concertEntity.getTitle() + " \n" +
-                            "playing at " + concertEntity.getLocation() + " \n" +
-                            "on " + concertEntity.getDate() + " \n" +
-                            "price is " + concertEntity.getPrice() + " \n" +
-                            "genre is " + concertEntity.getGenre() + " \n" +
-                            concertEntity.getLink();
-
-                    telegramService.sendMessage(message);
-                    concertEntity.setNotified(true);
-                    concertRepository.save(concertEntity);
-                    break;
+                if (genre.toLowerCase().contains("rock")) {
+                    newRockConcerts.add(concertEntity);
+                }
+                if (genre.toLowerCase().contains("metal")) {
+                    newMetalConcerts.add(concertEntity);
+                }
+                if (genre.toLowerCase().contains("punk")) {
+                    newPunkConcerts.add(concertEntity);
                 }
             }
+            concertEntity.setNotified(true);
+            concertRepository.save(concertEntity);
+        }
+
+
+        notifyNewConcerts("Good news everyone! I found some new metal concerts for you\n\n", newMetalConcerts, "@MunichMetalConcerts");
+        notifyNewConcerts("Good news everyone! I found some new rock concerts for you\n\n", newRockConcerts, "@MunichRockConcerts");
+        notifyNewConcerts("Good news everyone! I found some new punk concerts for you\n\n", newPunkConcerts, "@MunichPunkConcerts");
+    }
+
+    private void notifyNewConcerts(String message, TreeSet<ConcertEntity> newConcerts, String channelName) {
+        if (!newConcerts.isEmpty()) {
+            for (ConcertEntity concert : newConcerts) {
+                message += "<b>" + concert.getTitle() + "</b> \n" +
+                        "on " + concert.getDate().format(formatter) + " \n" +
+                        "genre is " + concert.getGenre() + " \n" +
+                        "playing at <a href=\"" + concert.getLink() + "\">" + concert.getLocation() + "</a>\n\n";
+            }
+            telegramService.sendMessage(channelName, message);
         }
     }
 
-    public void notifyNextWeekMetalConcerts() {
-        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now(), LocalDate.now().plusDays(8))) {
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+    public void notifyNextWeekMetalConcerts() {
+        TreeSet<ConcertEntity> metalConcerts = new TreeSet<>();
+
+        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now(), LocalDate.now().plusDays(8))) {
 
             Set<String> genres = concertEntity.getGenre();
             for (String genre : genres) {
-                if (genre.toLowerCase().contains("rock") || genre.toLowerCase().contains("metal") || genre.toLowerCase().contains("punk")) {
-                    String message = "<b>" + concertEntity.getTitle() + "</b> \n" +
-                            "playing at <b>" + concertEntity.getLocation() + "</b> \n" +
-                            "on " + concertEntity.getDate().format(formatter) + " \n" +
-                            "genre is " + concertEntity.getGenre() + " \n" +
-
-                            "playing at <a href=\"" + concertEntity.getLink() + "\">" + concertEntity.getLocation() + "</a>";
-
-
-                    telegramService.sendMessage(message);
+                if (genre.toLowerCase().contains("metal")) {
+                    metalConcerts.add(concertEntity);
                     break;
                 }
             }
         }
+        notifyNewConcerts("Upcoming metal concerts for next week: \n\n", metalConcerts, "@MunichMetalConcerts");
+    }
+
+
+    public void notifyNextWeekRockConcerts() {
+        TreeSet<ConcertEntity> rockConcerts = new TreeSet<>();
+
+        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now(), LocalDate.now().plusDays(8))) {
+
+            Set<String> genres = concertEntity.getGenre();
+            for (String genre : genres) {
+                if (genre.toLowerCase().contains("rock")) {
+                    rockConcerts.add(concertEntity);
+                    break;
+                }
+            }
+        }
+
+        notifyNewConcerts("Upcoming rock concerts for next week: \n\n", rockConcerts, "@MunichRockConcerts");
+    }
+
+    public void notifyNextWeekPunkConcerts() {
+        TreeSet<ConcertEntity> punkConcerts = new TreeSet<>();
+
+        for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now(), LocalDate.now().plusDays(8))) {
+
+
+            Set<String> genres = concertEntity.getGenre();
+            for (String genre : genres) {
+                if (genre.toLowerCase().contains("punk")) {
+                    punkConcerts.add(concertEntity);
+                    break;
+                }
+            }
+        }
+
+        notifyNewConcerts("Upcoming punk concerts for next week: \n\n", punkConcerts, "@MunichPunkConcerts");
     }
 
     public void getNewConcerts() {
         log.info("starting");
 
         List<ConcertDTO> allConcerts = new ArrayList<>();
+        allConcerts.addAll(getOlympiaparkConcerts());
+        allConcerts.addAll(getKult9Concerts());
         allConcerts.addAll(getZenithConcerts());
-
         allConcerts.addAll(getTheaterfabrikConcerts());
         allConcerts.addAll(getStromConcerts());
-        allConcerts.addAll(getOlympiaparkConcerts());
         allConcerts.addAll(getBackstageConcerts());
         allConcerts.addAll(getMuffathalleConcerts());
         allConcerts.addAll(getFeierwerkConcerts());
@@ -117,6 +167,16 @@ public class ConcertService {
             }
         }
 
+    }
+
+    private Collection<ConcertDTO> getKult9Concerts() {
+        List<ConcertDTO> kult9Concerts = new ArrayList<>();
+        kult9Service.getConcerts().forEach(concert -> {
+            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
+                kult9Concerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), concert.price()));
+            }
+        });
+        return kult9Concerts;
     }
 
     private Collection<ConcertDTO> getTheaterfabrikConcerts() {
@@ -205,26 +265,41 @@ public class ConcertService {
 
     }
 
+    @PostConstruct
     public void generateHtml() throws FileNotFoundException {
-        String result = "<table>" +
-                "  <tr>" +
-                "    <th>Datum</th>" +
-                "    <th>Band</th>" +
-                "    <th>Genre</th>\n" +
-                "    <th>Location</th>\n" +
-                "  </tr>\" ";
-        for (ConcertEntity concertEntity : concertRepository.findAllByOrderByDate()) {
-            result += "<tr>";
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
 
-            result += "<td>" + concertEntity.getDate().format(formatter) + "</td>";
-            result += "<td><a href=" + concertEntity.getLink() + ">" + concertEntity.getTitle() + "</a></td>";
+        String tdOpenTag = "<td>";
+        String tdCloseTag = "</td>";
+        StringBuilder result = new StringBuilder("""
+                  <!DOCTYPE html>
+                  <html lang="de">
+                  <head>
+                  <meta http-equiv="Content-Type"
+                        content="text/html; charset=utf-8"/>
+                      <title>All Concerts in munich</title>
+                  </head>
+                
+                  <table>
+                     <tr>
+                        <th>Datum</th>
+                        <th>Band</th>
+                        <th>Genre</th>
+                        <th>Location</th>
+                     </tr>
+                """);
+        for (ConcertEntity concertEntity : concertRepository.findByDateAfterOrderByDate(LocalDate.now().minusDays(1))) {
+            result.append("<tr>\n");
+            String title = concertEntity.getTitle();
 
-            result += "<td>" + concertEntity.getGenre() + "</td>";
-            result += "<td>" + concertEntity.getLocation() + "</td>";
-            result += "</tr>";
+            result.append(tdOpenTag).append(concertEntity.getDate().format(formatter)).append(tdCloseTag);
+            result.append(tdOpenTag).append("<a href=\"").append(concertEntity.getLink()).append("\">").append(title).append("</a>").append(tdCloseTag);
+            String genre = String.join(", ", concertEntity.getGenre());
+
+            result.append(tdOpenTag).append(genre).append(tdCloseTag);
+            result.append(tdOpenTag).append(concertEntity.getLocation()).append(tdCloseTag);
+            result.append("</tr>");
         }
-        result += "</table>";
+        result.append("</table></html>");
         try (PrintWriter out = new PrintWriter("result.html")) {
             out.println(result);
         }
@@ -237,5 +312,27 @@ public class ConcertService {
         return concertMapper.toConcertDto(byDateAfterAndDateBeforeOrderByDate);
     }
 
+    public List<ConcertEntity> getConcertsWithoutGenre() {
+        return concertRepository.findByGenreIn(Set.of("[]]"));
+    }
+
+    public void updateConcertGenre(String id, String genre) {
+        Optional<ConcertEntity> byId = concertRepository.findById(id);
+        if (byId.isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Unable to find resource");
+        } else {
+            ConcertEntity concertEntity = byId.get();
+            concertEntity.setGenre(Set.of(genre));
+            concertRepository.save(concertEntity);
+        }
+    }
+
+    public void deleteOldConcerts() {
+        List<ConcertEntity> allByDateBefore = concertRepository.findAllByDateBefore(LocalDate.now());
+        if (!allByDateBefore.isEmpty()) {
+            log.info("deleting {} old concerts", allByDateBefore.size());
+            concertRepository.deleteAll(allByDateBefore);
+        }
+    }
 }
 

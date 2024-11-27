@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +18,9 @@ import java.util.List;
 public class OlympiaparkService {
 
     private static final String VENUE_NAME = "Olympiapark";
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 
     public List<ConcertDTO> getConcerts() {
         log.info("getting {} concerts", VENUE_NAME);
@@ -43,12 +46,17 @@ public class OlympiaparkService {
             }
             String location = source.getAsJsonObject().get("locationName").getAsString();
             String link = source.getAsJsonObject().get("path").getAsString();
-            String dateJson = source.getAsJsonObject().get("start").getAsString();
+            JsonArray dateJson = source.getAsJsonObject().get("occursOn").getAsJsonArray();
 
-            OffsetDateTime time = OffsetDateTime.parse(dateJson);
-            LocalDate date = LocalDate.from(time);
+            List<LocalDate> concertDates = new ArrayList<>();
+            for (JsonElement dates : dateJson) {
+                concertDates.add(LocalDate.parse(dates.getAsString(), formatter));
+            }
 
-            concerts.add(new ConcertDTO(title, date, "https://www.olympiapark.de" + link, null, location, null));
+            for(LocalDate date: concertDates){
+                concerts.add(new ConcertDTO(title, date, "https://www.olympiapark.de" + link, null, location, null));
+            }
+
         }
         log.info("received {} {} concerts", concerts.size(), VENUE_NAME);
 

@@ -5,18 +5,21 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Repository
-public interface ConcertRepository extends JpaRepository<ConcertEntity, Long> {
+public interface ConcertRepository extends JpaRepository<ConcertEntity, String> {
     List<ConcertEntity> findAllByDateBefore(LocalDate now);
 
     List<ConcertEntity> findByNotified(boolean notified);
 
-    List<ConcertEntity> findAllByOrderByDate();
+    List<ConcertEntity> findByDateAfterOrderByDate(LocalDate date);
 
     List<ConcertEntity> findByDateAfterAndDateBeforeOrderByDate(LocalDate now, LocalDate localDate);
 
     List<ConcertEntity> findByTitle(String title);
 
     List<ConcertEntity> findByTitleAndDate(String title, LocalDate date);
+
+    List<ConcertEntity> findByGenreIn(Set<String> s);
 }

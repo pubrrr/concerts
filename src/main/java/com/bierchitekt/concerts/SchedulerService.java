@@ -18,7 +18,7 @@ public class SchedulerService {
 
     @Scheduled(cron = "${notify.cron}")
     public void notifyNewMetalConcerts() {
-        concertService.notifyNewMetalConcerts();
+        concertService.notifyNewConcerts();
     }
 
     @Scheduled(cron = "${getConcerts.cron}")
