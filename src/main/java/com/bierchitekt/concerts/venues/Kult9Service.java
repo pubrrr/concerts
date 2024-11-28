@@ -29,7 +29,7 @@ public class Kult9Service {
     public List<ConcertDTO> getConcerts() {
         log.info("getting {} concerts", VENUE_NAME);
 
-        List<ConcertDTO> concerts = new ArrayList<>();
+        List<ConcertDTO> allConcerts = new ArrayList<>();
         try {
 
             Document doc = Jsoup.connect(URL).get();
@@ -67,16 +67,15 @@ public class Kult9Service {
                 if (!linkElement.isEmpty()) {
                     link = event.select("div.btnarea").select("a[href]").getFirst().attr("href");
                 }
-                log.info(title + " | " + allGenres + " | " + day + " | " + price + " | " + link);
                 ConcertDTO concertDTO = new ConcertDTO(title, date, link, allGenres, VENUE_NAME, price);
-                concerts.add(concertDTO);
+                allConcerts.add(concertDTO);
             }
         } catch (Exception ex) {
             log.warn("error getting {} concerts", VENUE_NAME, ex);
             return List.of();
         }
-        log.info("received {} {} concerts", concerts.size(), VENUE_NAME);
+        log.info("received {} {} concerts", allConcerts.size(), VENUE_NAME);
 
-        return concerts;
+        return allConcerts;
     }
 }

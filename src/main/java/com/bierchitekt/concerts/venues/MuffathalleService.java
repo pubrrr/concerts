@@ -26,7 +26,7 @@ public class MuffathalleService {
     public List<ConcertDTO> getConcerts() {
         log.info("getting {} concerts", VENUE_NAME);
 
-        List<ConcertDTO> concerts = new ArrayList<>();
+        List<ConcertDTO> allConcerts = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(URL).get();
             Elements allEvents = doc.select("div[id~=event[0-9]+]");
@@ -48,12 +48,12 @@ public class MuffathalleService {
 
                     ConcertDTO concertDTO = new ConcertDTO(title, null, link, null, VENUE_NAME, null);
 
-                    concerts.add(concertDTO);
+                    allConcerts.add(concertDTO);
                 }
             }
-            log.info("received {} {} concerts", concerts.size(), VENUE_NAME);
+            log.info("received {} {} concerts", allConcerts.size(), VENUE_NAME);
 
-            return concerts;
+            return allConcerts;
         } catch (Exception ex) {
             return List.of();
         }

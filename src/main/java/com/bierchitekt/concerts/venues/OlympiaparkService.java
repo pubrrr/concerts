@@ -30,10 +30,10 @@ public class OlympiaparkService {
                 .uri("https://www.olympiapark.de/api/event-list?locale=de&phrase&eventType=konzerte&genre&startDate&endDate&sort=asc&location&limit=120&page=1")
                 .retrieve()
                 .body(String.class);
-        List<ConcertDTO> concerts = new ArrayList<>();
+        List<ConcertDTO> allConcerts = new ArrayList<>();
 
         if (result == null) {
-            return concerts;
+            return allConcerts;
         }
         JsonArray hits = JsonParser.parseString(result).getAsJsonObject()
                 .get("hits").getAsJsonArray();
@@ -54,13 +54,13 @@ public class OlympiaparkService {
             }
 
             for(LocalDate date: concertDates){
-                concerts.add(new ConcertDTO(title, date, "https://www.olympiapark.de" + link, null, location, null));
+                allConcerts.add(new ConcertDTO(title, date, "https://www.olympiapark.de" + link, null, location, null));
             }
 
         }
-        log.info("received {} {} concerts", concerts.size(), VENUE_NAME);
+        log.info("received {} {} concerts", allConcerts.size(), VENUE_NAME);
 
-        return concerts;
+        return allConcerts;
     }
 
 }

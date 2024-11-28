@@ -30,8 +30,8 @@ public class BackstageService {
 
     public List<ConcertDTO> getConcerts() {
         log.info("getting {} concerts", VENUE_NAME);
+        List<ConcertDTO> allConcerts = new ArrayList<>();
         try {
-            List<ConcertDTO> allConcerts = new ArrayList<>();
             String url = OVERVIEW_URL + ITEMS_PER_PAGE;
             int totalElements = getPages(url);
             log.debug("Backstage total elements: {}", totalElements);
@@ -50,7 +50,7 @@ public class BackstageService {
             return allConcerts;
         } catch (Exception ex) {
             log.error("exception: ", ex);
-            return List.of();
+            return allConcerts;
         }
     }
 

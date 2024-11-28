@@ -28,7 +28,7 @@
     </scm>
     <properties>
         <java.version>21</java.version>
-        <jsoup.version>1.18.1</jsoup.version>
+        <jsoup.version>1.18.2</jsoup.version>
         <sqlite-jdbc.version>3.47.1.0</sqlite-jdbc.version>
         <hibernate-community-dialects.version>6.6.3.Final</hibernate-community-dialects.version>
         <htmlcleaner.version>2.29</htmlcleaner.version>
@@ -110,6 +110,13 @@
             <artifactId>jakarta.validation-api</artifactId>
             <version>${jakarta.validation-api.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.graalvm.buildtools</groupId>
+            <artifactId>graalvm-reachability-metadata</artifactId>
+            <version>0.10.3</version>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -163,6 +170,7 @@
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
+                <version>0.10.3</version>
             </plugin>
         </plugins>
     </build>

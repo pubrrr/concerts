@@ -30,7 +30,7 @@ public class StromService {
     public List<ConcertDTO> getConcerts() {
         log.info("getting {} concerts", VENUE_NAME);
 
-        List<ConcertDTO> concerts = new ArrayList<>();
+        List<ConcertDTO> allConcerts = new ArrayList<>();
         try {
 
             Document doc = Jsoup.connect(URL).get();
@@ -58,17 +58,17 @@ public class StromService {
                     String link = JsonParser.parseString(answer).getAsJsonObject().get("permalink").getAsString();
 
                     ConcertDTO concertDTO = new ConcertDTO(title, date, link, null, VENUE_NAME, null);
-                    concerts.add(concertDTO);
+                    allConcerts.add(concertDTO);
                 }
 
             }
         } catch (Exception ex) {
             log.warn("error getting {} concerts", VENUE_NAME, ex);
-            return concerts;
+            return allConcerts;
         }
-        log.info("received {} {} concerts", concerts.size(), VENUE_NAME);
+        log.info("received {} {} concerts", allConcerts.size(), VENUE_NAME);
 
-        return concerts;
+        return allConcerts;
 
     }
 }

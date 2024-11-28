@@ -1,6 +1,7 @@
 package com.bierchitekt.concerts.venues;
 
 import com.bierchitekt.concerts.ConcertDTO;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -27,74 +28,83 @@ public class FeierwerkService {
 
     private static final String VENUE_NAME = "Feierwerk";
 
+    @PostConstruct
     public List<ConcertDTO> getConcerts() {
         log.info("getting {} concerts", VENUE_NAME);
         List<ConcertDTO> allConcerts = new ArrayList<>();
 
+        try {
+            String baseUrl = "https://www.feierwerk.de/";
+            String feierwerkDirectory = "/tmp/feierwerk/";
+            Set<String> strings = listFilesUsingJavaIO(feierwerkDirectory);
+            log.info("got {} {} pages", strings.size(), VENUE_NAME);
 
-        String baseUrl = "https://www.feierwerk.de/";
-        String feierwerkDirectory = "/tmp/feierwerk/";
-        Set<String> strings = listFilesUsingJavaIO(feierwerkDirectory);
-        log.info("downloaded {} {} pages", strings.size(), VENUE_NAME);
+            for (String file : strings) {
 
-        for (String file : strings) {
-
-            File input = new File(feierwerkDirectory + file);
-            Document doc;
-            try {
-                doc = Jsoup.parse(input, "UTF-8", "https://www.feierwerk.de/");
-            } catch (IOException e) {
-                return List.of();
-            }
-
-            Elements concerts = doc.select("div.event.cp-view");
-            for (Element concert : concerts) {
-                String title = "";
-                String concertDetail = "";
-                Element titleElement = concert.select("h2.event-artist-name").first();
-                if (titleElement != null) {
-                    concertDetail = titleElement.text();
-                } else {
-                    continue;
+                File input = new File(feierwerkDirectory + file);
+                Document doc;
+                try {
+                    doc = Jsoup.parse(input, "UTF-8", "https://www.feierwerk.de/");
+                } catch (IOException e) {
+                    return List.of();
                 }
 
-                // result: » The Peach Cans [ Funk, Disco, Jazz … | München ]
-                title = StringUtils.substringBetween(concertDetail, "»", "[").trim();
+                Elements concerts = doc.select("div.event.cp-view");
+                for (Element concert : concerts) {
+                    String title = "";
+                    String concertDetail = "";
+                    Element titleElement = concert.select("h2.event-artist-name").first();
+                    if (titleElement != null) {
+                        concertDetail = titleElement.text();
+                    } else {
+                        continue;
+                    }
 
-                String genre = StringUtils.substringBetween(concertDetail, "[", "…").trim();
+                    // result: » The Peach Cans [ Funk, Disco, Jazz … | München ]
+                    title = StringUtils.substringBetween(concertDetail, "»", "[").trim();
 
-                if (genre.contains("Illustrationen") || genre.contains("Ausstellung")|| genre.contains("Malerei")) {
-                    continue;
+                    String genre = StringUtils.substringBetween(concertDetail, "[", "…").trim();
+
+                    if (genre.contains("Illustrationen") || genre.contains("Ausstellung") || genre.contains("Malerei")) {
+                        continue;
+                    }
+
+                    Set<String> genres = Arrays.stream(genre.split(",")).collect(Collectors.toSet());
+                    String select2 = concert.select("div.event-date-location").first().text();
+                    String link = baseUrl + concert.select("a[href]").getFirst().attr("href");
+
+                    String substring = select2.substring(3, 13);
+
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                    LocalDate localDate = LocalDate.parse(substring, formatter);
+
+                    ConcertDTO concertDTO = new ConcertDTO(title, localDate, link, genres, VENUE_NAME, null);
+                    allConcerts.add(concertDTO);
                 }
 
-                Set<String> genres = Arrays.stream(genre.split(",")).collect(Collectors.toSet());
-                String select2 = concert.select("div.event-date-location").first().text();
-                String link = baseUrl + concert.select("a[href]").getFirst().attr("href");
-
-                String substring = select2.substring(3, 13);
-
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-                LocalDate localDate = LocalDate.parse(substring, formatter);
-
-                ConcertDTO concertDTO = new ConcertDTO(title, localDate, link, genres, VENUE_NAME, null);
-                allConcerts.add(concertDTO);
             }
-
+            log.info("received {} {} concerts", allConcerts.size(), VENUE_NAME);
+        } catch (Exception ex) {
+            log.warn("error getting feierwerk-concerts", ex);
+            return allConcerts;
         }
         log.info("received {} {} concerts", allConcerts.size(), VENUE_NAME);
         return allConcerts;
     }
 
     private Set<String> listFilesUsingJavaIO(String dir) {
+        File[] files = new File(dir).listFiles();
+        if (files == null || files.length == 1) {
+            log.warn("no feierwerk concerts downloaded so far, trying it now");
+        }
         return Stream.of(Objects.requireNonNull(new File(dir).listFiles()))
                 .filter(file -> !file.isDirectory())
                 .map(File::getName)
                 .collect(Collectors.toSet());
     }
 
-
     public String getPrice(String url) {
-        Document doc = null;
+        Document doc;
         try {
             doc = Jsoup.connect(url).get();
         } catch (IOException e) {
