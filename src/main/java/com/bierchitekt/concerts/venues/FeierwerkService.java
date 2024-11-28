@@ -96,6 +96,7 @@ public class FeierwerkService {
         File[] files = new File(dir).listFiles();
         if (files == null || files.length == 1) {
             log.warn("no feierwerk concerts downloaded so far, trying it now");
+            return Set.of();
         }
         return Stream.of(Objects.requireNonNull(new File(dir).listFiles()))
                 .filter(file -> !file.isDirectory())
