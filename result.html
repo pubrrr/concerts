@@ -1,0 +1,896 @@
+  <!DOCTYPE html>
+  <html lang="de">
+  <head>
+  <meta http-equiv="Content-Type"
+        content="text/html; charset=utf-8"/>
+      <title>All Concerts in munich</title>
+       <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #121212;
+          color: #e0e0e0;
+        }
+        .collapsible {
+          background-color: #000;
+          color: #ff4081;
+          cursor: pointer;
+          padding: 10px;
+          width: 100%;
+          border: none;
+          text-align: left;
+          outline: none;
+          font-size: 18px;
+        }
+        .active, .collapsible:hover {
+          background-color: #444;
+        }
+        .content {
+          padding: 0 15px;
+          display: block;
+          overflow: hidden;
+          background-color: #1e1e1e;
+        }
+        table {
+          width: 95%;
+          margin: 20px auto;
+          border-collapse: collapse;
+          background-color: #1e1e1e;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+          table-layout: fixed;  /* Ermöglicht flexiblere Darstellung der Spalten */
+        }
+        th, td {
+          padding: 12px;
+          text-align: left;
+          border-bottom: 1px solid #444;
+          white-space: normal;  /* Normaler Textumbruch */
+          overflow-wrap: break-word; /* Umbruch innerhalb der Zellen */
+        }
+        th {
+          background-color: #000;
+          color: #ff4081;
+        }
+        td:nth-child(4) { /* Preis-Spalte */
+          width: 20%; /* Feste Breite für die Preisspalte, um Platz sicherzustellen */
+          white-space: nowrap; /* Verhindert das Abschneiden des Preises */
+        }
+        tr:hover {
+          background-color: #333;
+        }
+        a {
+          color: #82b1ff;
+          text-decoration: none;
+        }
+        a:hover {
+          text-decoration: underline;
+        }
+      </style>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            var coll = document.getElementsByClassName("collapsible");
+            for (var i = 0; i < coll.length; i++) {
+              coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                  content.style.display = "none";
+                } else {
+                  content.style.display = "block";
+                }
+              });
+            }
+          });
+        </script>
+  </head>
+
+
+    Filter for Metal: <input type="checkbox" id="filterMetalCheckBox"><br>
+    Filter for Rock: <input type="checkbox" id="filterRockCheckBox"><br>
+    Filter for Punk: <input type="checkbox" id="filterPunkCheckBox"><br>
+
+    <button onclick="filterMetal()">Apply Filter</button>
+
+
+  <script >
+
+      function filterMetal() {
+
+          var checkBox = document.getElementById("filterMetalCheckBox");
+
+          const filterList = new Array();
+
+          if (document.getElementById("filterMetalCheckBox").checked == true) {
+              filterList.push("METAL")
+          }
+          if (document.getElementById("filterRockCheckBox").checked == true) {
+              filterList.push("ROCK")
+          }
+          if (document.getElementById("filterPunkCheckBox").checked == true) {
+              filterList.push("PUNK")
+          }
+
+          console.log(filterList);
+          var input, table, tr, td, i, txtValue;
+          input = document.getElementById("myInput");
+          table = document.getElementById("concertTable");
+          tr = table.getElementsByTagName("tr");
+
+
+          for (i = 0; i < tr.length; i++) {
+              tr[i].style.display = "";
+          }
+
+          if (filterList.length != 0) {
+              // Loop through all table rows, and hide those who don't match the search query
+              for (i = 0; i < tr.length; i++) {
+                  td = tr[i].getElementsByTagName("td")[2];
+                  if (td) {
+                      txtValue = td.textContent || td.innerText;
+
+                      if (txtValue.toUpperCase().indexOf(filterList[0]) > -1 || txtValue.toUpperCase().indexOf(filterList[1]) > -1 || txtValue.toUpperCase().indexOf(filterList[2]) > -1) {
+                          tr[i].style.display = "";
+                      } else {
+                          tr[i].style.display = "none";
+                      }
+
+
+
+                  }
+              }
+          }
+      }
+
+      </script>
+
+   <table id="concertTable">
+     <tr>
+        <th>Datum</th>
+        <th>Band</th>
+        <th>Genre</th>
+        <th>Location</th>
+     </tr>
+<tr>
+<td>28 November 2024</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/gianna-nannini-n4145">Gianna Nannini</a></td><td>Italian Adult Pop, Italian Pop, Classic Italian Pop</td><td>Olympiahalle</td></tr><tr>
+<td>28 November 2024</td><td><a href="https://backstage.eu/dayseeker-live-2024.html">Dayseeker - Live 2024 | Ausverkauft</a></td><td>Metalcore, Post Hardcore</td><td>Backstage Halle</td></tr><tr>
+<td>28 November 2024</td><td><a href="https://backstage.eu/jaill-tinte-tragik-tour-2024.html">Jaill - Tinte & Tragik Tour 2024</a></td><td>Rap</td><td>Backstage Club</td></tr><tr>
+<td>28 November 2024</td><td><a href="https://backstage.eu/d-a-d-live-2024.html">D-a-d - Live 2024</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>28 November 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/6912/oho-bani">$oho Bani</a></td><td>German Hip Hop</td><td>Muffathalle</td></tr><tr>
+<td>28 November 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/7009/erwin-edwin">Erwin & Edwin</a></td><td>Volkspop</td><td>Muffathalle</td></tr><tr>
+<td>28 November 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/28-11-2024_shacke-one">Shacke One</a></td><td>Rap</td><td>Feierwerk</td></tr><tr>
+<td>28 November 2024</td><td><a href="https://www.kult9.de/veranstaltung/the-komets/">The Komets</a></td><td>Pop, Indie</td><td>Kult9</td></tr><tr>
+<td>29 November 2024</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/as-i-lay-dying/">As I Lay Dying</a></td><td>Nu Metal, Metalcore, Melodic Metalcore, Christian Metal, Alternative Metal</td><td>Zenith</td></tr><tr>
+<td>29 November 2024</td><td><a href="https://strom-muc.de/event/extrabreit/">Extrabreit</a></td><td>German Rock, Neue Deutsche Welle</td><td>Strom</td></tr><tr>
+<td>29 November 2024</td><td><a href="https://backstage.eu/emo-s-not-dead-29-11-24.html">Emo´s Not Dead | 29.11.24</a></td><td>Emo Party</td><td>Backstage Club</td></tr><tr>
+<td>29 November 2024</td><td><a href="https://backstage.eu/as-i-lay-dying-through-storms-ahead-europe-2024.html">As I Lay Dying - Through Storms Ahead Europe 2024 | Abgesagt</a></td><td>Metalcore</td><td>Zenith</td></tr><tr>
+<td>29 November 2024</td><td><a href="https://backstage.eu/league-of-distortion-galvanize-tour-2024.html">League Of Distortion - Galvanize Tour 2024</a></td><td>Metal</td><td>Backstage Club</td></tr><tr>
+<td>29 November 2024</td><td><a href="https://backstage.eu/april-art-rodeo-tour-2024.html">April Art - Rodeo Tour 2024 | Ausverkauft</a></td><td>Modern Metal</td><td>Backstage Halle</td></tr><tr>
+<td>29 November 2024</td><td><a href="https://backstage.eu/ikke-huftgold-nummer-eins-live-tour-2024.html">Ikke Hüftgold - Nummer Eins - Live Tour 2024</a></td><td>Schlager</td><td>Backstage Werk</td></tr><tr>
+<td>29 November 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/6848/marsimoto">Marsimoto</a></td><td>German Reggae</td><td>Muffathalle</td></tr><tr>
+<td>29 November 2024</td><td><a href="https://theaterfabrik-muc.de/2024/01/18/sam-tompkins/">Sam Tompkins</a></td><td>Singer-songwriter Pop</td><td>Theaterfabrik</td></tr><tr>
+<td>29 November 2024</td><td><a href="https://www.kult9.de/veranstaltung/turn2ten/">Turn2Ten</a></td><td>Rock, Blues</td><td>Kult9</td></tr><tr>
+<td>30 November 2024</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/hbz/">Hbz</a></td><td>Melbourne Bounce International, Hypertechno</td><td>Zenith</td></tr><tr>
+<td>30 November 2024</td><td><a href="https://backstage.eu/the-new-roses-attracted-to-danger-tour-2024.html">The New Roses - Attracted To Danger Tour 2024</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>30 November 2024</td><td><a href="https://backstage.eu/hammerschmitt-survivors-kintsugi-live.html">Hammerschmitt Survivors - „kintsugi Live"</a></td><td></td><td>Backstage Halle</td></tr><tr>
+<td>30 November 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/30-11-2024_grunges-not-dead-nilo-crow-velorise-nilo-crow-thee-shirts">Velorise</a></td><td>Electro,  Punk,  Rock</td><td>Feierwerk</td></tr><tr>
+<td>30 November 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/30-11-2024_jan-hegenberg-jan-hegenberg">Jan Hegenberg</a></td><td>Singer*in/Songwriter*in</td><td>Feierwerk</td></tr><tr>
+<td>30 November 2024</td><td><a href="https://www.kult9.de/veranstaltung/stand-up-stacy/">Stand Up Stacy</a></td><td>Fun Punk mit feinsten Emo Core - Einflüssen</td><td>Kult9</td></tr><tr>
+<td>01 Dezember 2024</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/kreator-x-anthrax/">Kreator</a></td><td>Melodic Thrash, Old School Thrash, German Metal, Thrash Metal, Death Metal, German Thrash Metal, Speed Metal, Metal, Hard Rock</td><td>Zenith</td></tr><tr>
+<td>01 Dezember 2024</td><td><a href="https://strom-muc.de/event/damona-2/">Damona</a></td><td>Rock, Alternative, Pop Punk, German, Female Vocalists</td><td>Strom</td></tr><tr>
+<td>01 Dezember 2024</td><td><a href="https://backstage.eu/zebrahead-live-2024.html">Zebrahead - Live 2024</a></td><td>Punkrock</td><td>Backstage Werk</td></tr><tr>
+<td>01 Dezember 2024</td><td><a href="https://backstage.eu/ell-live-2024.html">Ell - Live 2024</a></td><td>Rock</td><td>Backstage Club</td></tr><tr>
+<td>01 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/6868/teho-teardo-blixa-bargeld">Teho Teardo & Blixa Bargeld</a></td><td>Italian Soundtrack</td><td>Muffathalle</td></tr><tr>
+<td>02 Dezember 2024</td><td><a href="https://backstage.eu/20tokens-european-tour-2024.html">20tokens - European Tour 2024</a></td><td>Rock</td><td>Backstage Club</td></tr><tr>
+<td>02 Dezember 2024</td><td><a href="https://backstage.eu/kishi-bashi-kantos.html">Kishi Bashi - Kantos</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>02 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/02-12-2024_amilli">Amilli</a></td><td>Soul,  Pop,  Alternative</td><td>Feierwerk</td></tr><tr>
+<td>03 Dezember 2024</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/die-antwoord/">Die Antwoord</a></td><td>South African Hip Hop, South African Alternative, African Rock</td><td>Zenith</td></tr><tr>
+<td>03 Dezember 2024</td><td><a href="https://strom-muc.de/event/hazlett/">Hazlett</a></td><td>Modern Indie Folk, Brisbane Indie</td><td>Strom</td></tr><tr>
+<td>03 Dezember 2024</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/deichkind-n4057">DEICHKIND</a></td><td>German Pop, Hamburg Hip Hop</td><td>Olympiahalle</td></tr><tr>
+<td>03 Dezember 2024</td><td><a href="https://backstage.eu/restless-road-live-2024.html">Restless Road - Live 2024</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>03 Dezember 2024</td><td><a href="https://backstage.eu/nada-surf-moon-mirror-tour.html">Nada Surf - Moon Mirror Tour</a></td><td>Alternative Rock</td><td>Backstage Werk</td></tr><tr>
+<td>03 Dezember 2024</td><td><a href="https://backstage.eu/gong-universal-ascension-24.html">Gong - Universal Ascension 24</a></td><td>Progressive Rock</td><td>Backstage Club</td></tr><tr>
+<td>03 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/6753/deichkind">Deichkind</a></td><td>German Pop, Hamburg Hip Hop</td><td>Muffathalle</td></tr><tr>
+<td>03 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/7102/bunt">BUNT.</a></td><td>Stutter House</td><td>Muffathalle</td></tr><tr>
+<td>03 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/03-12-2024_workshop-booking-fuer-musiker-innen-alessa-patzer">Alessa Patzer</a></td><td>Workshops,  Fortbildung</td><td>Feierwerk</td></tr><tr>
+<td>03 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/03-12-2024_the-virginmarys">The Virginmarys</a></td><td>Rock</td><td>Feierwerk</td></tr><tr>
+<td>04 Dezember 2024</td><td><a href="https://strom-muc.de/event/gewalt/">Gewalt</a></td><td>Industrial, Noise, Seen Live, Noise Rock, Post-punk</td><td>Strom</td></tr><tr>
+<td>04 Dezember 2024</td><td><a href="https://backstage.eu/jag-panzer-40-years-of-destruction.html">Jag Panzer – 40 Years Of Destruction</a></td><td>Powermetal</td><td>Backstage Club</td></tr><tr>
+<td>04 Dezember 2024</td><td><a href="https://backstage.eu/wheel-europe-tour-2024.html">Wheel - Europe Tour 2024</a></td><td>Prog Metal</td><td>Backstage Halle</td></tr><tr>
+<td>04 Dezember 2024</td><td><a href="https://backstage.eu/donots-30-jahre-tour-grand-birthday-slam-04-12-24.html">Donots - 30 Jahre-tour: Grand Birthday Slams | 04.12.24</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>04 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/7068/bunt">BUNT.</a></td><td>Stutter House</td><td>Muffathalle</td></tr><tr>
+<td>04 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/04-12-2024_kanii">Kanii</a></td><td>Rap,  HipHop,  Emo</td><td>Feierwerk</td></tr><tr>
+<td>04 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/04-12-2024_worm-und-ante-inferno-worm-ante-inferno">Ante-Inferno</a></td><td>Heavy Metal</td><td>Feierwerk</td></tr><tr>
+<td>04 Dezember 2024</td><td><a href="https://theaterfabrik-muc.de/2024/01/19/victor-ray/">Victor Ray</a></td><td>Pop, Soul, Singer-songwriter, Folk, Seen Live</td><td>Theaterfabrik</td></tr><tr>
+<td>05 Dezember 2024</td><td><a href="https://strom-muc.de/event/seelemann/">Seelemann</a></td><td>German Pop</td><td>Strom</td></tr><tr>
+<td>05 Dezember 2024</td><td><a href="https://backstage.eu/thornhill-live-2024.html">Thornhill - Live 2024</a></td><td>Metalcore</td><td>Backstage Halle</td></tr><tr>
+<td>05 Dezember 2024</td><td><a href="https://backstage.eu/elias-verlieren-gefunden-tour-2024.html">Elias - Verlieren / Gefunden Tour 2024</a></td><td></td><td>Backstage Club</td></tr><tr>
+<td>05 Dezember 2024</td><td><a href="https://backstage.eu/donots-30-jahre-tour-grand-birthday-slam-05-12-24.html">Donots - 30 Jahre-tour: Grand Birthday Slams | 05.12.24</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>05 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/05-12-2024_relativ-rapid">Relativ Rapid</a></td><td>Ska</td><td>Feierwerk</td></tr><tr>
+<td>05 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/05-12-2024_zombiez">Zombiez</a></td><td>Rap,  HipHop</td><td>Feierwerk</td></tr><tr>
+<td>06 Dezember 2024</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/hardshift-festival-2024/">Hardshift Festival 2024</a></td><td>Hypertechno</td><td>Zenith</td></tr><tr>
+<td>06 Dezember 2024</td><td><a href="https://strom-muc.de/event/friedberg/">Friedberg</a></td><td>Austrian Indie</td><td>Strom</td></tr><tr>
+<td>06 Dezember 2024</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/night-of-the-proms-n4588">Night of the Proms</a></td><td>Swwg, Classical</td><td>Olympiahalle</td></tr><tr>
+<td>06 Dezember 2024</td><td><a href="https://backstage.eu/siberian-meat-grinder-live-2024.html">Siberian Meat Grinder - Live 2024</a></td><td>Crossover / Thrash Metal</td><td>Backstage Club</td></tr><tr>
+<td>06 Dezember 2024</td><td><a href="https://backstage.eu/jammin-on-friday-w-special-guest-tasheeno.html">Jammin On Friday W/ Special Guest: Tasheeno</a></td><td>EAD</td><td>Backstage Club</td></tr><tr>
+<td>06 Dezember 2024</td><td><a href="https://backstage.eu/role-model-live-2024.html">Role Model - Live 2024 | Ausverkauft</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>06 Dezember 2024</td><td><a href="https://backstage.eu/blues-pills-live-2024.html">Blues Pills - Live 2024</a></td><td>Rock, Blues</td><td>Backstage Halle</td></tr><tr>
+<td>06 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/06-12-2024_delving-delving">Delving</a></td><td>Krautrock,  Progressive</td><td>Feierwerk</td></tr><tr>
+<td>06 Dezember 2024</td><td><a href="https://theaterfabrik-muc.de/2024/01/19/f4t0ni-und-sehr-spezielle-gaeste-40-jahre-f4toni/">F4t0ni Und Sehr Spezielle Gäste</a></td><td>Hoerspiel, Kleine Hoerspiel</td><td>Theaterfabrik</td></tr><tr>
+<td>06 Dezember 2024</td><td><a href="https://backstage.eu/blues-pills-live-2024.html">Blues Pills - Live 2024 | Ausverkauft</a></td><td>Rock, Blues</td><td>Backstage Halle</td></tr><tr>
+<td>07 Dezember 2024</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/contact-festival-2024/">Contact Festival 2024</a></td><td>Pop Dance, Hypertechno</td><td>Zenith</td></tr><tr>
+<td>07 Dezember 2024</td><td><a href="https://strom-muc.de/event/mambo-kurt-6/">Mambo Kurt</a></td><td>Comic</td><td>Strom</td></tr><tr>
+<td>07 Dezember 2024</td><td><a href="https://backstage.eu/neverland-in-ashes-live-on-the-horizon-2024.html">Neverland In Ashes - Live On The Horizon 2024</a></td><td>Metal</td><td>Backstage Club</td></tr><tr>
+<td>07 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/6991/mal-eleve">Mal Élevé</a></td><td>German Alternative Rap, German Reggae</td><td>Muffathalle</td></tr><tr>
+<td>07 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/6970/blackout-problems">Blackout Problems</a></td><td>German Alternative Rock, German Rock, Modern Alternative Rock, German Punk Rock, Munich Indie</td><td>Muffathalle</td></tr><tr>
+<td>07 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/7010/whitey-en-vogue">Whitey en Vogue</a></td><td>Done, Added My Own Pics</td><td>Muffathalle</td></tr><tr>
+<td>07 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/07-12-2024_slamdamn-slamndamn-the-raw-deals-bale">Slamndamn</a></td><td>Hardcore</td><td>Feierwerk</td></tr><tr>
+<td>07 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/07-12-2024_dubtown-iundi-dubwise-soundsystem">I&I Dubwise Soundsystem</a></td><td>Dub</td><td>Feierwerk</td></tr><tr>
+<td>07 Dezember 2024</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/night-of-the-proms-n4588">Night of the Proms</a></td><td>Swwg, Classical</td><td>Olympiahalle</td></tr><tr>
+<td>08 Dezember 2024</td><td><a href="https://backstage.eu/ignite-slapshot-europe-30th-anniversary-tour.html">Ignite + Slapshot - Europe • 30th Anniversary Tour</a></td><td>Alternative Rock</td><td>Backstage Halle</td></tr><tr>
+<td>08 Dezember 2024</td><td><a href="https://backstage.eu/lizzard-live-2024.html">Lizzard - Live 2024</a></td><td>Art Rock</td><td>Backstage Club</td></tr><tr>
+<td>08 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/6840/florian-paul-die-kapelle-der-letzten-hoffnung">Florian Paul & die Kapelle der letzten Hoffnung</a></td><td></td><td>Muffathalle</td></tr><tr>
+<td>08 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/6995/phil-siemers">Phil Siemers</a></td><td></td><td>Muffathalle</td></tr><tr>
+<td>08 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/7199/jersey">Jersey</a></td><td>Indie, Rock, Punk, Seen Live, Punk Rock</td><td>Muffathalle</td></tr><tr>
+<td>08 Dezember 2024</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/night-of-the-proms-n4588">Night of the Proms</a></td><td>Swwg, Classical</td><td>Olympiahalle</td></tr><tr>
+<td>09 Dezember 2024</td><td><a href="https://strom-muc.de/event/j-bernardt/">J. Bernardt</a></td><td>Belgian Pop</td><td>Strom</td></tr><tr>
+<td>09 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/6889/nik-kershaw">Nik Kershaw</a></td><td>New Wave Pop, New Wave, New Romantic</td><td>Muffathalle</td></tr><tr>
+<td>10 Dezember 2024</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/the-script-3/">The Script</a></td><td>Pop, Celtic Rock</td><td>Zenith</td></tr><tr>
+<td>10 Dezember 2024</td><td><a href="https://strom-muc.de/event/the-tchik/">The Tchik</a></td><td>German Punk, Elektropunk</td><td>Strom</td></tr><tr>
+<td>10 Dezember 2024</td><td><a href="https://backstage.eu/evergrey-emptiness-over-europe-tour-2024.html">Evergrey - Emptiness Over Europe Tour 2024</a></td><td>Progressive Metal</td><td>Backstage Halle</td></tr><tr>
+<td>10 Dezember 2024</td><td><a href="https://backstage.eu/dying-fetus-european-tour-fall-2024.html">Dying Fetus - European Tour Fall 2024</a></td><td>Death Metal</td><td>Backstage Werk</td></tr><tr>
+<td>10 Dezember 2024</td><td><a href="https://backstage.eu/rrotzer-dumme-ideen-tour-2024.html">Rrotzer - Dumme Ideen Tour 2024</a></td><td>Pop</td><td>Backstage Club</td></tr><tr>
+<td>10 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/6828/moses-pelham">Moses Pelham</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>10 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/6934/revelle">Revelle</a></td><td>German Pop, German Singer-songwriter</td><td>Muffathalle</td></tr><tr>
+<td>10 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/10-12-2024_domiziana-domiziana">Domiziana</a></td><td>Pop</td><td>Feierwerk</td></tr><tr>
+<td>11 Dezember 2024</td><td><a href="https://strom-muc.de/event/donkey-kid/">Donkey Kid</a></td><td>Neue Neue Deutsche Welle</td><td>Strom</td></tr><tr>
+<td>11 Dezember 2024</td><td><a href="https://backstage.eu/terror-live-2024.html">Terror - Europeantour 2024</a></td><td>Hardcore</td><td>Backstage Werk</td></tr><tr>
+<td>12 Dezember 2024</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/laura-pausini-n4187">Laura Pausini</a></td><td>Italian Adult Pop, Mexican Pop, Europop, Latin Arena Pop</td><td>Olympiahalle</td></tr><tr>
+<td>12 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/12-12-2024_brezel-goering-brezel-goering-und-psychoanalyse">Brezel Göring & Psychoanalyse</a></td><td>Indie,  Alternative</td><td>Feierwerk</td></tr><tr>
+<td>12 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/12-12-2024_aaron-zusatzshow-aaron">Aaron</a></td><td>Pop,  HipHop</td><td>Feierwerk</td></tr><tr>
+<td>12 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/12-12-2024_brkn">BRKN</a></td><td>Rap,  R 'n' B,  Soul</td><td>Feierwerk</td></tr><tr>
+<td>13 Dezember 2024</td><td><a href="https://strom-muc.de/event/poebel-mc/">Pöbel Mc</a></td><td>German Alternative Rap, Antideutsche</td><td>Strom</td></tr><tr>
+<td>13 Dezember 2024</td><td><a href="https://backstage.eu/dondon-live-2024.html">Dondon - Live 2024</a></td><td>Pop</td><td>Backstage Halle</td></tr><tr>
+<td>13 Dezember 2024</td><td><a href="https://backstage.eu/boppin-b-live-2024.html">Boppin`b - Live 2024</a></td><td>Rock, Punk, Ska</td><td>Backstage Club</td></tr><tr>
+<td>13 Dezember 2024</td><td><a href="https://backstage.eu/future-palace-european-tour-2024.html">Future Palace - "europe/uk Headline" Tour 2024</a></td><td>Post Hardcore</td><td>Backstage Werk</td></tr><tr>
+<td>13 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/13-12-2024_konzertfotografie-mit-itje-kleinert">Käthe deKoe</a></td><td>Workshops</td><td>Feierwerk</td></tr><tr>
+<td>13 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/13-12-2024_sprungbrett-finale-netzwerk-pew-pew-alice-popcorn-molecule-mirabelle-rose">Mirabelle Rose</a></td><td>Singer*in/Songwriter*in</td><td>Feierwerk</td></tr><tr>
+<td>13 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/13-12-2024_eisbach-callin-miso-noise-colors-turdbaby-weiky-mc-treasure-irie">Miso</a></td><td>Drum 'n' Bass,  Jungle</td><td>Feierwerk</td></tr><tr>
+<td>13 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/13-12-2024_aaron-curfew-22uhr">Aaron</a></td><td>Pop,  HipHop</td><td>Feierwerk</td></tr><tr>
+<td>13 Dezember 2024</td><td><a href="https://www.kult9.de/veranstaltung/dadgad/">DADGAD</a></td><td>Noise-Rock</td><td>Kult9</td></tr><tr>
+<td>14 Dezember 2024</td><td><a href="https://strom-muc.de/event/matija/">Matija</a></td><td>Munich Indie, German Indie Rock</td><td>Strom</td></tr><tr>
+<td>14 Dezember 2024</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/tream-n4143">Tream</a></td><td>Techno Remix</td><td>Olympiahalle</td></tr><tr>
+<td>14 Dezember 2024</td><td><a href="https://backstage.eu/curse-unzerstorbarer-sommer-tour-2024-25.html">Curse - Unzerstörbarer Sommer - Tour 2024/25</a></td><td>Rap</td><td>Backstage Werk</td></tr><tr>
+<td>14 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/7205/wavvyboi">wavvyboi</a></td><td>Liechtenstein, German Hyperpop</td><td>Muffathalle</td></tr><tr>
+<td>14 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/14-12-2024_omega-dub-circle-sistah-sheeba-mc-treasure-irie-siren-sisters-soundsystem">Sistah Sheeba</a></td><td>Dub</td><td>Feierwerk</td></tr><tr>
+<td>14 Dezember 2024</td><td><a href="https://www.kult9.de/veranstaltung/humming-people/">humming people</a></td><td>Pop, Folk</td><td>Kult9</td></tr><tr>
+<td>15 Dezember 2024</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/jazeek/">Jazeek</a></td><td>German Hip Hop</td><td>Zenith</td></tr><tr>
+<td>15 Dezember 2024</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/die-fantastischen-vier-n4046">Die Fantastischen Vier</a></td><td>German Rock, Oldschool Deutschrap, German Pop</td><td>Olympiahalle</td></tr><tr>
+<td>15 Dezember 2024</td><td><a href="https://backstage.eu/berq-live-2024.html">Berq - Live 2024</a></td><td>Pop</td><td>Backstage Werk</td></tr><tr>
+<td>16 Dezember 2024</td><td><a href="https://backstage.eu/miss-may-i-eu-uk-tour-2024.html">Miss May I - Eu/uk Tour 2024</a></td><td>Metalcore</td><td>Backstage Halle</td></tr><tr>
+<td>17 Dezember 2024</td><td><a href="https://backstage.eu/mavi-gri-mavi-gri-europe-tour.html">Mavi Gri - Mavi Gri Europe Tour</a></td><td>Pop, Rock</td><td>Backstage Club</td></tr><tr>
+<td>17 Dezember 2024</td><td><a href="https://backstage.eu/peter-and-the-test-tube-babies-dead-rock-stars-vol-2-tour-2024.html">Peter And The Test Tube Babies - "life Of Peter Tour 2024"</a></td><td>Punkrock</td><td>Backstage Werk</td></tr><tr>
+<td>19 Dezember 2024</td><td><a href="https://strom-muc.de/event/akne-kid-joe/">Akne Kid Joe</a></td><td>German Punk Rock, German Punk</td><td>Strom</td></tr><tr>
+<td>19 Dezember 2024</td><td><a href="https://backstage.eu/fit-for-an-autopsy-live-2024.html">Fit For An Autopsy - Live 2024</a></td><td>Deathcore</td><td>Backstage Werk</td></tr><tr>
+<td>19 Dezember 2024</td><td><a href="https://backstage.eu/esta-yacht-mit-deinem-namen-tour-2024.html">Esta - Yacht Mit Deinem Namen Tour 2024</a></td><td>Rap</td><td>Backstage Club</td></tr><tr>
+<td>19 Dezember 2024</td><td><a href="https://backstage.eu/faroon-revenge-tour-2024.html">Faroon - Revenge Tour 2024 | Verlegt Auf Den 19.12.24</a></td><td>Rap</td><td>Backstage Halle</td></tr><tr>
+<td>19 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/7115/samsemilia-feat-sonnyjim">Samsemilia feat. Sonnyjim</a></td><td></td><td>Muffathalle</td></tr><tr>
+<td>19 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/19-12-2024_en60-und-skrt-cobain-skrt-cobain-und-en6o">Skrt Cobain & En6O</a></td><td>Rap,  HipHop,  Cloud-Rap</td><td>Feierwerk</td></tr><tr>
+<td>19 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/19-12-2024_black-rat-concerts-modfaelld-gleitsicht-uschi">Modfälld</a></td><td>Black Metal</td><td>Feierwerk</td></tr><tr>
+<td>20 Dezember 2024</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/trettmann-2/">Trettmann</a></td><td>German Cloud Rap, German Hip Hop, Hamburg Hip Hop</td><td>Zenith</td></tr><tr>
+<td>20 Dezember 2024</td><td><a href="https://strom-muc.de/event/the-whiskey-foundation/">The Whiskey Foundation</a></td><td>Munich Indie</td><td>Strom</td></tr><tr>
+<td>20 Dezember 2024</td><td><a href="https://backstage.eu/erdmobel-weihnachtstour-2024.html">Erdmöbel - Weihnachtstour 2024</a></td><td>Rock, Indie</td><td>Backstage Halle</td></tr><tr>
+<td>20 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/7283/duman">Duman</a></td><td>Karadeniz Turkuleri, Turkish Alternative Rock, Turkish Rock, Anadolu Rock, Turkish Alternative</td><td>Muffathalle</td></tr><tr>
+<td>20 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/20-12-2024_break-it-down-casco-zebster-sy-kiq-nerf-kit-curse-cruel-culture">Casco</a></td><td>Drum 'n' Bass</td><td>Feierwerk</td></tr><tr>
+<td>21 Dezember 2024</td><td><a href="https://backstage.eu/26-schalldruck-festival-metal-core-21-12-24.html">26. Schalldruck Festival (metal & Core) | 21.12.24</a></td><td>Metal</td><td>Backstage Halle</td></tr><tr>
+<td>21 Dezember 2024</td><td><a href="https://backstage.eu/dailysoap-the-final-show.html">Dailysoap - The Final Show</a></td><td>Punkrock</td><td>Backstage Club</td></tr><tr>
+<td>21 Dezember 2024</td><td><a href="https://backstage.eu/emil-bulls-xmas-bash-2024.html">Emil Bulls - Xmas Bash 2024 | Ausverkauft</a></td><td>Rock, Metal</td><td>Backstage Werk</td></tr><tr>
+<td>21 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/7007/sondaschule">Sondaschule</a></td><td>German Ska, German Punk Rock, German Punk, Antideutsche</td><td>Muffathalle</td></tr><tr>
+<td>21 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/21-12-2024_necrosabbat-ritual">Death Racer</a></td><td>Metal</td><td>Feierwerk</td></tr><tr>
+<td>21 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/21-12-2024_schlecht-und-schwindlig-agent-alert-kollateralschaden-all-my-hate-for">Agent Alert</a></td><td>Postpunk</td><td>Feierwerk</td></tr><tr>
+<td>22 Dezember 2024</td><td><a href="https://backstage.eu/ferris-mc-dj-stylewarz-mortal-comeback-tour-2024.html">Ferris Mc & Dj Stylewarz - Mortal Comeback Tour 2024</a></td><td>HipHop</td><td>Backstage Halle</td></tr><tr>
+<td>22 Dezember 2024</td><td><a href="https://backstage.eu/doro-winter-tour-2024.html">Doro - Conqueress - Forever Strong And Proud</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>23 Dezember 2024</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/wir-singen-n4587">"Wir singen"</a></td><td></td><td>Olympiahalle</td></tr><tr>
+<td>27 Dezember 2024</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/in-extremo-3/">In Extremo</a></td><td>German Metal, Neue Deutsche Harte, Hurdy-gurdy, Medieval Rock, Folk Metal</td><td>Zenith</td></tr><tr>
+<td>27 Dezember 2024</td><td><a href="https://backstage.eu/turbokill-a-fistful-of-teutonic-metal.html">Turbokill - A Fistful Of Teutonic Metal</a></td><td>Metal</td><td>Backstage Club</td></tr><tr>
+<td>27 Dezember 2024</td><td><a href="https://backstage.eu/dominum-majestica-hammer-king-the-dead-don-t-die-tour.html">Dominum + Majestica + Hammer King - The Dead Don't Die Tour</a></td><td>Metal</td><td>Backstage Halle</td></tr><tr>
+<td>27 Dezember 2024</td><td><a href="https://www.muffatwerk.de//de/events/view/7025/monobo-son">Monobo Son</a></td><td>Volkspop</td><td>Muffathalle</td></tr><tr>
+<td>27 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/27-12-2024_sacred-bones-dj-xray-frankit-dj-stefan-robota">DJ Xray Frankit</a></td><td>Wave,  Postpunk</td><td>Feierwerk</td></tr><tr>
+<td>28 Dezember 2024</td><td><a href="https://backstage.eu/blackened-halo-a-nightmare-after-christmas.html">Blackened Halo - A Nightmare After Christmas</a></td><td>Metal</td><td>Backstage Club</td></tr><tr>
+<td>28 Dezember 2024</td><td><a href="https://backstage.eu/fall-of-man-2024.html">Fall Of Man 2024</a></td><td>Metal</td><td>Backstage Halle</td></tr><tr>
+<td>28 Dezember 2024</td><td><a href="https://backstage.eu/the-rock-n-roll-wrestling-bash-2024.html">The Rock `n´ Roll Wrestling Bash 2024</a></td><td>Trash Wrestling</td><td>Backstage Werk</td></tr><tr>
+<td>28 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/28-12-2024_colour-haze-30-jahre-rotor-colour-haze">Colour Haze</a></td><td> Rock, Psychedelic</td><td>Feierwerk</td></tr><tr>
+<td>28 Dezember 2024</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/28-12-2024_colour-haze-30-jahre-jellyfish-kebap-swan-valley-heights-carpet">Jellyfish Kebap</a></td><td>Psychedelic</td><td>Feierwerk</td></tr><tr>
+<td>29 Dezember 2024</td><td><a href="https://backstage.eu/anomalie-live-2024.html">Anomalie - Live 2024</a></td><td>Black Metal</td><td>Backstage Halle</td></tr><tr>
+<td>31 Dezember 2024</td><td><a href="https://backstage.eu/call-the-cops-inkl-fuck-off-2024-silvester-party.html">Call The Cops Inkl. Fuck Off 2024 Silvester Party</a></td><td>Punk</td><td>Backstage Club</td></tr><tr>
+<td>31 Dezember 2024</td><td><a href="https://backstage.eu/fuck-off-2024-die-silvester-all-area-party-im-backstage.html">Fuck Off 2024 - Die Silvester All Area Party Im Backstage</a></td><td>Silvesterparty</td><td>Backstage All Area</td></tr><tr>
+<td>03 Januar 2025</td><td><a href="https://backstage.eu/liver-of-a-duck-live-2024.html">Liver Of A Duck - Live 2024</a></td><td>Heavy Metal</td><td>Backstage Club</td></tr><tr>
+<td>04 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7298/muffat-winterfest">Muffat Winterfest</a></td><td>German Hip Hop</td><td>Muffathalle</td></tr><tr>
+<td>04 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/04-01-2025_dubtown">I&I Dubwise Soundsystem</a></td><td>Dub</td><td>Feierwerk</td></tr><tr>
+<td>07 Januar 2025</td><td><a href="https://backstage.eu/canozan-live-in-munchen.html">Canozan - Live In München</a></td><td>pop</td><td>Backstage Werk</td></tr><tr>
+<td>08 Januar 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/der-konig-der-lowen-n4399">Der König der Löwen</a></td><td>Kleine Hoerspiel</td><td>Kleine Olympiahalle</td></tr><tr>
+<td>09 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7134/lucifer-xo">Lucifer Xo</a></td><td>German Trap</td><td>Muffathalle</td></tr><tr>
+<td>10 Januar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/antilopen-gang/">Antilopen Gang</a></td><td>German Alternative Rap, Antideutsche</td><td>Zenith</td></tr><tr>
+<td>10 Januar 2025</td><td><a href="https://backstage.eu/blitz-union-hello-hello-my-name-is-tour.html">Blitz Union - Hello Hello My Name Is Tour</a></td><td>EDM Rock</td><td>Backstage Club</td></tr><tr>
+<td>10 Januar 2025</td><td><a href="https://backstage.eu/talco-20th-anniversary-34-jahre-backstage.html">Talco - 20th Anniversary | 34 Jahre Backstage</a></td><td>SKA Punk</td><td>Backstage Werk</td></tr><tr>
+<td>10 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/10-01-2025_chaos-blast-sucking-leech-loudanum-system-collapse">Sucking leech</a></td><td>Grindcore,  Hardcore</td><td>Feierwerk</td></tr><tr>
+<td>11 Januar 2025</td><td><a href="https://backstage.eu/end-of-green-live-2025.html">End Of Green - Live 2025</a></td><td>Dark Rock</td><td>Backstage Werk</td></tr><tr>
+<td>11 Januar 2025</td><td><a href="https://backstage.eu/bluekilla-34-jahre-backstage.html">Bluekilla | 34 Jahre Backstage</a></td><td>Ska</td><td>Backstage Halle</td></tr><tr>
+<td>11 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/11-01-2025_riddim-disco-the-mighty-tip-a-tone-hi-fi">The Mighty Tip-A-Tone Hi-Fi</a></td><td>Ska,  Dub,  Rootsreggae</td><td>Feierwerk</td></tr><tr>
+<td>16 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/16-01-2025_black-rat">no GAIN no PAIN</a></td><td>Noise,  Punk</td><td>Feierwerk</td></tr><tr>
+<td>17 Januar 2025</td><td><a href="https://strom-muc.de/event/elvana/">Elvana</a></td><td>Albanian Pop</td><td>Strom</td></tr><tr>
+<td>17 Januar 2025</td><td><a href="https://backstage.eu/iq-zero-album-release.html">Iq Zero – Album Release</a></td><td>Punkrock</td><td>Backstage Club</td></tr><tr>
+<td>17 Januar 2025</td><td><a href="https://backstage.eu/dark-funeral-let-the-devil-in-european-winter-tour-2025.html">Dark Funeral - Let The Devil In European Winter Tour 2025</a></td><td>Black Metal</td><td>Backstage Werk</td></tr><tr>
+<td>17 Januar 2025</td><td><a href="https://backstage.eu/grave-digger-45th-anniversary-tour-2025.html">Grave Digger - 45th Anniversary Tour 2025</a></td><td>Heavy Metal</td><td>Backstage Halle</td></tr><tr>
+<td>17 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7021/babyjoy">Babyjoy</a></td><td>Frauenrap</td><td>Muffathalle</td></tr><tr>
+<td>17 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7338/dedublueman">Dedublüman</a></td><td>Turkce Slow Sarkilar</td><td>Muffathalle</td></tr><tr>
+<td>18 Januar 2025</td><td><a href="https://strom-muc.de/event/1328/">1328</a></td><td>Hardcore, Rock N Roll, Punk, Seen Live, Punk Rock</td><td>Strom</td></tr><tr>
+<td>18 Januar 2025</td><td><a href="https://backstage.eu/punchfest-2025-apron.html">Punchfest 2025 - Apron</a></td><td></td><td>Backstage Halle</td></tr><tr>
+<td>18 Januar 2025</td><td><a href="https://backstage.eu/schreyner-monsters-of-rock-tour-2025.html">Schreyner - Monsters Of Rock - Tour 2025</a></td><td>Rock</td><td>Backstage Club</td></tr><tr>
+<td>18 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/18-01-2025_chaos-blast-meating-howls-from-above-acid-mammoth-dopelord-endonomos-hidas-thronehammer-tons">DOPELORD</a></td><td>Doom</td><td>Feierwerk</td></tr><tr>
+<td>18 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/18-01-2025_feierwerk-sessions-bunte-raben-leva-brucklyn">Leva</a></td><td>Singer*in/Songwriter*in</td><td>Feierwerk</td></tr><tr>
+<td>19 Januar 2025</td><td><a href="https://backstage.eu/gutalax-15th-anniversary-tour-2024.html">Gutalax - 15th Anniversary Tour 2025 | Verlegt Auf Den 19.01.25</a></td><td>Gore 'n' Roll</td><td>Backstage Werk</td></tr><tr>
+<td>19 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/6979/he-ro">HE/RO</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>20 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7085/wishbone-ash">Wishbone Ash</a></td><td>British Blues, Progressive Rock, Blues Rock, Symphonic Rock</td><td>Muffathalle</td></tr><tr>
+<td>21 Januar 2025</td><td><a href="https://backstage.eu/jiggo-love-language-tour-2025.html">Jiggo - Love Language Tour 2025</a></td><td>Rap</td><td>Backstage Club</td></tr><tr>
+<td>21 Januar 2025</td><td><a href="https://backstage.eu/kublai-khan-tx-europe-uk-tour-2025.html">Kublai Khan Tx - Europe & Uk Tour 2025</a></td><td>Hardcore Punk</td><td>Backstage Halle</td></tr><tr>
+<td>21 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/21-01-2025_carlo5">Carlo5</a></td><td>HipHop,  Rap</td><td>Feierwerk</td></tr><tr>
+<td>21 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/21-01-2025_mike-masse-mike-masse">Mike Massé</a></td><td>Rock</td><td>Feierwerk</td></tr><tr>
+<td>22 Januar 2025</td><td><a href="https://strom-muc.de/event/wage-war/">Wage War</a></td><td>Metalcore, Melodic Metalcore</td><td>Strom</td></tr><tr>
+<td>22 Januar 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/andr-rieu-n4412">André Rieu</a></td><td>Easy Listening, Pop Violin, Operatic Pop</td><td>Olympiahalle</td></tr><tr>
+<td>22 Januar 2025</td><td><a href="https://backstage.eu/chuck-ragan-the-camaraderie-live-2025.html">Chuck Ragan & The Camaraderie - Love & Lore-tour 2025</a></td><td>Folk Rock</td><td>Backstage Halle</td></tr><tr>
+<td>22 Januar 2025</td><td><a href="https://backstage.eu/venues-transience-tour.html">Venues - Transience Tour</a></td><td>Metalcore</td><td>Backstage Club</td></tr><tr>
+<td>22 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/22-01-2025_luana">Luana</a></td><td>Pop</td><td>Feierwerk</td></tr><tr>
+<td>23 Januar 2025</td><td><a href="https://backstage.eu/die-herren-wesselsky-heute-schon-gelebt-tour-2025.html">Die Herren Wesselsky - Heute Schon Gelebt? - Tour 2025</a></td><td>NDH, Rock, Metal</td><td>Backstage Halle</td></tr><tr>
+<td>23 Januar 2025</td><td><a href="https://backstage.eu/transmission-the-sound-of-joy-division-23-01-25.html">Transmission - The Sound Of Joy Division | 23.01.25</a></td><td>Synth Pop</td><td>Backstage Club</td></tr><tr>
+<td>23 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7318/munich-rocks-fun-for-free">Munich Rocks! – Fun For Free</a></td><td>Classic Schlager, German Rock, Neue Deutsche Welle, Ostrock, Schlager, German Pop, German Pop Rock, Austropop</td><td>Muffathalle</td></tr><tr>
+<td>23 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/23-01-2025_rosmarin">rosmarin</a></td><td>Indie,  Funk</td><td>Feierwerk</td></tr><tr>
+<td>23 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/23-01-2025_ramkot">Ramkot</a></td><td>Rock</td><td>Feierwerk</td></tr><tr>
+<td>24 Januar 2025</td><td><a href="https://strom-muc.de/event/efterklang/">Efterklang</a></td><td>Danish Indie, Danish Alternative Rock</td><td>Strom</td></tr><tr>
+<td>24 Januar 2025</td><td><a href="https://backstage.eu/gotz-widmann-blutenduft-tour.html">Götz Widmann - „blütenduft“ Tour</a></td><td>Liedermacher</td><td>Backstage Club</td></tr><tr>
+<td>24 Januar 2025</td><td><a href="https://backstage.eu/the-butcher-sisters-the-great-music-band-tour-2025.html">The Butcher Sisters - The Great Music Band Tour 2025</a></td><td>Rap</td><td>Backstage Werk</td></tr><tr>
+<td>24 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/6805/jan-boehmermann-das-rundfunk-tanzorchester-ehrenfeld">Jan Böhmermann & Das Rundfunk Tanzorchester Ehrenfeld</a></td><td></td><td>Muffathalle</td></tr><tr>
+<td>24 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7303/delinquent-habits">Delinquent Habits</a></td><td>Chicano Rap</td><td>Muffathalle</td></tr><tr>
+<td>24 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/24-01-2025_siamese-siamese-chaosbay-blackgold">Siamese</a></td><td> Metalcore, Metal</td><td>Feierwerk</td></tr><tr>
+<td>24 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/24-01-2025_thrash-inferno">Warrant</a></td><td>Speedmetal,  Thrash Metal</td><td>Feierwerk</td></tr><tr>
+<td>25 Januar 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/alligatoah-n4234">Alligatoah</a></td><td>German Pop</td><td>Olympiahalle</td></tr><tr>
+<td>25 Januar 2025</td><td><a href="https://backstage.eu/paganfest-2025.html">Paganfest 2025 | Ausverkauft</a></td><td>Rock, Pagan, Metal</td><td>Backstage Werk</td></tr><tr>
+<td>25 Januar 2025</td><td><a href="https://backstage.eu/xwave-tour-der-triaden-2025.html">Xwave - Tour Der Triaden 2025</a></td><td>HipHop</td><td>Backstage Halle</td></tr><tr>
+<td>25 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7159/kamrad">Kamrad</a></td><td>German Indie Folk</td><td>Muffathalle</td></tr><tr>
+<td>25 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7170/shazalakazoo">ShazaLaKazoo</a></td><td>Balkan Beats</td><td>Muffathalle</td></tr><tr>
+<td>25 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/25-01-2025_tempel-festival-swan-valley-heights-robo-raging-sloth-monomanic-sundog-miss-mellow">Swan Valley Heights</a></td><td> Psychedelic, Stonerrock</td><td>Feierwerk</td></tr><tr>
+<td>27 Januar 2025</td><td><a href="https://backstage.eu/insomnium-shadows-of-the-dying-sun-10th-anniversary-tour.html">Insomnium - Shadows Of The Dying Sun 10th Anniversary Tour</a></td><td>Metal</td><td>Backstage Werk</td></tr><tr>
+<td>28 Januar 2025</td><td><a href="https://strom-muc.de/event/zero-936/">Zero 9:36</a></td><td>Rap, Rock, Alternative, Electronic, Rapcore</td><td>Strom</td></tr><tr>
+<td>28 Januar 2025</td><td><a href="https://backstage.eu/dope-d-o-d-europe-tour.html">Dope D.o.d - Europe Tour</a></td><td>HipHop</td><td>Backstage Club</td></tr><tr>
+<td>28 Januar 2025</td><td><a href="https://backstage.eu/nightmare-the-world-tour.html">Nightmare - The World Tour</a></td><td>Visual-Kei</td><td>Backstage Halle</td></tr><tr>
+<td>28 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7082/johnossi">Johnossi</a></td><td>Swedish Alternative Rock, Swedish Indie Rock</td><td>Muffathalle</td></tr><tr>
+<td>29 Januar 2025</td><td><a href="https://backstage.eu/touche-amore-live-2025.html">Touché Amoré - Live 2025</a></td><td>Post Hardcore</td><td>Backstage Halle</td></tr><tr>
+<td>30 Januar 2025</td><td><a href="https://backstage.eu/bonfire-40-jahre-bonfire.html">Bonfire - "40 Jahre Bonfire"</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>30 Januar 2025</td><td><a href="https://backstage.eu/turmion-katilot-reset-world-tour-2025.html">Turmion Kätilöt - Reset World Tour 2025</a></td><td>Metal</td><td>Backstage Club</td></tr><tr>
+<td>30 Januar 2025</td><td><a href="https://backstage.eu/herbert-pixner-the-italo-connection-tour-2025.html">Herbert Pixner & The Italo-connection - Tour 2025</a></td><td></td><td>Backstage Werk</td></tr><tr>
+<td>30 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7242/caspar-broetzmann-massaker">Caspar Brötzmann Massaker</a></td><td>Drone Rock</td><td>Muffathalle</td></tr><tr>
+<td>30 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/30-01-2025_luca-noel">Luca Noel</a></td><td>Pop</td><td>Feierwerk</td></tr><tr>
+<td>30 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/30-01-2025_could-seed-could-seed">Could Seed</a></td><td>Postrock,  Instrumental</td><td>Feierwerk</td></tr><tr>
+<td>31 Januar 2025</td><td><a href="https://backstage.eu/orden-ogan-the-tour-of-fear.html">Orden Ogan - The Tour Of Fear</a></td><td>Folk Metal</td><td>Backstage Werk</td></tr><tr>
+<td>31 Januar 2025</td><td><a href="https://backstage.eu/trille-aus-meiner-haut-tour-2025.html">Trille - Aus Meiner Haut Tour 2025</a></td><td>Pop</td><td>Backstage Club</td></tr><tr>
+<td>31 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7064/bernth-und-charles-berthoud">Bernth und Charles Berthoud</a></td><td>Electric Bass</td><td>Muffathalle</td></tr><tr>
+<td>31 Januar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7158/warren-zeiders">Warren Zeiders</a></td><td>Modern Country Pop</td><td>Muffathalle</td></tr><tr>
+<td>31 Januar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/31-01-2025_dani-lia-dani-lia">Dani Lia</a></td><td>HipHop,  Indie</td><td>Feierwerk</td></tr><tr>
+<td>01 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/mero/">Mero</a></td><td>German Hip Hop</td><td>Zenith</td></tr><tr>
+<td>01 Februar 2025</td><td><a href="https://strom-muc.de/event/wizthemc/">Wizthemc</a></td><td>Pop Rap, Canadian Contemporary R&b</td><td>Strom</td></tr><tr>
+<td>01 Februar 2025</td><td><a href="https://backstage.eu/kapotaki-stadltort-o-ur.html">Kapotaki - Stadltort(o)ur</a></td><td>Rock</td><td>Backstage Club</td></tr><tr>
+<td>01 Februar 2025</td><td><a href="https://backstage.eu/das-lumpenpack-nie-wieder-w-a-c-h.html">Das Lumpenpack - Nie Wieder W.a.c.h.</a></td><td>Rock</td><td>Tonhalle (werksviertel-mitte)</td></tr><tr>
+<td>01 Februar 2025</td><td><a href="https://backstage.eu/the-halo-effect-live-2025.html">The Halo Effect - Live 2025</a></td><td>Melodic Death Metal</td><td>Backstage Werk</td></tr><tr>
+<td>01 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7323/levent-geiger">Levent Geiger</a></td><td>Singer-songwriter Pop</td><td>Muffathalle</td></tr><tr>
+<td>01 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/6982/betontod">Betontod</a></td><td>German Rock, German Oi, German Punk, Medieval Rock, Deutschrock</td><td>Muffathalle</td></tr><tr>
+<td>02 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/jamule/">Jamule</a></td><td>German Hip Hop</td><td>Zenith</td></tr><tr>
+<td>02 Februar 2025</td><td><a href="https://backstage.eu/rolling-quartz-europe-tour-2025.html">Rolling Quartz - “stand Up” 2nd Eu Tour 2025</a></td><td>K-POP</td><td>Backstage Halle</td></tr><tr>
+<td>02 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7202/kidd-kawaki">Kidd Kawaki</a></td><td></td><td>Muffathalle</td></tr><tr>
+<td>03 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7053/kruder-dorfmeister">Kruder & Dorfmeister</a></td><td>Trip Hop, Downtempo, Electronica</td><td>Muffathalle</td></tr><tr>
+<td>03 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7140/cory-wong">Cory Wong</a></td><td>Instrumental Funk</td><td>Muffathalle</td></tr><tr>
+<td>04 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/snow-patrol/">Snow Patrol</a></td><td>Permanent Wave, Irish Rock, Neo Mellow, Pop Rock, Modern Rock</td><td>Zenith</td></tr><tr>
+<td>04 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7285/enno-bunger">Enno Bunger</a></td><td>German Indie, German Singer-songwriter, German Indie Folk</td><td>Muffathalle</td></tr><tr>
+<td>05 Februar 2025</td><td><a href="https://backstage.eu/stick-to-your-guns-europe-2025.html">Stick To Your Guns - Europe 2025</a></td><td>Hardcore</td><td>Backstage Werk</td></tr><tr>
+<td>05 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/05-02-2025_-bestuhlt-kathrin-wessling">Kathrin Weßling</a></td><td>Literatur</td><td>Feierwerk</td></tr><tr>
+<td>06 Februar 2025</td><td><a href="https://strom-muc.de/event/soul-asylum/">Soul Asylum</a></td><td>Permanent Wave, Post-grunge, Alternative Rock, Grunge, Pop Rock</td><td>Strom</td></tr><tr>
+<td>06 Februar 2025</td><td><a href="https://backstage.eu/florentina-alles-auf-grun-tour-2025.html">Florentina - Alles Auf Grün - Tour 2025</a></td><td>HipHop</td><td>Backstage Club</td></tr><tr>
+<td>06 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7105/kadebostany">Kadebostany</a></td><td>Swiss Rock</td><td>Muffathalle</td></tr><tr>
+<td>06 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7233/kasi">Kasi</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>06 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/06-02-2025_emei">Emei</a></td><td>Pop</td><td>Feierwerk</td></tr><tr>
+<td>07 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7130/northern-lite">Northern Lite</a></td><td>Electronic Rock</td><td>Muffathalle</td></tr><tr>
+<td>07 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/07-02-2025_alex-mofa-gang-alex-mofa-gang">Alex Mofa Gang</a></td><td>Punk,  Pop</td><td>Feierwerk</td></tr><tr>
+<td>07 Februar 2025</td><td><a href="https://rausgegangen.de/events/spiral-drive-5/">Spiral Drive</a></td><td>Psychadelic Rock</td><td>Kult9</td></tr><tr>
+<td>08 Februar 2025</td><td><a href="https://backstage.eu/cattle-decapitation-shadow-of-intent-live-2025.html">Cattle Decapitation & Shadow Of Intent - The Terrastic Reconquest Tour 2025</a></td><td>Death Grind</td><td>Backstage Werk</td></tr><tr>
+<td>08 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/08-02-2025_dune-rats">Dune Rats</a></td><td>Punk-Rock,  Punk,  Rock</td><td>Feierwerk</td></tr><tr>
+<td>08 Februar 2025</td><td><a href="https://t.rausgegangen.de/tickets/shop/sun-king-music-artists-concerts">Marlin Beach</a></td><td>Yacht Pop</td><td>Kult9</td></tr><tr>
+<td>09 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/milano/">Milano</a></td><td>German Hip Hop</td><td>Zenith</td></tr><tr>
+<td>09 Februar 2025</td><td><a href="https://backstage.eu/sascha-salvati-country-sunday.html">Sascha Salvati – Country Sunday</a></td><td>Country</td><td>Backstage Halle</td></tr><tr>
+<td>09 Februar 2025</td><td><a href="https://backstage.eu/silent-planet-superbloom-eu-uk-tour-2025.html">Silent Planet - Superbloom - Eu/uk Tour 2025</a></td><td>Metalcore</td><td>Backstage Werk</td></tr><tr>
+<td>09 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7027/parra-for-cuva">Parra for Cuva</a></td><td>Downtempo, New French Touch, Deep Euro House</td><td>Muffathalle</td></tr><tr>
+<td>09 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7086/four-year-strong">Four Year Strong</a></td><td>Easycore, New England Emo, Anthem Emo, Pop Punk, Worcester Ma Indie, Neon Pop Punk, Screamo</td><td>Muffathalle</td></tr><tr>
+<td>10 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/mehnersmoos/">Mehnersmoos</a></td><td>German Underground Rap</td><td>Zenith</td></tr><tr>
+<td>10 Februar 2025</td><td><a href="https://backstage.eu/mehnersmoos-die-grosse-arschrapper-tour.html">Mehnersmoos - Die Grosse Arschrapper Tour</a></td><td>Rap</td><td>Zenith</td></tr><tr>
+<td>10 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7256/moses-yoofee-trio">Moses Yoofee Trio</a></td><td>Jazz, Germany</td><td>Muffathalle</td></tr><tr>
+<td>10 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/10-02-2025_neander-neander">Neànder</a></td><td> Doom-Metal, Metal</td><td>Feierwerk</td></tr><tr>
+<td>11 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/dropkick-murphys-doppelshow/">Dropkick Murphys</a></td><td>Celtic Rock, Boston Punk, Punk, Celtic Punk, Boston Rock</td><td>Zenith</td></tr><tr>
+<td>11 Februar 2025</td><td><a href="https://strom-muc.de/event/alexander-knappe/">Alexander Knappe</a></td><td>German Pop</td><td>Strom</td></tr><tr>
+<td>11 Februar 2025</td><td><a href="https://backstage.eu/the-devil-wears-prada-live-2025.html">The Devil Wears Prada - Eu Winter Tour 2025</a></td><td>Metalcore</td><td>Backstage Halle</td></tr><tr>
+<td>11 Februar 2025</td><td><a href="https://backstage.eu/civo-weg-von-hier-tour-2025.html">Civo - Weg Von Hier Tour 2025</a></td><td>Rap</td><td>Backstage Werk</td></tr><tr>
+<td>11 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7207/blanco-white">Blanco White</a></td><td>British Singer-songwriter, Indie Folk, Indie Anthem-folk</td><td>Muffathalle</td></tr><tr>
+<td>12 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/dropkick-murphys-doppelshow-2/">Dropkick Murphys</a></td><td>Celtic Rock, Boston Punk, Punk, Celtic Punk, Boston Rock</td><td>Zenith</td></tr><tr>
+<td>12 Februar 2025</td><td><a href="https://strom-muc.de/event/darren-kiely/">Darren Kiely</a></td><td>Irish Singer-songwriter</td><td>Strom</td></tr><tr>
+<td>12 Februar 2025</td><td><a href="https://backstage.eu/paleface-swiss-european-headline-tour-2025.html">Paleface Swiss - European Headline Tour 2025</a></td><td>Heavy Metal</td><td>Backstage Werk</td></tr><tr>
+<td>12 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7307/jan-blomqvist">Jan Blomqvist</a></td><td>Deep Euro House, Melodic House</td><td>Muffathalle</td></tr><tr>
+<td>13 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/marilyn-manson/">Marilyn Manson</a></td><td>Post-grunge, Nu Metal, Industrial Metal, Rock, Industrial, Alternative Metal, Industrial Rock, Hard Rock</td><td>Zenith</td></tr><tr>
+<td>13 Februar 2025</td><td><a href="https://strom-muc.de/event/destroy-boys-2/">Destroy Boys</a></td><td>Pov: Indie, Oakland Indie</td><td>Strom</td></tr><tr>
+<td>13 Februar 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/pietro-lombardi-n3539">Pietro Lombardi</a></td><td>German Pop</td><td>Olympiahalle</td></tr><tr>
+<td>13 Februar 2025</td><td><a href="https://backstage.eu/aymz-trost-scherben-tour-2025.html">Aymz Trost & Scherben - Tour 2025</a></td><td>Rock</td><td>Backstage Club</td></tr><tr>
+<td>13 Februar 2025</td><td><a href="https://backstage.eu/prime-circle.html">Prime Circle</a></td><td></td><td>Backstage Halle</td></tr><tr>
+<td>13 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7206/mitch-ryder">Mitch Ryder</a></td><td>Rock, Classic Rock, 60s, 70s, Blues</td><td>Muffathalle</td></tr><tr>
+<td>14 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/the-australian-pink-floyd-show-4/">The Australian Pink Floyd Show</a></td><td>Cover Band, Rock, Progressive Rock, Pink Floyd Cover, Seen Live</td><td>Zenith</td></tr><tr>
+<td>14 Februar 2025</td><td><a href="https://strom-muc.de/event/verifiziert/">Verifiziert</a></td><td>German Hip Hop, German Hyperpop</td><td>Strom</td></tr><tr>
+<td>14 Februar 2025</td><td><a href="https://backstage.eu/julia-meladin-leben-meiner-traume-tour.html">Julia Meladin – Leben Meiner Träume Tour</a></td><td>Pop</td><td>Backstage Halle</td></tr><tr>
+<td>14 Februar 2025</td><td><a href="https://backstage.eu/seraina-telli-color-addict-tour.html">Seraina Telli - Color Addict Tour</a></td><td>Rock, Metal</td><td>Backstage Club</td></tr><tr>
+<td>14 Februar 2025</td><td><a href="https://backstage.eu/carly-pearce-hummingbird-2025-uk-eu-tour.html">Carly Pearce - Hummingbird 2025 Uk/eu Tour</a></td><td>County-Singer-Songwriterin</td><td>Backstage Werk</td></tr><tr>
+<td>14 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7259/max-cooper">Max Cooper</a></td><td>Minimal Techno, Modular Synth, Microhouse, Electronica</td><td>Muffathalle</td></tr><tr>
+<td>14 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7251/oscar-and-the-wolf">Oscar And The Wolf</a></td><td>Belgian Pop, Belgian Indie</td><td>Muffathalle</td></tr><tr>
+<td>14 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/14-02-2025_love-letter-love-letter">Love Letter</a></td><td>Hardcore</td><td>Feierwerk</td></tr><tr>
+<td>15 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/manowar/">Manowar</a></td><td>Comic Metal, Us Power Metal, Power Metal, Speed Metal, Metal, Hard Rock</td><td>Zenith</td></tr><tr>
+<td>15 Februar 2025</td><td><a href="https://backstage.eu/the-night-flight-orchestra-moon-over-europe-tour-2025.html">The Night Flight Orchestra - Moon Over Europe Tour 2025</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>15 Februar 2025</td><td><a href="https://backstage.eu/alvin-es-a-mokusok-2025-tour.html">Alvin És A Mókusok - 2025 Tour</a></td><td>Rock</td><td>Backstage Club</td></tr><tr>
+<td>15 Februar 2025</td><td><a href="https://backstage.eu/one-step-closer-a-tribute-to-linkin-park.html">One Step Closer – A Tribute To Linkin Park</a></td><td>Rock, Coverband</td><td>Backstage Werk</td></tr><tr>
+<td>15 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/15-02-2025_distant-und-enterprise-earth-distant-enterprise-earth-harbinger-the-last-ten-seconds-of-life">Distant</a></td><td>Death Metal,  Deathcore</td><td>Feierwerk</td></tr><tr>
+<td>15 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/15-02-2025_katzenclub-rue-oberkampf-potochkine">RUE OBERKAMPF</a></td><td>Wave,  Electro</td><td>Feierwerk</td></tr><tr>
+<td>16 Februar 2025</td><td><a href="https://strom-muc.de/event/kelly-finnigan-the-atonements/">Kelly Finnigan & The Atonements</a></td><td>Souldies, Neo Soul</td><td>Strom</td></tr><tr>
+<td>16 Februar 2025</td><td><a href="https://backstage.eu/ngee-strassenapotheker-tour-2025.html">Ngee - Strassenapotheker Tour 2025</a></td><td>Rap</td><td>Backstage Halle</td></tr><tr>
+<td>16 Februar 2025</td><td><a href="https://backstage.eu/tonbandgerat-ein-anderes-leben-tour.html">Tonbandgerät - Ein Anderes Leben Tour</a></td><td>Indie Pop</td><td>Backstage Club</td></tr><tr>
+<td>16 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/16-02-2025_tua-tua">Tua</a></td><td>Rap</td><td>Feierwerk</td></tr><tr>
+<td>17 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/rise-against-2/">Rise Against</a></td><td>Post-grunge, Punk, Chicago Hardcore, Pop Punk, Alternative Metal, Hardcore Punk, Chicago Punk, Modern Rock</td><td>Zenith</td></tr><tr>
+<td>17 Februar 2025</td><td><a href="https://backstage.eu/trash-boat-live-2025.html">Trash Boat - Live 2025</a></td><td>Alternative</td><td>Backstage Club</td></tr><tr>
+<td>17 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/17-02-2025_moe">Moé</a></td><td>Rap,  Indie,  Pop</td><td>Feierwerk</td></tr><tr>
+<td>18 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/bullet-for-my-valentine-trivium/">Bullet For My Valentine</a></td><td>Post-grunge, Nu Metal, Welsh Metal, Alternative Metal, Uk Metalcore</td><td>Zenith</td></tr><tr>
+<td>18 Februar 2025</td><td><a href="https://backstage.eu/lucio101-101-prozent-tour-2025.html">Lucio101 - 101 Prozent Tour 2025</a></td><td>HipHop</td><td>Backstage Werk</td></tr><tr>
+<td>18 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/18-02-2025_jupiter-jones">Jupiter Jones</a></td><td>Pop,  Indie-Punk</td><td>Feierwerk</td></tr><tr>
+<td>18 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/18-02-2025_rian">Rian</a></td><td>Pop,  Hip-Hop,  Indie-Pop</td><td>Feierwerk</td></tr><tr>
+<td>19 Februar 2025</td><td><a href="https://backstage.eu/polar-five-arrows-tour-2025.html">Polar - Five Arrows Tour 2025</a></td><td>Metalcore, Hardcore</td><td>Backstage Club</td></tr><tr>
+<td>19 Februar 2025</td><td><a href="https://backstage.eu/queensryche-the-origins-tour-eu-uk-2025.html">Queensrÿche - The Origins Tour Eu/uk 2025</a></td><td>Progressive Metal</td><td>Backstage Werk</td></tr><tr>
+<td>19 Februar 2025</td><td><a href="https://backstage.eu/universum25-die-maschinen-wollen-leben-2025.html">Universum25 - "die Maschinen Wollen Leben" 2025 | Abgesagt</a></td><td>Rock, Synth, Metal</td><td>Backstage Halle</td></tr><tr>
+<td>19 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7177/opeth">Opeth</a></td><td>Swedish Metal, Progressive Death Metal, Alternative Metal, Metal, Swedish Progressive Metal, Progressive Metal</td><td>Muffathalle</td></tr><tr>
+<td>19 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/19-02-2025_dirty-sound-magnet">DIRTY SOUND MAGNET</a></td><td>Progressive</td><td>Feierwerk</td></tr><tr>
+<td>19 Februar 2025</td><td><a href="">Kult9 Konzertwoche: Jeanne D'azz</a></td><td>Latin & Contemporary Music, Jazz</td><td>Kult9</td></tr><tr>
+<td>20 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7034/haevn">Haevn</a></td><td>Dutch Pop</td><td>Muffathalle</td></tr><tr>
+<td>20 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7138/chef-special">Chef' Special</a></td><td>Dutch Indie, Dutch Rock, Folk-pop, Nederreggae, Dutch Pop</td><td>Muffathalle</td></tr><tr>
+<td>20 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/20-02-2025_ditz">Ditz</a></td><td>Rock,  Punk</td><td>Feierwerk</td></tr><tr>
+<td>20 Februar 2025</td><td><a href="">Kult9 Konzertwoche</a></td><td>Künstler*innen werden noch bekannt gegeben</td><td>Kult9</td></tr><tr>
+<td>21 Februar 2025</td><td><a href="https://strom-muc.de/event/demented-are-go/">Demented Are Go</a></td><td>Psychobilly, Deathgrass</td><td>Strom</td></tr><tr>
+<td>21 Februar 2025</td><td><a href="https://backstage.eu/unleash-the-archers-phantoma-european-tour-2025.html">Unleash The Archers - Phantoma European Tour 2025</a></td><td>Power Metal</td><td>Backstage Halle</td></tr><tr>
+<td>21 Februar 2025</td><td><a href="https://backstage.eu/kiasmos-live-2025.html">Kiasmos - Live 2025</a></td><td>Minimal Electro</td><td>Backstage Werk</td></tr><tr>
+<td>21 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7222/kiasmos">Kiasmos</a></td><td>Icelandic Electronic, Electronica</td><td>Muffathalle</td></tr><tr>
+<td>21 Februar 2025</td><td><a href="https://theaterfabrik-muc.de/2024/07/15/zartmann/">Zartmann</a></td><td>Pop, Germany</td><td>Theaterfabrik</td></tr><tr>
+<td>21 Februar 2025</td><td><a href="">Kult9 Konzertwoche</a></td><td>Künstler*innen werden noch bekannt gegeben</td><td>Kult9</td></tr><tr>
+<td>22 Februar 2025</td><td><a href="https://backstage.eu/vukovi-my-god-has-got-a-gun-eu-uk-tour-2025.html">Vukovi - My God Has Got A Gun Eu/uk Tour 2025</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>22 Februar 2025</td><td><a href="https://backstage.eu/jeremy-loops-live-2025.html">Jeremy Loops - Live 2025</a></td><td>Singer Songwriter</td><td>Backstage Werk</td></tr><tr>
+<td>22 Februar 2025</td><td><a href="https://backstage.eu/flash-forward-renegade-tour-2025.html">Flash Forward - Renegade Tour 2025</a></td><td>Alternative Rock</td><td>Backstage Club</td></tr><tr>
+<td>22 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7198/chapo102">Chapo102</a></td><td>German Hip Hop</td><td>Muffathalle</td></tr><tr>
+<td>22 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7217/franz-ferdinand">Franz Ferdinand</a></td><td>Rock, Alternative Rock, Indie Rock, Scottish Rock, Dance Rock, Modern Rock</td><td>Muffathalle</td></tr><tr>
+<td>22 Februar 2025</td><td><a href="">Kult9 Konzertwoche</a></td><td>Künstler*innen werden noch bekannt gegeben</td><td>Kult9</td></tr><tr>
+<td>23 Februar 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/ludovico-einaudi-n4263">Ludovico Einaudi</a></td><td>Neo-classical, Compositional Ambient</td><td>Olympiahalle</td></tr><tr>
+<td>23 Februar 2025</td><td><a href="https://backstage.eu/kidd-kazama-lil-tees-sad-stunner-tour.html">Kidd Kazama & Lil Tees - Sad Stunner Tour</a></td><td>Rap</td><td>Backstage Club</td></tr><tr>
+<td>23 Februar 2025</td><td><a href="https://backstage.eu/napalm-death-campaign-for-musical-destruction-2025.html">Napalm Death - Campaign For Musical Destruction 2025</a></td><td>Metal</td><td>Backstage Werk</td></tr><tr>
+<td>23 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7028/paulwetz">PaulWetz</a></td><td>Pop, Seen Live, Germany</td><td>Muffathalle</td></tr><tr>
+<td>23 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7155/y-akoto">Y'akoto</a></td><td>Acoustic Soul, Soul, Singer-songwriter, Folk, Female Vocalists</td><td>Muffathalle</td></tr><tr>
+<td>24 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7220/alan-sparhawk">Alan Sparhawk</a></td><td>Duluth Indie, Melancholia</td><td>Muffathalle</td></tr><tr>
+<td>25 Februar 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/8205/">Mayberg</a></td><td>Neue Neue Deutsche Welle</td><td>Zenith</td></tr><tr>
+<td>25 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7235/wallners">Wallners</a></td><td>Vienna Indie</td><td>Muffathalle</td></tr><tr>
+<td>25 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7247/saxon">Saxon</a></td><td>Glam Metal, Power Metal, Metal, Nwobhm, Hard Rock</td><td>Muffathalle</td></tr><tr>
+<td>26 Februar 2025</td><td><a href="https://backstage.eu/bausa-stimme-der-vernunft-tour-2025.html">Bausa - Stimme Der Vernunft Tour 2025</a></td><td>Rap</td><td>Backstage Werk</td></tr><tr>
+<td>26 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7091/loi">Loi</a></td><td>Black Metal, Pop, Experimental, Depressive Black Metal, Funk</td><td>Muffathalle</td></tr><tr>
+<td>27 Februar 2025</td><td><a href="https://backstage.eu/obscura-silver-linings-europe-2025.html">Obscura - Silver Linings // Europe 2025</a></td><td>Technical Death Metal</td><td>Feierwerk - Hansa 39</td></tr><tr>
+<td>27 Februar 2025</td><td><a href="https://backstage.eu/dewolff-live-2025.html">Dewolff - Live 2025</a></td><td>Bluesrock</td><td>Backstage Halle</td></tr><tr>
+<td>27 Februar 2025</td><td><a href="https://backstage.eu/dirkschneider-balls-to-the-wall-40th-anniversary-tour.html">Dirkschneider - Balls To The Wall - 40th Anniversary Tour</a></td><td>Metal</td><td>Backstage Werk</td></tr><tr>
+<td>27 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7209/thee-sacred-souls">Thee Sacred Souls</a></td><td>Souldies, Latinx Alternative</td><td>Muffathalle</td></tr><tr>
+<td>27 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/27-02-2025_obscura-obscura">Obscura</a></td><td> Metal, Death Metal</td><td>Feierwerk</td></tr><tr>
+<td>27 Februar 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/27-02-2025_fritzi-ernst">Fritzi Ernst</a></td><td>Pop</td><td>Feierwerk</td></tr><tr>
+<td>28 Februar 2025</td><td><a href="https://backstage.eu/leoniden-sophisticated-sad-songs-tour-2025.html">Leoniden - Sophisticated Sad Songs - Tour 2025</a></td><td>Indie Rock</td><td>Backstage Werk</td></tr><tr>
+<td>28 Februar 2025</td><td><a href="https://backstage.eu/nachtblut-todschick-tour-2025.html">Nachtblut - Todschick Tour 2025</a></td><td>Dark Metal</td><td>Backstage Halle</td></tr><tr>
+<td>28 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7281/matze-rossi">Matze Rossi</a></td><td>German Singer-songwriter, German Indie Folk</td><td>Muffathalle</td></tr><tr>
+<td>28 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7107/vnv-nation">VNV Nation</a></td><td>Ebm, Futurepop</td><td>Muffathalle</td></tr><tr>
+<td>28 Februar 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7252/leoniden">Leoniden</a></td><td>German Indie</td><td>Muffathalle</td></tr><tr>
+<td>28 Februar 2025</td><td><a href="https://theaterfabrik-muc.de/2024/07/16/kvelertak-mantar/">Kvelertak</a></td><td>Norwegian Rock, Black Thrash, Norwegian Metal, Rogaland Musikk, Black 'n' Roll</td><td>Theaterfabrik</td></tr><tr>
+<td>28 Februar 2025</td><td><a href="">Maidenhead-Ascendancy</a></td><td>Iron Maiden Tribute Show und Support Ascendancy</td><td>Kult9</td></tr><tr>
+<td>01 März 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/ufo361-2/">Ufo361</a></td><td>German Cloud Rap, German Hip Hop</td><td>Zenith</td></tr><tr>
+<td>01 März 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/elvis-n4300">Elvis</a></td><td>Rock-and-roll, Rockabilly</td><td>Kleine Olympiahalle</td></tr><tr>
+<td>01 März 2025</td><td><a href="https://backstage.eu/growl-bowl-festival-2025.html">Growl Bowl Festival 2025</a></td><td>Metal</td><td>Backstage Halle</td></tr><tr>
+<td>01 März 2025</td><td><a href="https://backstage.eu/bibiza-bis-einer-weint-2025.html">Bibiza - Bis Einer Weint 2025 | Verlegt In Die Tonhalle</a></td><td>Rock</td><td>Tonhalle (werksviertel-mitte)</td></tr><tr>
+<td>01 März 2025</td><td><a href="https://backstage.eu/enemy-inside-european-tour-2025.html">Enemy Inside - "european Tour 2025"</a></td><td>Dark Rock, Alternative Metal</td><td>Backstage Club</td></tr><tr>
+<td>01 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/01-03-2025_ankor-ankor-conquer-divide">Ankor</a></td><td> Metal, Alternative</td><td>Feierwerk</td></tr><tr>
+<td>01 März 2025</td><td><a href="">Maidenhead-Viper Queen</a></td><td>80ies Faschingsparty mit Maidenhead und Support Viper Queen</td><td>Kult9</td></tr><tr>
+<td>02 März 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/dean-lewis/">Dean Lewis</a></td><td>Pop, Australian Pop</td><td>Zenith</td></tr><tr>
+<td>02 März 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/james-blunt-n4596">James Blunt</a></td><td>Neo Mellow</td><td>Olympiahalle</td></tr><tr>
+<td>02 März 2025</td><td><a href="https://backstage.eu/the-picturebooks-live-2025.html">The Picturebooks - Live 2025</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>02 März 2025</td><td><a href="https://backstage.eu/hippotraktor-the-great-belgian-trendkill-tour.html">Hippotraktor - The Great Belgian Trendkill Tour</a></td><td>Progressive Metal</td><td>Backstage Club</td></tr><tr>
+<td>03 März 2025</td><td><a href="https://backstage.eu/brainstorm-the-plague-that-burns-the-sky-tour-2025.html">Brainstorm - The Plague That Burns The Sky Tour 2025</a></td><td></td><td>Backstage Halle</td></tr><tr>
+<td>03 März 2025</td><td><a href="https://backstage.eu/1914-anthems-for-doomed-youth.html">1914 - Anthems For Doomed Youth</a></td><td>Death Metal</td><td>Backstage Club</td></tr><tr>
+<td>04 März 2025</td><td><a href="https://backstage.eu/the-rumjacks-live-2025.html">The Rumjacks - Dead Anthems – Uk&europe Album Tour 2025</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>04 März 2025</td><td><a href="https://backstage.eu/allt-from-the-new-world-european-tour.html">Allt - From The New World - European Tour</a></td><td>Metalcore</td><td>Backstage Club</td></tr><tr>
+<td>04 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7054/loreen">Loreen</a></td><td>Europop</td><td>Muffathalle</td></tr><tr>
+<td>04 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7308/orange-blossom">Orange Blossom</a></td><td>Electro Dub</td><td>Muffathalle</td></tr><tr>
+<td>04 März 2025</td><td><a href="https://backstage.eu/rebellion-tour-xi-2025.html">Rebellion Tour Xi – 2025</a></td><td>Hardcore</td><td>Backstage Halle</td></tr><tr>
+<td>05 März 2025</td><td><a href="https://backstage.eu/the-baboon-show-20th-anniversary-party.html">The Baboon Show - 20th Anniversary Party!</a></td><td>Rock, Punk</td><td>Backstage Werk</td></tr><tr>
+<td>05 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7320/revelle">Revelle</a></td><td>German Pop, German Singer-songwriter</td><td>Muffathalle</td></tr><tr>
+<td>06 März 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/michael-kiwanuka/">Michael Kiwanuka</a></td><td>British Soul, Soul, Psychedelic Soul, Neo Soul</td><td>Zenith</td></tr><tr>
+<td>06 März 2025</td><td><a href="https://strom-muc.de/event/eli-preiss-2/">Eli Preiss</a></td><td>Rap, Pop, Hip-hop, Seen Live, Hip Hop</td><td>Strom</td></tr><tr>
+<td>06 März 2025</td><td><a href="https://backstage.eu/jbs-outrun-tour-2025.html">Jbs - Outrun Tour 2025</a></td><td>SYNTHWAVE, INDIE-POP</td><td>Backstage Club</td></tr><tr>
+<td>06 März 2025</td><td><a href="https://backstage.eu/green-lungs-unto-others-heathen-neverlands-tour.html">Green Lung & Unto Others - Heathen Neverlands Tour</a></td><td>Stoner, Doom Metal</td><td>Backstage Halle</td></tr><tr>
+<td>06 März 2025</td><td><a href="https://backstage.eu/ritter-lean-stell-dir-vor-du-warst-nicht-da-tour-2025.html">Ritter Lean - "stell Dir Vor Du Warst Nicht Da" Tour 2025</a></td><td>Indie Pop</td><td>Backstage Werk</td></tr><tr>
+<td>06 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/6987/chris-klaefford">Chris Kläfford</a></td><td></td><td>Muffathalle</td></tr><tr>
+<td>06 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/06-03-2025_keywest-keywest">Keywest</a></td><td>Rock,  Pop</td><td>Feierwerk</td></tr><tr>
+<td>06 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/06-03-2025_ritter-lean-ritter-lean">Ritter Lean</a></td><td>HipHop,  Pop</td><td>Feierwerk</td></tr><tr>
+<td>06 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/06-03-2025_almost-monday-almost-monday">Almost Monday</a></td><td>Pop,  Indie</td><td>Feierwerk</td></tr><tr>
+<td>07 März 2025</td><td><a href="https://strom-muc.de/event/hgich-t/">Hgich.t</a></td><td>Elektropunk</td><td>Strom</td></tr><tr>
+<td>07 März 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/lenny-kravitz-n4671">Lenny Kravitz</a></td><td>Permanent Wave, Rock</td><td>Olympiahalle</td></tr><tr>
+<td>07 März 2025</td><td><a href="https://backstage.eu/achtvier-fucking-fizzle-tour-2024.html">Achtvier - Fucking Fizzle Tour 2024 | Verlegt Auf Den 07.03.25</a></td><td>Rap</td><td>Backstage Club</td></tr><tr>
+<td>07 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7213/jill-barber">Jill Barber</a></td><td>Contemporary Vocal Jazz, Pop Quebecois</td><td>Muffathalle</td></tr><tr>
+<td>07 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/07-03-2025_bikini-beach-bikini-beach">BIKINI BEACH</a></td><td>Garage,  Rock</td><td>Feierwerk</td></tr><tr>
+<td>08 März 2025</td><td><a href="https://strom-muc.de/event/mael-jonas/">Maël & Jonas</a></td><td>Salsa Puertorriquena, Salsa, Tropical</td><td>Strom</td></tr><tr>
+<td>08 März 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/seiler-speer-n4404">Seiler & Speer</a></td><td>Volkspop, Austropop</td><td>Olympiahalle</td></tr><tr>
+<td>08 März 2025</td><td><a href="https://backstage.eu/heathcliff-album-release-party.html">Heathcliff – Album Release Party</a></td><td>Skatepunk</td><td>Backstage Club</td></tr><tr>
+<td>08 März 2025</td><td><a href="https://backstage.eu/silverstein-25-years-of-noise.html">Silverstein - 25 Years Of Noise</a></td><td>Post-Hardcore</td><td>Backstage Werk</td></tr><tr>
+<td>08 März 2025</td><td><a href="https://backstage.eu/the-busters-loud.html">The Busters - Loud</a></td><td>Rock</td><td>Feierwerk - Hansa 39</td></tr><tr>
+<td>08 März 2025</td><td><a href="https://backstage.eu/raum27-live-in-munchen.html">Raum27 - Live In München</a></td><td>Indie Pop</td><td>Backstage Halle</td></tr><tr>
+<td>08 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7192/tiavo">Tiavo</a></td><td>German Hip Hop</td><td>Muffathalle</td></tr><tr>
+<td>08 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7020/the-kolors">The Kolors</a></td><td>Italian Adult Pop, Italian Pop</td><td>Muffathalle</td></tr><tr>
+<td>08 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/08-03-2025_the-busters">The Busters</a></td><td>Ska</td><td>Feierwerk</td></tr><tr>
+<td>08 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/08-03-2025_unterwelt-dj-moryty-dj-kai-ser">DJ Moryty</a></td><td>Industrial,  Techno</td><td>Feierwerk</td></tr><tr>
+<td>09 März 2025</td><td><a href="https://backstage.eu/suffocation-embrace-the-suffering.html">Suffocation - Embrace The Suffering</a></td><td>Metal</td><td>Backstage Halle</td></tr><tr>
+<td>09 März 2025</td><td><a href="https://backstage.eu/max-grimm-im-spati-tour-2025.html">Max Grimm - Im Späti Tour 2025</a></td><td>Pop</td><td>Backstage Club</td></tr><tr>
+<td>09 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7185/animals-as-leaders">Animals As Leaders</a></td><td>Instrumental Rock, Progressive Jazz Fusion, Jazz Metal, Djent, Instrumental Djent, Progressive Metal</td><td>Muffathalle</td></tr><tr>
+<td>10 März 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/alan-walker/">Alan Walker</a></td><td>Electro House</td><td>Zenith</td></tr><tr>
+<td>10 März 2025</td><td><a href="https://strom-muc.de/event/the-meffs/">The Meffs</a></td><td>British, Punk, Uk, Punk Rock, Political</td><td>Strom</td></tr><tr>
+<td>10 März 2025</td><td><a href="https://backstage.eu/el-ke-live-2025.html">El*ke - Live 2025</a></td><td>Rock</td><td>Backstage Club</td></tr><tr>
+<td>10 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7077/christoph-sakwerda">Christoph Sakwerda</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>10 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7114/myles-smith">Myles Smith</a></td><td>Singer-songwriter Pop</td><td>Muffathalle</td></tr><tr>
+<td>10 März 2025</td><td><a href="https://theaterfabrik-muc.de/2024/07/15/zartmann/">Zartmann</a></td><td>Pop, Germany</td><td>Theaterfabrik</td></tr><tr>
+<td>11 März 2025</td><td><a href="https://backstage.eu/romero-was-sind-raves-tour-2025.html">Romero - Was Sind Raves? Tour 2025</a></td><td>Rap</td><td>Backstage Club</td></tr><tr>
+<td>11 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7257/glengang-030">GlenGang 030</a></td><td>German Underground Rap</td><td>Muffathalle</td></tr><tr>
+<td>11 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7273/zaho-de-sagazan">Zaho de Sagazan</a></td><td>French Pop, Nouvelle Chanson Francaise</td><td>Muffathalle</td></tr><tr>
+<td>11 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/11-03-2025_lottery-winners">Lottery Winners</a></td><td>Indie-Pop</td><td>Feierwerk</td></tr><tr>
+<td>12 März 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/sam-fender-2/">Sam Fender</a></td><td>North East England Indie, Modern Rock</td><td>Zenith</td></tr><tr>
+<td>12 März 2025</td><td><a href="https://backstage.eu/bloodywood-live-2025.html">Bloodywood - Live 2025</a></td><td>Metal</td><td>Backstage Werk</td></tr><tr>
+<td>12 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7311/booka-shade">Booka Shade</a></td><td>Minimal Techno, Frankfurt Electronic, German Techno, Electronica</td><td>Muffathalle</td></tr><tr>
+<td>12 März 2025</td><td><a href="https://backstage.eu/hecht-live-2025.html">Hecht - Live 2025</a></td><td></td><td>Backstage Club</td></tr><tr>
+<td>13 März 2025</td><td><a href="https://backstage.eu/deine-cousine-tour-2025.html">Deine Cousine - Tour 2025</a></td><td>Rock</td><td>Tonhalle (werksviertel-mitte)</td></tr><tr>
+<td>13 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7136/ikkimel">Ikkimel</a></td><td>Rap, Deutschrap, Hip-hop, Seen Live, Electronic</td><td>Muffathalle</td></tr><tr>
+<td>13 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/13-03-2025_gavin-james-gavin-james">Gavin James</a></td><td>Pop</td><td>Feierwerk</td></tr><tr>
+<td>13 März 2025</td><td><a href="">Muddy What?</a></td><td>New Blues</td><td>Kult9</td></tr><tr>
+<td>14 März 2025</td><td><a href="https://strom-muc.de/event/isolation-berlin/">Isolation Berlin</a></td><td>German Indie</td><td>Strom</td></tr><tr>
+<td>14 März 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/harry-potter-und-der-stein-der-weisen-n4091">Harry Potter und der Stein der Weisen™</a></td><td>Hoerspiel</td><td>Olympiahalle</td></tr><tr>
+<td>14 März 2025</td><td><a href="https://backstage.eu/ccosmo-live-2025.html">Ccosmo - Live 2025</a></td><td>Rap, Pop</td><td>Backstage Halle</td></tr><tr>
+<td>14 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7147/badchieff">Badchieff</a></td><td>Bayerischer Rap, German Hip Hop</td><td>Muffathalle</td></tr><tr>
+<td>14 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/14-03-2025_aesthetic-perfection">Aesthetic Perfection</a></td><td> Synthie-Pop, Electro</td><td>Feierwerk</td></tr><tr>
+<td>14 März 2025</td><td><a href="https://t.rausgegangen.de/tickets/shop/sun-king-music-artists-concerts">Mary Jane's Soundgarden & Color the Night</a></td><td>Funk und Synth-Pop</td><td>Kult9</td></tr><tr>
+<td>15 März 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/andrea-berg-n4035">Andrea Berg</a></td><td>Classic Schlager, Schlager</td><td>Olympiahalle</td></tr><tr>
+<td>15 März 2025</td><td><a href="https://backstage.eu/mr-irish-bastard-st-patrick-s-day-bash.html">Mr Irish Bastard - St. Patrick’s Day Bash</a></td><td>Irish Folk Rock</td><td>Backstage Halle</td></tr><tr>
+<td>15 März 2025</td><td><a href="https://backstage.eu/jaya-the-cat-live-2025.html">Jaya The Cat - Live 2025</a></td><td>Punkrock, Ska, Reggae</td><td>Backstage Werk</td></tr><tr>
+<td>15 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7225/egofm-fest">egoFM fest</a></td><td>German Underground Rap</td><td>Muffathalle</td></tr><tr>
+<td>16 März 2025</td><td><a href="https://backstage.eu/bonecarver-so-this-is-suffering-castiel-death-mask.html">Bonecarver + So This Is Suffering + Castiel + Death Mask</a></td><td>Deathcore, Metal, Brutal Death Metal</td><td>Backstage Club</td></tr><tr>
+<td>16 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7201/joris">Joris</a></td><td>German Pop, German Pop Rock, German Singer-songwriter</td><td>Muffathalle</td></tr><tr>
+<td>16 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7275/mar-malade">Mar Malade</a></td><td>Indie Pop, Indie, Happy, German, Germany</td><td>Muffathalle</td></tr><tr>
+<td>17 März 2025</td><td><a href="https://strom-muc.de/event/sylvie-kreusch/">Sylvie Kreusch</a></td><td>Belgian Pop, Belgian Indie</td><td>Strom</td></tr><tr>
+<td>17 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7166/midge-ure-and-band-electronica">Midge Ure and Band Electronica</a></td><td>German Dance, Brass Band Pop, Hamburg Electronic, Livetronica</td><td>Muffathalle</td></tr><tr>
+<td>17 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7188/the-coronas">The Coronas</a></td><td>Irish Rock</td><td>Muffathalle</td></tr><tr>
+<td>18 März 2025</td><td><a href="https://backstage.eu/harlem-lake-the-mirrored-mask-tour-2025.html">Harlem Lake - The Mirrored Mask Tour 2025 | Verlegt Auf Den 13.11.25</a></td><td>Blues</td><td>Backstage Club</td></tr><tr>
+<td>18 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7018/wincent-weiss">Wincent Weiss</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>18 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7229/lena-linus">Lena&Linus</a></td><td>Indie Viet, German Pop</td><td>Muffathalle</td></tr><tr>
+<td>19 März 2025</td><td><a href="https://backstage.eu/gianni-suave-gift-tour-2024.html">Gianni Suave - Gift Tour 2025 | Verlegt Auf Den 19.03.25</a></td><td>HipHop</td><td>Backstage Club</td></tr><tr>
+<td>19 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7221/culcha-candela">Culcha Candela</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>19 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7236/sturgill-simpson">Sturgill Simpson</a></td><td>New Americana, Kentucky Roots, Nashville Singer-songwriter, Outlaw Country, Alternative Americana</td><td>Muffathalle</td></tr><tr>
+<td>20 März 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/k-i-z-zusatzshow/">K.i.z.</a></td><td>German Hip Hop</td><td>Zenith</td></tr><tr>
+<td>20 März 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/david-garrett-n4265">David Garrett</a></td><td>Pop Violin, Bow Pop</td><td>Olympiahalle</td></tr><tr>
+<td>20 März 2025</td><td><a href="https://backstage.eu/cyan-kicks-autumn-kings-2025-european-tour.html">Cyan Kicks + Autumn Kings - 2025 European Tour</a></td><td>Rock</td><td>Backstage Club</td></tr><tr>
+<td>20 März 2025</td><td><a href="https://backstage.eu/lostboi-lino-tour-2025.html">Lostboi Lino - Tour 2025</a></td><td>Nu Rap, Emo-Rap, Hip Hop</td><td>Backstage Werk</td></tr><tr>
+<td>20 März 2025</td><td><a href="https://backstage.eu/punk-rock-factory-live-2024.html">Punk Rock Factory - Stick To The Covers Tour</a></td><td>Rock / Punk Coversongs</td><td>Backstage Halle</td></tr><tr>
+<td>20 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7066/max-von-milland">Max von Milland</a></td><td>Pop-rock, Italian, Volksmusik, Italy, Pop Rock</td><td>Muffathalle</td></tr><tr>
+<td>20 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7274/zimmer90">Zimmer90</a></td><td>Pop, Indie, Alternative, Seen Live, House</td><td>Muffathalle</td></tr><tr>
+<td>20 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7245/kkuba102-uncle-f">Kkuba102 & Uncle F</a></td><td></td><td>Muffathalle</td></tr><tr>
+<td>20 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/20-03-2025_lostboi-lino-bs-werk-lostboi-lino">Lostboi Lino</a></td><td>Rap</td><td>Feierwerk</td></tr><tr>
+<td>20 März 2025</td><td><a href="https://theaterfabrik-muc.de/2024/07/17/christopher/">Christopher</a></td><td>Danish Pop</td><td>Theaterfabrik</td></tr><tr>
+<td>21 März 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/k-i-z-ausverkauft/">K.i.z.</a></td><td>German Hip Hop</td><td>Zenith</td></tr><tr>
+<td>21 März 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/bonez-mc-n4622">Bonez MC</a></td><td>German Hip Hop, Hamburg Hip Hop</td><td>Olympiahalle</td></tr><tr>
+<td>21 März 2025</td><td><a href="https://backstage.eu/klangphonics-live-2025.html">Klangphonics - Live 2025</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>21 März 2025</td><td><a href="https://backstage.eu/flavio-giungla-tour-2025.html">Flavio - Giungla Tour 2025</a></td><td>HipHop</td><td>Backstage Halle</td></tr><tr>
+<td>21 März 2025</td><td><a href="https://backstage.eu/aladdin-jameel-redflag-tour-2025.html">Aladdin Jameel - Red Flag Tour 2025</a></td><td>Comedy</td><td>Backstage Arena</td></tr><tr>
+<td>21 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7300/klangphonics">Klangphonics</a></td><td>Melodic Techno, Techno, Deep House, Seen Live, Electronic</td><td>Muffathalle</td></tr><tr>
+<td>21 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7167/lebanon-hanover">Lebanon Hanover</a></td><td>Minimal Wave</td><td>Muffathalle</td></tr><tr>
+<td>21 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/21-03-2025_che-sudaka-che-sudaka">CHE SUDAKA</a></td><td> Reggae, Ska,  Folklore</td><td>Feierwerk</td></tr><tr>
+<td>21 März 2025</td><td><a href="https://theaterfabrik-muc.de/2024/07/20/kamasi-washington/">Kamasi Washington</a></td><td>Afrofuturism, Contemporary Jazz, Jazz, Indie Soul, Jazz Saxophone</td><td>Theaterfabrik</td></tr><tr>
+<td>21 März 2025</td><td><a href="https://t.rausgegangen.de/tickets/shop/sun-king-music-artists-concerts">Lumen, der Minister</a></td><td>Independent-Pop</td><td>Kult9</td></tr><tr>
+<td>22 März 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/die-schlagernacht-des-jahres--n4230">Die Schlagernacht des Jahres</a></td><td>Classic Schlager, Schlager, German Pop</td><td>Olympiahalle</td></tr><tr>
+<td>22 März 2025</td><td><a href="https://backstage.eu/biohazard-life-of-agony-co-headline-europe-uk-tour-2025.html">Biohazard & Life Of Agony - Co-headline Europe/uk Tour 2025</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>22 März 2025</td><td><a href="https://backstage.eu/hexer-live-2025.html">Hexer - Live 2025</a></td><td>HipHop</td><td>Backstage Club</td></tr><tr>
+<td>22 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7174/tjark">Tjark</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>22 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/22-03-2025_orla-gartland">Orla Gartland</a></td><td>Indie-Pop,  Folk</td><td>Feierwerk</td></tr><tr>
+<td>22 März 2025</td><td><a href="">Jan Solo & The Full Bug</a></td><td>Southern Rock/Rock Klassiker</td><td>Kult9</td></tr><tr>
+<td>23 März 2025</td><td><a href="https://strom-muc.de/event/ghost-funk-orchestra/">Ghost Funk Orchestra</a></td><td>Neo-psychedelic, Psychedelic Soul, Psychedelic Jazz Fusion</td><td>Strom</td></tr><tr>
+<td>23 März 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/abbamania-the-show-n4232">Abbamania The Show</a></td><td></td><td>Olympiahalle</td></tr><tr>
+<td>23 März 2025</td><td><a href="https://backstage.eu/zakk-sabbath-uk-eu-tour-2025.html">Zakk Sabbath - Uk / Eu Tour 2025</a></td><td>Metal</td><td>Backstage Werk</td></tr><tr>
+<td>23 März 2025</td><td><a href="https://backstage.eu/welle-erdball-das-experiment-tour-2025.html">Welle:erdball - Das Experiment - Tour 2025</a></td><td>Electropop</td><td>Backstage Halle</td></tr><tr>
+<td>23 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7038/oehl">Oehl</a></td><td>German Indie, Austrian Indie</td><td>Muffathalle</td></tr><tr>
+<td>24 März 2025</td><td><a href="https://backstage.eu/bilmuri-live-2025.html">Bilmuri - Live 2025</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>24 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7211/alec-benjamin">Alec Benjamin</a></td><td>Pop, Alt Z, Pov: Indie</td><td>Muffathalle</td></tr><tr>
+<td>25 März 2025</td><td><a href="https://strom-muc.de/event/bacao-rhythm-steel-band/">Bacao Rhythm & Steel Band</a></td><td>Instrumental Funk</td><td>Strom</td></tr><tr>
+<td>25 März 2025</td><td><a href="https://backstage.eu/descendents-circle-jerks-live-2025.html">Descendents + Circle Jerks - Live 2025</a></td><td>Punk</td><td>Backstage Werk</td></tr><tr>
+<td>25 März 2025</td><td><a href="https://backstage.eu/the-godfathers-40th-anniversary-tour-2025.html">The Godfathers - 40th Anniversary Tour 2025</a></td><td>New Wave</td><td>Backstage Club</td></tr><tr>
+<td>25 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7052/leony">Leony</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>25 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/25-03-2025_the-reytons">The Reytons</a></td><td>Indie-Rock,  Punk-Rock</td><td>Feierwerk</td></tr><tr>
+<td>26 März 2025</td><td><a href="https://backstage.eu/rivers-of-nihil-the-aggressive-progressive-eu-uk-tour-2025.html">Rivers Of Nihil - The Aggressive Progressive Eu/uk Tour 2025</a></td><td>Death Metal</td><td>Backstage Werk</td></tr><tr>
+<td>26 März 2025</td><td><a href="https://backstage.eu/dorian-taharia-tour-2024.html">Dorian - Taharia Tour | Verlegt Auf Den 26.03.25</a></td><td>Pop</td><td>Backstage Club</td></tr><tr>
+<td>27 März 2025</td><td><a href="https://strom-muc.de/event/waving-the-guns/">Waving The Guns</a></td><td>German Alternative Rap, Antideutsche</td><td>Strom</td></tr><tr>
+<td>27 März 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/maluma-n4691">MALUMA</a></td><td>Reggaeton, Urbano Latino, Latin Pop, Reggaeton Colombiano, Trap Latino</td><td>Olympiahalle</td></tr><tr>
+<td>27 März 2025</td><td><a href="https://backstage.eu/yasi-hofer-live-2025.html">Yasi Hofer - Live 2025</a></td><td>Rock</td><td>Backstage Club</td></tr><tr>
+<td>27 März 2025</td><td><a href="https://backstage.eu/the-o-reillys-and-the-paddyhats-live-2025.html">The O’reillys And The Paddyhats - Live 2025</a></td><td>Irish Folk Punk</td><td>Backstage Halle</td></tr><tr>
+<td>27 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7304/nicola-rost">Nicola Rost</a></td><td></td><td>Muffathalle</td></tr><tr>
+<td>27 März 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/27-03-2025_sebastian-wurth-sebastian-wurth">Sebastian Wurth</a></td><td>Pop</td><td>Feierwerk</td></tr><tr>
+<td>28 März 2025</td><td><a href="https://strom-muc.de/event/neeve-2/">Neeve</a></td><td>Pop, Indie, Pop-indie, Germany</td><td>Strom</td></tr><tr>
+<td>28 März 2025</td><td><a href="https://backstage.eu/dartagnan-herzblut-tour-2025.html">Dartagnan - "herzblut Tour 2025"</a></td><td>Folk Rock</td><td>Backstage Werk</td></tr><tr>
+<td>29 März 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/go-90-2000-bayerns-beste-90er-und-2000er-party-2/">Go 90-2000 – Bayerns Beste 90er Und 2000er Party</a></td><td>German Pop, German Reggae</td><td>Zenith</td></tr><tr>
+<td>29 März 2025</td><td><a href="https://strom-muc.de/event/jack-and-the-weatherman/">Jack And The Weatherman</a></td><td>Dutch Pop</td><td>Strom</td></tr><tr>
+<td>29 März 2025</td><td><a href="https://backstage.eu/thundermother-live-2025.html">Thundermother - Godess Of The Road Tour – 2025</a></td><td>Hardrock</td><td>Backstage Werk</td></tr><tr>
+<td>29 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7253/florian-kuenstler">Florian Künstler</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>30 März 2025</td><td><a href="https://backstage.eu/serious-black-metalized-world-tour.html">Serious Black - Metalized World Tour</a></td><td>Metal</td><td>Backstage Halle</td></tr><tr>
+<td>31 März 2025</td><td><a href="https://strom-muc.de/event/glaive/">Glaive</a></td><td>Pop, Digicore, Emo Rap, Electronic, Hyperpop</td><td>Strom</td></tr><tr>
+<td>31 März 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7157/enkay">Enkay</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>01 April 2025</td><td><a href="https://backstage.eu/1000mods-frenzee-cheat-death-tour-2025.html">1000mods & Frenzee - Cheat Death Tour 2025</a></td><td>Psychedelic Stoner</td><td>Backstage Werk</td></tr><tr>
+<td>02 April 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/godsmack-2/">Godsmack</a></td><td>Post-grunge, Nu Metal, Rap Metal, Alternative Metal</td><td>Zenith</td></tr><tr>
+<td>02 April 2025</td><td><a href="https://backstage.eu/the-hirsch-effekt-live-in-munchen-2025.html">The Hirsch Effekt - Live In München 2025</a></td><td>Artcore</td><td>Backstage Club</td></tr><tr>
+<td>02 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7118/baby-lasagna">Baby Lasagna</a></td><td>Rock, Techno, Pop Punk, House, Croatian</td><td>Muffathalle</td></tr><tr>
+<td>02 April 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/02-04-2025_mia-morgan">Mia Morgan</a></td><td>Pop,  Indie</td><td>Feierwerk</td></tr><tr>
+<td>03 April 2025</td><td><a href="https://backstage.eu/tag-my-heart-live-2025.html">Tag My Heart - Live 2025</a></td><td>Modern Metal</td><td>Backstage Club</td></tr><tr>
+<td>03 April 2025</td><td><a href="https://backstage.eu/rapk-rapk-live-tour-2025.html">Rapk - Rapk Live Tour 2025</a></td><td>Rap</td><td>Backstage Halle</td></tr><tr>
+<td>03 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7249/ivo-martin">Ivo Martin</a></td><td>Pop, Germany</td><td>Muffathalle</td></tr><tr>
+<td>03 April 2025</td><td><a href="https://theaterfabrik-muc.de/2024/07/21/the-wombats/">The Wombats</a></td><td>Modern Alternative Rock, Liverpool Indie, Modern Rock</td><td>Theaterfabrik</td></tr><tr>
+<td>04 April 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/avantasia/">Avantasia</a></td><td>Symphonic Metal, Fantasy Metal, German Metal, Gothic Symphonic Metal, Opera Metal, German Power Metal, Power Metal, Speed Metal, Metal</td><td>Zenith</td></tr><tr>
+<td>04 April 2025</td><td><a href="https://strom-muc.de/event/ryan-harris/">Ryan Harris</a></td><td>Modern Indie Folk</td><td>Strom</td></tr><tr>
+<td>04 April 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/der-herr-der-ringe-die-zwei-turme-n4244">Der Herr der Ringe: Die zwei Türme</a></td><td>Hoerspiel, Kleine Hoerspiel</td><td>Olympiahalle</td></tr><tr>
+<td>04 April 2025</td><td><a href="https://backstage.eu/sono-the-2025-tour.html">Sono - The 2025 Tour</a></td><td>Pop, Electronica</td><td>Backstage Club</td></tr><tr>
+<td>04 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7329/the-amy-winehouse-band">The Amy Winehouse Band</a></td><td></td><td>Muffathalle</td></tr><tr>
+<td>04 April 2025</td><td><a href="https://theaterfabrik-muc.de/2024/07/21/mackenzy-mackay/">Mackenzy Mackay</a></td><td>Singer-songwriter Pop</td><td>Theaterfabrik</td></tr><tr>
+<td>04 April 2025</td><td><a href="">Crackpot Chicken From Hell</a></td><td>Fuckrock</td><td>Kult9</td></tr><tr>
+<td>05 April 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/behemoth/">Behemoth</a></td><td>Black Metal, Death Metal, Groove Metal, Polish Metal, Pagan Black Metal, Polish Black Metal, Polish Death Metal, Metal</td><td>Zenith</td></tr><tr>
+<td>05 April 2025</td><td><a href="https://backstage.eu/behemoth-the-unholy-trinity-tour-2025.html">Behemoth - The Unholy Trinity Tour 2025</a></td><td>Metal</td><td>Zenith</td></tr><tr>
+<td>05 April 2025</td><td><a href="https://backstage.eu/die-larmer-herz-auf-tour-2025.html">Die Lärmer - Herz Auf – Tour 2025</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>05 April 2025</td><td><a href="https://backstage.eu/schmutzki-live-2025.html">Schmutzki - Tour 2025</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>05 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7194/sportrecords-jonny5-fergy53">Sportrecords Jonny5 & Fergy53</a></td><td>German Cloud Rap, German Trap</td><td>Muffathalle</td></tr><tr>
+<td>05 April 2025</td><td><a href="">Face Invaders</a></td><td>Fun core is back</td><td>Kult9</td></tr><tr>
+<td>06 April 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/blumengarten/">Blumengarten</a></td><td>Pop, Deutsch, 2020s, Soul, German</td><td>Zenith</td></tr><tr>
+<td>06 April 2025</td><td><a href="https://strom-muc.de/event/yin-yin/">Yin Yin</a></td><td>Dutch Indie</td><td>Strom</td></tr><tr>
+<td>06 April 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/rock-meets-classic-n4237">Rock meets Classic</a></td><td>Rock, Australian Rock, Hard Rock</td><td>Olympiahalle</td></tr><tr>
+<td>06 April 2025</td><td><a href="https://backstage.eu/tito-and-tarantula-brincamos-tour-2025.html">Tito And Tarantula - Brincamos Tour 2025</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>07 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7335/destroy-lonely">Destroy Lonely</a></td><td>Rage Rap</td><td>Muffathalle</td></tr><tr>
+<td>08 April 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/08-04-2025_carsick-carsick">Carsick</a></td><td>Indie,  Punk,  Rock</td><td>Feierwerk</td></tr><tr>
+<td>08 April 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/08-04-2025_asbjorn">Asbjørn</a></td><td>Pop,  Powerpop</td><td>Feierwerk</td></tr><tr>
+<td>09 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7330/thomas-d-and-the-kbcs">Thomas D and THE KBCS</a></td><td></td><td>Muffathalle</td></tr><tr>
+<td>10 April 2025</td><td><a href="https://backstage.eu/beslik-nachher-is-nachher.html">Beslik - Nachher Is Nachher</a></td><td>Pop, Trap</td><td>Backstage Club</td></tr><tr>
+<td>10 April 2025</td><td><a href="https://backstage.eu/marcin-solo-dragon-tour-europe.html">Marcin - Solo Dragon Tour Europe</a></td><td>Classic Guitar</td><td>Backstage Halle</td></tr><tr>
+<td>10 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7223/jeremias">Jeremias</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>10 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7282/engin">Engin</a></td><td>Kommz, Seen Live, 2022, Darkheartrobotfunk</td><td>Muffathalle</td></tr><tr>
+<td>10 April 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/10-04-2025_somebodys-child">Somebody's Child</a></td><td>Indie-Rock,  Alternative</td><td>Feierwerk</td></tr><tr>
+<td>10 April 2025</td><td><a href="">Stumpen mit Kind und Kegel</a></td><td>Musikalische Lesung</td><td>Kult9</td></tr><tr>
+<td>11 April 2025</td><td><a href="https://strom-muc.de/event/last-train/">Last Train</a></td><td>Rock Alternatif Francais</td><td>Strom</td></tr><tr>
+<td>11 April 2025</td><td><a href="https://backstage.eu/monsters-of-liedermaching-setzen-sekt.html">Monsters Of Liedermaching - Setzen, Sekt!</a></td><td>Rock</td><td>Backstage Arena</td></tr><tr>
+<td>11 April 2025</td><td><a href="https://backstage.eu/rap-la-rue-rap-la-rue-tour-2025.html">Rap La Rue - Rap La Rue Tour 2025</a></td><td>HipHop</td><td>Backstage Werk</td></tr><tr>
+<td>11 April 2025</td><td><a href="https://backstage.eu/crystallion-claymorean-solar-system-live-2024.html">Crystallion + Claymorean + Solar System - Strong Winds Magic Mist</a></td><td>Rock</td><td>Backstage Club</td></tr><tr>
+<td>11 April 2025</td><td><a href="https://theaterfabrik-muc.de/2024/07/21/nand/">Nand</a></td><td>Neue Neue Deutsche Welle</td><td>Theaterfabrik</td></tr><tr>
+<td>11 April 2025</td><td><a href="">Stumpen mit Kind und Kegel</a></td><td>Musikalische Lesung</td><td>Kult9</td></tr><tr>
+<td>12 April 2025</td><td><a href="https://backstage.eu/montreal-am-achteck-nichts-neues-tour-2025.html">Montreal - "am Achteck Nichts Neues" Tour 2025</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>12 April 2025</td><td><a href="https://backstage.eu/eko-fresh-legacy-tour-2025.html">Eko Fresh - Legacy Tour 2025</a></td><td>Rap</td><td>Backstage Halle</td></tr><tr>
+<td>12 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7254/levin-liam">Levin Liam</a></td><td>Deutschrap, Deutschpop</td><td>Muffathalle</td></tr><tr>
+<td>12 April 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/12-04-2025_gwen-dolyn-gwen-dolyn">Gwen Dolyn</a></td><td>Alternative,  Indie-Pop</td><td>Feierwerk</td></tr><tr>
+<td>12 April 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/social-distortion-2/">Social Distortion</a></td><td>Punk 'n' Roll, Punk, Skate Punk, Socal Pop Punk</td><td>Zenith</td></tr><tr>
+<td>13 April 2025</td><td><a href="https://backstage.eu/yuzyuzeyken-konusuzuruz-live-in-europe-2025.html">Yüzyüzeyken Konusuzuruz - Live In Europe 2025</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>14 April 2025</td><td><a href="https://backstage.eu/shelter-celebrating-30-years-of-mantra.html">Shelter - "celebrating 30 Years Of Mantra“</a></td><td></td><td>Backstage Halle</td></tr><tr>
+<td>14 April 2025</td><td><a href="https://backstage.eu/symba-liebe-hass-tour-2025-nachholtermin-vom-13-10-24.html">Symba - Liebe & Hass Tour 2025 | Nachholtermin Vom 13.10.24</a></td><td>Rap</td><td>Backstage Werk</td></tr><tr>
+<td>15 April 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/da-capo-udo-jurgens-n4638">Da Capo Udo Jürgens</a></td><td>Classic Schlager, Austropop</td><td>Olympiahalle</td></tr><tr>
+<td>15 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7286/jassin">Jassin</a></td><td>Rap</td><td>Muffathalle</td></tr><tr>
+<td>15 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7325/the-hellacopters">The Hellacopters</a></td><td>Punk 'n' Roll, Action Rock, Swedish Garage Rock</td><td>Muffathalle</td></tr><tr>
+<td>16 April 2025</td><td><a href="https://strom-muc.de/event/sheppard/">Sheppard</a></td><td>Folk-pop, Australian Pop, Australian Indie</td><td>Strom</td></tr><tr>
+<td>16 April 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/rainhard-fendrich-45-jahre-live-n4436">Rainhard Fendrich - 45 Jahre Live</a></td><td>Austropop</td><td>Olympiahalle</td></tr><tr>
+<td>16 April 2025</td><td><a href="https://backstage.eu/caney303-kleine-handys-grosse-traume-tour-2025.html">Caney 030 - Kleine Handys Grosse Träume Tour 2025</a></td><td>Rap</td><td>Backstage Club</td></tr><tr>
+<td>17 April 2025</td><td><a href="https://backstage.eu/fabian-wegerer-wenn-ich-ehrlich-bin-tour-2025.html">Fabian Wegerer - Wenn Ich Ehrlich Bin – Tour 2025</a></td><td>Singer Songwriter</td><td>Backstage Halle</td></tr><tr>
+<td>19 April 2025</td><td><a href="https://backstage.eu/dark-easter-metal-meeting-19-20-april-2025.html">Dark Easter Metal Meeting – 19. & 20. April 2025</a></td><td>Metal</td><td>Backstage All Area</td></tr><tr>
+<td>19 April 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/19-04-2025_turbostaat-turbostaat">Turbostaat</a></td><td>Punk</td><td>Feierwerk</td></tr><tr>
+<td>20 April 2025</td><td><a href="https://strom-muc.de/event/karate/">Karate</a></td><td>Deep German Hip Hop</td><td>Strom</td></tr><tr>
+<td>20 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7334/and-so-i-watch-you-from-afar">And So I Watch You From Afar</a></td><td>Instrumental Rock, Math Rock, Post-rock, Instrumental Post-rock, British Post-rock</td><td>Muffathalle</td></tr><tr>
+<td>21 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7305/charlie-cunningham">Charlie Cunningham</a></td><td>British Singer-songwriter, Indie Folk, Indie Anthem-folk</td><td>Muffathalle</td></tr><tr>
+<td>22 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7278/kelvin-jones">Kelvin Jones</a></td><td>Uk Pop</td><td>Muffathalle</td></tr><tr>
+<td>23 April 2025</td><td><a href="https://backstage.eu/swallow-the-sun-live-2025.html">Swallow The Sun - Live 2025</a></td><td>Death Doom Metal</td><td>Backstage Halle</td></tr><tr>
+<td>24 April 2025</td><td><a href="https://strom-muc.de/event/alarmsignal/">Alarmsignal</a></td><td>German Punk Rock, German Punk, Antideutsche</td><td>Strom</td></tr><tr>
+<td>24 April 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/ghost-n4682">GHOST</a></td><td>Metal, Hard Rock</td><td>Olympiahalle</td></tr><tr>
+<td>24 April 2025</td><td><a href="https://backstage.eu/boundaries-death-is-little-more-uk-eu-tour.html">Boundaries - Death Is Little More Uk/eu Tour</a></td><td>Metalcore</td><td>Backstage Club</td></tr><tr>
+<td>24 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7272/mele">Mele</a></td><td>Pop, Rap, Hip-hop, Deutschrap, Rnb</td><td>Muffathalle</td></tr><tr>
+<td>25 April 2025</td><td><a href="https://backstage.eu/acht-eimer-huhnerherzen-live-2025.html">Acht Eimer Hühnerherzen - Live 2025</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>25 April 2025</td><td><a href="https://backstage.eu/catch-your-breath-the-savages-tour-2025.html">Catch Your Breath - The Savages Tour 2025</a></td><td>Metal</td><td>Backstage Halle</td></tr><tr>
+<td>25 April 2025</td><td><a href="https://backstage.eu/di-rect-live-2025.html">Di-rect - Sphinx Clubtour</a></td><td>Rock</td><td>Backstage Club</td></tr><tr>
+<td>25 April 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/25-04-2025_gaerea-gaerea">Gaerea</a></td><td>Black Metal</td><td>Feierwerk</td></tr><tr>
+<td>26 April 2025</td><td><a href="https://backstage.eu/soko-linx-grundhass-deutschland-musz-erben-tour-2025.html">Soko Linx + Grundhass - Deutschland Musz Erben Tour 2025</a></td><td>Elektro-Punk</td><td>Backstage Club</td></tr><tr>
+<td>26 April 2025</td><td><a href="https://backstage.eu/prohibition-party-munchen.html">Prohibition Party - München</a></td><td>burlesque, Live, elegant Party</td><td>Backstage Werk</td></tr><tr>
+<td>26 April 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7243/the-lumineers">The Lumineers</a></td><td>Folk-pop, Neo Mellow, Stomp And Holler, Modern Rock</td><td>Muffathalle</td></tr><tr>
+<td>26 April 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/26-04-2025_fliegende-haie-fliegende-haie">Fliegende Haie</a></td><td>Electro-Pop</td><td>Feierwerk</td></tr><tr>
+<td>27 April 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/twenty-one-pilots-n4225">Twenty One Pilots</a></td><td>Pop, Rock, Pov: Indie, Modern Rock</td><td>Olympiahalle</td></tr><tr>
+<td>27 April 2025</td><td><a href="https://backstage.eu/yungmon-lyran-dasz.html">Yungmon & Lyran Dasz</a></td><td></td><td>Backstage Werk</td></tr><tr>
+<td>29 April 2025</td><td><a href="https://backstage.eu/frozen-crown-war-hearts-tour-2025.html">Frozen Crown - War Hearts Tour 2025</a></td><td>Powermetal</td><td>Backstage Halle</td></tr><tr>
+<td>30 April 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/joe-bonamassa-n4444">Joe Bonamassa</a></td><td>Modern Blues, Blues Rock, Modern Blues Rock, Electric Blues, Blues</td><td>Olympiahalle</td></tr><tr>
+<td>30 April 2025</td><td><a href="https://theaterfabrik-muc.de/2024/07/22/zeal-ardor/">Zeal & Ardor</a></td><td>Swiss Metal, Avant-garde Metal</td><td>Theaterfabrik</td></tr><tr>
+<td>01 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7204/iamx">Iamx</a></td><td>Industrial Pop, Indietronica</td><td>Muffathalle</td></tr><tr>
+<td>01 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7208/russ-ballard">Russ Ballard</a></td><td>Rock, Classic Rock, 80s, Melodic Rock, Hard Rock</td><td>Muffathalle</td></tr><tr>
+<td>02 Mai 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/inhaler/">Inhaler</a></td><td>Dublin Indie</td><td>Zenith</td></tr><tr>
+<td>02 Mai 2025</td><td><a href="https://backstage.eu/moon-shot-the-power-tour-2025.html">Moon Shot - The Power Tour 2025</a></td><td>Alternative Rock</td><td>Backstage Club</td></tr><tr>
+<td>02 Mai 2025</td><td><a href="https://backstage.eu/prog-metal-mania-tag01.html">Prog Metal Mania</a></td><td>Prog Metal Festival</td><td>Backstage Werk</td></tr><tr>
+<td>02 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7260/team-scheisse">Team Scheisse</a></td><td>Elektropunk</td><td>Muffathalle</td></tr><tr>
+<td>03 Mai 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/pixies-2/">Pixies</a></td><td>Permanent Wave, Rock, Alternative Rock, Boston Rock</td><td>Zenith</td></tr><tr>
+<td>03 Mai 2025</td><td><a href="https://backstage.eu/amenra-tour-april-2025.html">Amenra - Tour April 2025</a></td><td>Post-Metal</td><td>Backstage Halle</td></tr><tr>
+<td>03 Mai 2025</td><td><a href="https://backstage.eu/jona-10-10-tour-2025.html">Jona - 10/10 Tour 2025</a></td><td>Pop</td><td>Backstage Club</td></tr><tr>
+<td>03 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7214/soccer-mommy">Soccer Mommy</a></td><td>Indie Pop, Bubblegrunge, Indie Rock, Art Pop, Small Room</td><td>Muffathalle</td></tr><tr>
+<td>04 Mai 2025</td><td><a href="https://backstage.eu/miracle-of-sound-tour-2025.html">Miracle Of Sound - Tour 2025</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>04 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7297/catt">Catt</a></td><td>Pop, Indie, Jazz, Rnb, German</td><td>Muffathalle</td></tr><tr>
+<td>04 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7301/alice-phoebe-lou">Alice Phoebe Lou</a></td><td>South African Alternative</td><td>Muffathalle</td></tr><tr>
+<td>05 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7244/oddisee-good-compny">Oddisee & Good Compny</a></td><td>Instrumental Hip Hop, Sudanese Pop, Alternative Hip Hop</td><td>Muffathalle</td></tr><tr>
+<td>05 Mai 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/05-05-2025_divorce">Divorce</a></td><td>Grunge,  Indie-Rock</td><td>Feierwerk</td></tr><tr>
+<td>07 Mai 2025</td><td><a href="https://strom-muc.de/event/navy/">Navy</a></td><td>German Cloud Rap, German Hyperpop</td><td>Strom</td></tr><tr>
+<td>07 Mai 2025</td><td><a href="https://backstage.eu/teluxe-der-wind-ist-mit-uns-tour.html">Teluxe - Der Wind Ist Mit Uns Tour</a></td><td>German Pop</td><td>Backstage Club</td></tr><tr>
+<td>07 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7239/the-baseballs">The Baseballs</a></td><td>Neo-rockabilly</td><td>Muffathalle</td></tr><tr>
+<td>08 Mai 2025</td><td><a href="https://strom-muc.de/event/keimzeit/">Keimzeit</a></td><td>German Rock, Ostrock, Liedermacher</td><td>Strom</td></tr><tr>
+<td>08 Mai 2025</td><td><a href="https://backstage.eu/the-murder-capital-live-2025.html">The Murder Capital - Live 2025</a></td><td>Rock, Post Punk</td><td>Backstage Halle</td></tr><tr>
+<td>08 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7216/cassia">Cassia</a></td><td>Manchester Indie, English Indie Rock</td><td>Muffathalle</td></tr><tr>
+<td>09 Mai 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/pashanim/">Pashanim</a></td><td>German Drill, German Hip Hop, German Alternative Rap</td><td>Zenith</td></tr><tr>
+<td>09 Mai 2025</td><td><a href="https://backstage.eu/danny-bryant-live-2025.html">Danny Bryant - Live 2025</a></td><td>Bluesrock</td><td>Backstage Club</td></tr><tr>
+<td>09 Mai 2025</td><td><a href="https://backstage.eu/setyoursails-bad-blood-tour-2025.html">Setyøursails - Bad Blood Tour 2025</a></td><td>Metalcore</td><td>Backstage Halle</td></tr><tr>
+<td>09 Mai 2025</td><td><a href="https://backstage.eu/cody-pennington-country-show-live-2025.html">Cody Pennington Country Show - Live 2025</a></td><td>Country</td><td>Backstage Werk</td></tr><tr>
+<td>09 Mai 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/09-05-2025_aborted-aborted">Aborted</a></td><td> Grindcore, Death Metal</td><td>Feierwerk</td></tr><tr>
+<td>10 Mai 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/eisbrecher-2/">Eisbrecher</a></td><td>Neue Deutsche Harte</td><td>Zenith</td></tr><tr>
+<td>10 Mai 2025</td><td><a href="https://backstage.eu/subway-to-sally-post-mortem-tour-2025.html">Subway To Sally - Post Mortem – Tour 2025</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>10 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7294/melike-sahin">Melike Sahin</a></td><td>Turkish Pop, Turkish Singer-songwriter, Turkish Alt Pop</td><td>Muffathalle</td></tr><tr>
+<td>10 Mai 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/10-05-2025_savvy">Savvy</a></td><td>Rap,  Pop</td><td>Feierwerk</td></tr><tr>
+<td>10 Mai 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/10-05-2025_blood-incantation-blood-incantation-minami-deutsch">Blood Incantation</a></td><td>Death Metal</td><td>Feierwerk</td></tr><tr>
+<td>10 Mai 2025</td><td><a href="https://t.rausgegangen.de/tickets/shop/sun-king-music-artists-concerts">Patrick James</a></td><td>Singer-Songwriter</td><td>Kult9</td></tr><tr>
+<td>11 Mai 2025</td><td><a href="https://strom-muc.de/event/olson-2/">Olson</a></td><td>German Cloud Rap</td><td>Strom</td></tr><tr>
+<td>11 Mai 2025</td><td><a href="https://backstage.eu/crematory-destination-tour-2025.html">Crematory - Destination Tour 2025</a></td><td>Gothic Metal</td><td>Backstage Club</td></tr><tr>
+<td>11 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7262/cari-cari">Cari Cari</a></td><td>Austrian Pop</td><td>Muffathalle</td></tr><tr>
+<td>12 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/6957/tom-twers">Tom Twers</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>12 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7332/bambara">Bambara</a></td><td>Shoegaze, Seen Live, Noise Rock, Post-punk, Crank Wave</td><td>Muffathalle</td></tr><tr>
+<td>13 Mai 2025</td><td><a href="https://backstage.eu/calli-tour-2025.html">Calli - Tour 2025</a></td><td>Rap</td><td>Backstage Club</td></tr><tr>
+<td>13 Mai 2025</td><td><a href="https://backstage.eu/alexandra-kay-all-i-ve-ever-known-the-tour.html">Alexandra Kay - All I've Ever Known: The Tour</a></td><td>Country</td><td>Backstage Halle</td></tr><tr>
+<td>13 Mai 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/13-05-2025_eleha">Eleha</a></td><td>Hip-Hop,  Rap,  Pop</td><td>Feierwerk</td></tr><tr>
+<td>14 Mai 2025</td><td><a href="https://backstage.eu/molly-hatchet-live-2025.html">Molly Hatchet - Live 2025</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>15 Mai 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/15-05-2025_radhika-das">Radhika Das</a></td><td>Ambient,  Experimental</td><td>Feierwerk</td></tr><tr>
+<td>15 Mai 2025</td><td><a href="https://backstage.eu/decapitated-infernal-bloodshed-over-europe-2025.html">Decapitated - Infernal Bloodshed Over Europe 2025</a></td><td>Technical Death Metal</td><td>Backstage Halle</td></tr><tr>
+<td>16 Mai 2025</td><td><a href="https://backstage.eu/jamaram-25-years-on-the-road-anniversary-tour.html">Jamaram - 25 Years On The Road - Anniversary Tour</a></td><td>Dub, Reggae</td><td>Backstage Werk</td></tr><tr>
+<td>16 Mai 2025</td><td><a href="https://backstage.eu/arena-30th-anniversary-tour.html">Arena - 30th Anniversary Tour</a></td><td>Progressive Rock</td><td>Backstage Club</td></tr><tr>
+<td>16 Mai 2025</td><td><a href="https://backstage.eu/zymba-heaven-s-gate-tour-2025.html">Zymba - Heaven's Gate Tour 2025</a></td><td></td><td>Backstage Halle</td></tr><tr>
+<td>16 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7258/yvonne-catterfeld">Yvonne Catterfeld</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>16 Mai 2025</td><td><a href="https://t.rausgegangen.de/tickets/shop/sun-king-music-artists-concerts">Hayley Reardon</a></td><td>Singer-Songwriter</td><td>Kult9</td></tr><tr>
+<td>18 Mai 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/playstation-the-concert-n4669">PlayStation™ The Concert</a></td><td>Video Game</td><td>Olympiahalle</td></tr><tr>
+<td>18 Mai 2025</td><td><a href="https://backstage.eu/sandra-hesch-immer-da-tour.html">Sandra Hesch - Immer Da - Tour</a></td><td>Pop</td><td>Backstage Club</td></tr><tr>
+<td>20 Mai 2025</td><td><a href="https://backstage.eu/popa-chubby-the-beast-band.html">Popa Chubby & The Beast Band - Live 2025</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>20 Mai 2025</td><td><a href="https://backstage.eu/fillies-lieben-leben-lassen-tour.html">Fillies - Lieben & Leben: Lassen - Tour</a></td><td>Pop, Indie, Rock</td><td>Backstage Club</td></tr><tr>
+<td>22 Mai 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/disney-in-concert-n4239">Disney in Concert</a></td><td>Movie Tunes</td><td>Olympiahalle</td></tr><tr>
+<td>22 Mai 2025</td><td><a href="https://backstage.eu/jennifer-weist-nackt-mein-leben-zwischen-den-zeilen.html">Jennifer Weist - „nackt - Mein Leben Zwischen Den Zeilen“</a></td><td>Lesung, Akustik</td><td>Backstage Arena</td></tr><tr>
+<td>23 Mai 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/23-05-2025_elder-elder">Elder</a></td><td>Doom-Metal,  Stonerrock</td><td>Feierwerk</td></tr><tr>
+<td>24 Mai 2025</td><td><a href="https://strom-muc.de/event/pigs-pigs-pigs-pigs-pigs-pigs-pigs/">Pigs Pigs Pigs Pigs Pigs Pigs Pigs</a></td><td>Newcastle Indie, Crank Wave</td><td>Strom</td></tr><tr>
+<td>24 Mai 2025</td><td><a href="https://backstage.eu/ak-ausserkontrolle-mask-off-tour.html">Ak Ausserkontrolle - Mask Off Tour</a></td><td>Rap</td><td>Backstage Werk</td></tr><tr>
+<td>24 Mai 2025</td><td><a href="https://backstage.eu/coldheart-live-2025.html">Coldheart - Rock Classics | Live 2025</a></td><td>Rock</td><td>Backstage Club</td></tr><tr>
+<td>24 Mai 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/24-05-2025_pink-turns-blue">Pink Turns Blue</a></td><td>Postpunk,  Punk-Rock</td><td>Feierwerk</td></tr><tr>
+<td>25 Mai 2025</td><td><a href="https://backstage.eu/florian-grey-sanz-beautiful-ending-co-headliner-tour.html">Florian Grey + Sanz - Beautiful Ending Co-headliner Tour 2025</a></td><td>Dark Rock</td><td>Backstage Club</td></tr><tr>
+<td>25 Mai 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7312/luke-noa">Luke Noa</a></td><td>German Indie Pop</td><td>Muffathalle</td></tr><tr>
+<td>28 Mai 2025</td><td><a href="https://backstage.eu/avaion-you-are-seen-tour-2025.html">Avaion - You Are Seen Tour 2025</a></td><td>Elctronic</td><td>Backstage Werk</td></tr><tr>
+<td>28 Mai 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/28-05-2025_rummelsnuff-rummelsnuff">RUMMELSNUFF</a></td><td>Electro-Pop</td><td>Feierwerk</td></tr><tr>
+<td>30 Mai 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/tarkan-n4709">Tarkan</a></td><td>Turkish Pop</td><td>Olympiahalle</td></tr><tr>
+<td>30 Mai 2025</td><td><a href="https://backstage.eu/grima-live-2025.html">Grima - Live 2025</a></td><td>Black Metal</td><td>Backstage Halle</td></tr><tr>
+<td>31 Mai 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/steven-wilson-2/">Steven Wilson</a></td><td>Progressive Rock, Progressive Metal</td><td>Zenith</td></tr><tr>
+<td>31 Mai 2025</td><td><a href="https://strom-muc.de/event/camel-power-club/">Camel Power Club</a></td><td>New French Touch</td><td>Strom</td></tr><tr>
+<td>31 Mai 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/dua-lipa-n4612">Dua Lipa</a></td><td>Pop, Uk Pop, Dance Pop</td><td>Olympiahalle</td></tr><tr>
+<td>31 Mai 2025</td><td><a href="https://backstage.eu/umse-immunsystem-tour-2025.html">Umse - Immunsystem-tour 2025</a></td><td>HipHop</td><td>Backstage Werk</td></tr><tr>
+<td>01 Juni 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/dua-lipa-n4612">Dua Lipa</a></td><td>Pop, Uk Pop, Dance Pop</td><td>Olympiahalle</td></tr><tr>
+<td>03 Juni 2025</td><td><a href="https://strom-muc.de/event/throwing-muses/">Throwing Muses</a></td><td>Rhode Island Indie, Alternative Rock, Dream Pop, Riot Grrrl, Alternative Pop, Boston Rock</td><td>Strom</td></tr><tr>
+<td>06 Juni 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/roland-kaiser-n4601">Roland Kaiser</a></td><td>Classic Schlager, Schlager</td><td>Olympiahalle</td></tr><tr>
+<td>07 Juni 2025</td><td><a href="https://strom-muc.de/event/uuhai/">Uuhai</a></td><td>Mongolia, Mongolian, Seen Live, Metal, Folk Metal</td><td>Strom</td></tr><tr>
+<td>11 Juni 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/tate-mcrae-n4712">Tate McRae</a></td><td>Pop</td><td>Olympiahalle</td></tr><tr>
+<td>01 Juli 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/6k-united-n4685">6K UNITED!</a></td><td>Fussball</td><td>Olympiahalle</td></tr><tr>
+<td>02 Juli 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/6k-united-n4685">6K UNITED!</a></td><td>Kinderchor</td><td>Olympiahalle</td></tr><tr>
+<td>09 Juli 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/lionel-richie-n4673">Lionel Richie</a></td><td>Soft Rock</td><td>Olympiahalle</td></tr><tr>
+<td>10 Juli 2025</td><td><a href="https://backstage.eu/the-devil-makes-three-live-2025.html">The Devil Makes Three - Live 2025</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>13 Juli 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/judas-priest-n4692">Judas Priest</a></td><td>Rock, Glam Metal, Birmingham Metal, Alternative Metal, Metal, Album Rock, Hard Rock</td><td>Olympiahalle</td></tr><tr>
+<td>19 Juli 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/sommernachtstraum-n4731">Sommernachtstraum</a></td><td></td><td>Olympiapark München</td></tr><tr>
+<td>26 Juli 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/robbie-williams-n4699">Robbie Williams</a></td><td>Europop, Dance Rock</td><td>Olympiastadion</td></tr><tr>
+<td>04 September 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/ayliva-n4698">Ayliva</a></td><td>German Pop</td><td>Olympiahalle</td></tr><tr>
+<td>05 September 2025</td><td><a href="https://backstage.eu/yakary-bubu-tour-2025.html">Yakary - Bubu Tour 2025</a></td><td>Rap</td><td>Backstage Werk</td></tr><tr>
+<td>05 September 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/ayliva-n4698">Ayliva</a></td><td>German Pop</td><td>Olympiahalle</td></tr><tr>
+<td>10 September 2025</td><td><a href="https://backstage.eu/primal-fear-domination-tour-2025.html">Primal Fear - Domination Tour 2025</a></td><td>Power Metal</td><td>Backstage Werk</td></tr><tr>
+<td>11 September 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/cro-n4621">CRO</a></td><td>German Hip Hop</td><td>Olympiahalle</td></tr><tr>
+<td>12 September 2025</td><td><a href="https://backstage.eu/cr7z-galaxie-tour.html">Cr7z - Galaxie Tour</a></td><td>Rap</td><td>Backstage Club</td></tr><tr>
+<td>12 September 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/cro-n4621">CRO</a></td><td>German Hip Hop</td><td>Olympiahalle</td></tr><tr>
+<td>13 September 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7142/granada">Granada</a></td><td>Graz Indie, Volkspop, Austropop</td><td>Muffathalle</td></tr><tr>
+<td>20 September 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/parkway-drive-n4658">Parkway Drive</a></td><td>Australian Metalcore, Nu Metal, Metalcore, Melodic Metalcore, Alternative Metal</td><td>Olympiahalle</td></tr><tr>
+<td>20 September 2025</td><td><a href="https://backstage.eu/257ers-endlich-erwachsen-tour-2025.html">257ers - Endlich Erwachsen Tour 2025</a></td><td>Rap</td><td>Backstage Werk</td></tr><tr>
+<td>26 September 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/montez-n4489">Montez</a></td><td>German Hip Hop, German Pop</td><td>Olympiahalle</td></tr><tr>
+<td>27 September 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/one-vision-of-queen-n4680">One Vision of Queen</a></td><td></td><td>Olympiahalle</td></tr><tr>
+<td>27 September 2025</td><td><a href="https://backstage.eu/bleed-from-within-the-zenith-tour-2025.html">Bleed From Within - The Zenith Tour 2025</a></td><td>Heavy Metal</td><td>Backstage Werk</td></tr><tr>
+<td>03 Oktober 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/finch-n4728">FiNCH</a></td><td>Tekk</td><td>Olympiahalle</td></tr><tr>
+<td>06 Oktober 2025</td><td><a href="https://backstage.eu/brings-brings-tour-2025.html">Brings - Brings Tour 2025</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>06 Oktober 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7309/henrik-freischlader">Henrik Freischlader</a></td><td>Modern Blues, German Blues</td><td>Muffathalle</td></tr><tr>
+<td>08 Oktober 2025</td><td><a href="https://backstage.eu/felicia-lu-bittersweet-the-tour.html">Felicia Lu - Bittersweet - The Tour</a></td><td>Pop</td><td>Backstage Club</td></tr><tr>
+<td>09 Oktober 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7336/philipp-dittberner">Philipp Dittberner</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>09 Oktober 2025</td><td><a href="https://backstage.eu/rauhbein-adrenalin-tour-2025.html">Rauhbein - Adrenalin Tour 2025</a></td><td>Folk Rock</td><td>Backstage Halle</td></tr><tr>
+<td>12 Oktober 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/arch-enemy-2/">Arch Enemy</a></td><td>Swedish Metal, Symphonic Metal, Death Metal, Power Metal, Alternative Metal, Speed Metal, Swedish Melodeath, Metal, Melodic Death Metal, Swedish Death Metal</td><td>Zenith</td></tr><tr>
+<td>12 Oktober 2025</td><td><a href="https://backstage.eu/reis-against-the-spulmachine-live-2025.html">Reis Against The Spülmachine - Live 2025</a></td><td>Musik Comedy</td><td>Backstage Club</td></tr><tr>
+<td>15 Oktober 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7227/jeremias">Jeremias</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>17 Oktober 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/feuerschwanz-x-lord-of-the-lost/">Feuerschwanz</a></td><td>Medieval Rock</td><td>Zenith</td></tr><tr>
+<td>17 Oktober 2025</td><td><a href="https://backstage.eu/feuerschwanz-lord-of-the-lost-lords-of-fyre-tour-2025.html">Feuerschwanz & Lord Of The Lost - Lords Of Fyre Tour 2025</a></td><td>Rock</td><td>Zenith</td></tr><tr>
+<td>17 Oktober 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7033/josh">Josh.</a></td><td>Volkspop, Austropop</td><td>Muffathalle</td></tr><tr>
+<td>18 Oktober 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/hans-zimmer-live-n4625">Hans Zimmer live</a></td><td>Soundtrack, Orchestral Soundtrack, German Soundtrack</td><td>Olympiahalle</td></tr><tr>
+<td>18 Oktober 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/18-10-2025_herrenmagazin-herrenmagazin">Herrenmagazin</a></td><td>Indie,  Pop</td><td>Feierwerk</td></tr><tr>
+<td>19 Oktober 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/samra-2/">Samra</a></td><td>German Hip Hop</td><td>Zenith</td></tr><tr>
+<td>19 Oktober 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/hans-zimmer-live-n4625">Hans Zimmer live</a></td><td>Soundtrack, Orchestral Soundtrack, German Soundtrack</td><td>Olympiahalle</td></tr><tr>
+<td>21 Oktober 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/simply-red-n4643">Simply Red</a></td><td>British Soul, Soft Rock, New Wave Pop, New Wave, New Romantic, Sophisti-pop</td><td>Olympiahalle</td></tr><tr>
+<td>22 Oktober 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/dardan/">Dardan</a></td><td>German Hip Hop, Albanian Hip Hop</td><td>Zenith</td></tr><tr>
+<td>25 Oktober 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/dicht-ergreifend-n4442">dicht & ergreifend</a></td><td>Bayerischer Rap, Volkspop</td><td>Olympiahalle</td></tr><tr>
+<td>25 Oktober 2025</td><td><a href="https://backstage.eu/dame-der-weg-ist-das-ziel-live-2025.html">Dame - Der Weg Ist Das Ziel - Live 2025</a></td><td>Rap</td><td>Backstage Werk</td></tr><tr>
+<td>26 Oktober 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7324/anda-morts">Anda Morts</a></td><td>Neue Neue Deutsche Welle</td><td>Muffathalle</td></tr><tr>
+<td>28 Oktober 2025</td><td><a href="https://backstage.eu/ronnie-romero-gus-g-convergence-tour-2025.html">Ronnie Romero & Gus G. - Convergence - Tour 2025</a></td><td>Rock, Metal</td><td>Backstage Halle</td></tr><tr>
+<td>28 Oktober 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7116/og-keemo">OG Keemo</a></td><td>German Hip Hop, German Alternative Rap</td><td>Muffathalle</td></tr><tr>
+<td>29 Oktober 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/nina-chuba-n4245">Nina Chuba</a></td><td>German Pop, Hamburg Hip Hop</td><td>Olympiahalle</td></tr><tr>
+<td>30 Oktober 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/the-offspring-n4651">The Offspring</a></td><td>Permanent Wave, Post-grunge, Rock, Punk, Skate Punk, Socal Pop Punk, Alternative Metal</td><td>Olympiahalle</td></tr><tr>
+<td>31 Oktober 2025</td><td><a href="https://backstage.eu/mono-inc-live-2025.html">Mono Inc. - Live 2025</a></td><td>Dark Rock</td><td>Backstage Werk</td></tr><tr>
+<td>05 November 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/il-volo-n4656">IL Volo</a></td><td>Operatic Pop, Italian Progressive Rock</td><td>Olympiahalle</td></tr><tr>
+<td>05 November 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7237/ness">Ness</a></td><td>German Pop</td><td>Muffathalle</td></tr><tr>
+<td>06 November 2025</td><td><a href="https://backstage.eu/marianne-rosenberg-bunter-planet-tour.html">Marianne Rosenberg - Bunter Planet Tour</a></td><td>Schlager</td><td>Backstage Werk</td></tr><tr>
+<td>07 November 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/saltatio-mortis-2/">Saltatio Mortis</a></td><td>German Metal, Neue Deutsche Harte, Hurdy-gurdy, Medieval Rock</td><td>Zenith</td></tr><tr>
+<td>07 November 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/sdp-n4490">SDP</a></td><td>German Pop, German Reggae</td><td>Olympiahalle</td></tr><tr>
+<td>08 November 2025</td><td><a href="https://strom-muc.de/event/rokko-weissensee/">Rokko Weissensee</a></td><td>German Boom Bap</td><td>Strom</td></tr><tr>
+<td>09 November 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/h-blockx/">H-blockx</a></td><td>German Alternative Rock, German Rock</td><td>Zenith</td></tr><tr>
+<td>09 November 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/onerepublic-n4718">OneRepublic</a></td><td>Pop, Piano Rock</td><td>Olympiahalle</td></tr><tr>
+<td>09 November 2025</td><td><a href="https://backstage.eu/from-fall-to-spring-tour-2025.html">From Fall To Spring - Tour 2025</a></td><td>Post Hardcore</td><td>Backstage Halle</td></tr><tr>
+<td>10 November 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7250/anna-r">AnNa R.</a></td><td>Lomoli</td><td>Muffathalle</td></tr><tr>
+<td>12 November 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7319/isaak">Isaak</a></td><td>Pop, Rock, Stoner, Stoner Rock, Stoner Metal</td><td>Muffathalle</td></tr><tr>
+<td>13 November 2025</td><td><a href="https://backstage.eu/asp-asp-auf-hollenfahrt-2025.html">Asp - Asp Auf Höllenfahrt 2025</a></td><td>Dark Rock</td><td>Backstage Werk</td></tr><tr>
+<td>14 November 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7264/guano-apes">Guano Apes</a></td><td>German Alternative Rock, Nu Metal, German Rock, Funk Rock, Funk Metal</td><td>Muffathalle</td></tr><tr>
+<td>18 November 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/kontra-k--n4192">Kontra K</a></td><td>German Hip Hop, German Pop</td><td>Olympiahalle</td></tr><tr>
+<td>19 November 2025</td><td><a href="https://backstage.eu/diary-of-dreams-live-2025.html">Diary Of Dreams - Live 2025</a></td><td>Dark Wave</td><td>Backstage Werk</td></tr><tr>
+<td>20 November 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/sabaton-n4702">Sabaton</a></td><td>Swedish Metal, Swedish Power Metal, Power Metal</td><td>Olympiahalle</td></tr><tr>
+<td>22 November 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/mia-julia/">Mia Julia</a></td><td>Schlager, Partyschlager</td><td>Zenith</td></tr><tr>
+<td>22 November 2025</td><td><a href="https://backstage.eu/avralize-liminal-tour-2025.html">Avralize - Liminal Tour 2025</a></td><td>Metalcore</td><td>Backstage Club</td></tr><tr>
+<td>22 November 2025</td><td><a href="https://backstage.eu/smoke-blow-final-hands-2025.html">Smoke Blow - Final Hands 2025</a></td><td>Rock</td><td>Backstage Halle</td></tr><tr>
+<td>22 November 2025</td><td><a href="https://www.feierwerk.de//konzert-kulturprogramm/detail/22-11-2025_conny-conny">Conny</a></td><td>Rap,  Hip-Hop</td><td>Feierwerk</td></tr><tr>
+<td>24 November 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7226/mine-orchester">Mine & Orchester</a></td><td>German Indie</td><td>Muffathalle</td></tr><tr>
+<td>25 November 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/till-lindemann-n4704">Till Lindemann</a></td><td>Industrial Metal, Till Lindemann, Rammstein, Seen Live, German</td><td>Olympiahalle</td></tr><tr>
+<td>25 November 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7337/paves-16">Paves 16</a></td><td>German-hip-hop</td><td>Muffathalle</td></tr><tr>
+<td>26 November 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/-electric-callboy-n4716">Electric Callboy</a></td><td>Comic Metal, Trancecore, German Metalcore</td><td>Olympiahalle</td></tr><tr>
+<td>29 November 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/hbz-2/">Hbz</a></td><td>Melbourne Bounce International, Hypertechno</td><td>Zenith</td></tr><tr>
+<td>29 November 2025</td><td><a href="https://backstage.eu/my-tallica-tribute-to-metallica-2025.html">My'tallica - Tribute To Metallica 2025</a></td><td>Coverband</td><td>Backstage Halle</td></tr><tr>
+<td>02 Dezember 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/luciano-n4173">Luciano</a></td><td>German Drill, German Hip Hop</td><td>Olympiahalle</td></tr><tr>
+<td>02 Dezember 2025</td><td><a href="https://www.muffatwerk.de//de/events/view/7093/kat-frankie">Kat Frankie</a></td><td>German Indie</td><td>Muffathalle</td></tr><tr>
+<td>05 Dezember 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/tream-n4609">TREAM</a></td><td>Techno Remix</td><td>Olympiahalle</td></tr><tr>
+<td>06 Dezember 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/tream-n4609">TREAM</a></td><td>Techno Remix</td><td>Olympiahalle</td></tr><tr>
+<td>07 Dezember 2025</td><td><a href="https://backstage.eu/clutch-tour-2025.html">Clutch - Tour 2025</a></td><td>Rock</td><td>Backstage Werk</td></tr><tr>
+<td>08 Dezember 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/bohse-onkelz-n4714">Böhse Onkelz</a></td><td>German Rock, German Hard Rock</td><td>Olympiahalle</td></tr><tr>
+<td>09 Dezember 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/bohse-onkelz-n4714">Böhse Onkelz</a></td><td>German Rock, German Hard Rock</td><td>Olympiahalle</td></tr><tr>
+<td>13 Dezember 2025</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/deine-freunde/">Deine Freunde</a></td><td>Kindermusik</td><td>Zenith</td></tr><tr>
+<td>16 Dezember 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/apache-207-n4636">Apache 207</a></td><td>German Hip Hop</td><td>Olympiahalle</td></tr><tr>
+<td>18 Dezember 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/apache-207-n4636">Apache 207</a></td><td>German Hip Hop</td><td>Olympiahalle</td></tr><tr>
+<td>19 Dezember 2025</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/apache-207-n4636">Apache 207</a></td><td>German Hip Hop</td><td>Olympiahalle</td></tr><tr>
+<td>09 Januar 2026</td><td><a href="https://backstage.eu/eddin-23-59-tour-35-jahre-backstage.html">Eddin -"23:59" Tour- | 35 Jahre Backstage</a></td><td>Rap</td><td>Backstage Werk</td></tr><tr>
+<td>10 Januar 2026</td><td><a href="https://www.muffatwerk.de//de/events/view/7331/queenz-of-piano">Queenz of Piano</a></td><td>Bow Pop</td><td>Muffathalle</td></tr><tr>
+<td>19 Januar 2026</td><td><a href="https://www.muffatwerk.de//de/events/view/7310/monet192">Monet192</a></td><td>German Hip Hop</td><td>Muffathalle</td></tr><tr>
+<td>22 Januar 2026</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/bushido-n4471">Bushido</a></td><td>German Hip Hop</td><td>Olympiahalle</td></tr><tr>
+<td>02 Februar 2026</td><td><a href="https://muenchen.motorworld.de/veranstaltungen/stardew-valley/">Stardew Valley</a></td><td>Fugly, Fucking Ugly, Overrated Ripoff, Overrated, Ripoff</td><td>Zenith</td></tr><tr>
+<td>12 März 2026</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/ben-zucker-n4724">Ben Zucker</a></td><td>Schlager, German Pop</td><td>Olympiahalle</td></tr><tr>
+<td>26 März 2026</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/howard-carpendale-n4675">Howard Carpendale</a></td><td>Classic Schlager, Schlager</td><td>Olympiahalle</td></tr><tr>
+<td>28 März 2026</td><td><a href="https://backstage.eu/julian-sommer-jetzt-kommt-der-sommer-tour-2026.html">Julian Sommer - Jetzt Kommt Der Sommer - Tour 2026</a></td><td>Schlager</td><td>Backstage Werk</td></tr><tr>
+<td>29 März 2026</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/sarah-connor-n4697">Sarah Connor</a></td><td>German Pop</td><td>Olympiahalle</td></tr><tr>
+<td>18 April 2026</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/johannes-oerding-n4687">Johannes Oerding</a></td><td>German Pop, German Pop Rock</td><td>Olympiahalle</td></tr><tr>
+<td>19 April 2026</td><td><a href="https://www.muffatwerk.de//de/events/view/7315/scala-kolacny-brothers">Scala & Kolacny Brothers</a></td><td>Mixed-classical-instrumental</td><td>Muffathalle</td></tr><tr>
+<td>29 April 2026</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/michael-patrick-kelly-n4678">Michael Patrick Kelly</a></td><td>German Pop</td><td>Olympiahalle</td></tr><tr>
+<td>16 Mai 2026</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/sportfreunde-stiller-n4738">Sportfreunde Stiller</a></td><td>Munich Indie, German Indie, German Pop, German Indie Rock</td><td>Olympiahalle</td></tr><tr>
+<td>29 Mai 2026</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/dj-bobo-n4741">DJ BoBo</a></td><td>Europop, Eurodance</td><td>Olympiahalle</td></tr><tr>
+<td>17 Juli 2026</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/helene-fischer-n4252">Helene Fischer</a></td><td>Schlager</td><td>Allianz Arena</td></tr><tr>
+<td>10 November 2026</td><td><a href="https://www.olympiapark.de/de/veranstaltungen/nico-santos-n4733">Nico Santos</a></td><td>German Pop</td><td>Olympiahalle</td></tr></table></html>
