@@ -7,7 +7,8 @@ CREATE TABLE concert_entity (
     link varchar(255),
     location varchar(255),
     notified boolean not null,
-    price varchar(255),
+    support_bands varchar(1000),
     primary key (id)
 );
 
+CREATE UNIQUE INDEX unique_title_date ON concert_entity(title, date);

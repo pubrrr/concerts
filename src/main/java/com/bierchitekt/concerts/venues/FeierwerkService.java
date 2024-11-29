@@ -1,7 +1,6 @@
 package com.bierchitekt.concerts.venues;
 
 import com.bierchitekt.concerts.ConcertDTO;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -15,9 +14,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,13 +28,13 @@ public class FeierwerkService {
 
     private static final String VENUE_NAME = "Feierwerk";
 
-    @PostConstruct
-    public List<ConcertDTO> getConcerts() {
-        log.info("getting {} concerts", VENUE_NAME);
-        List<ConcertDTO> allConcerts = new ArrayList<>();
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+    public Set<String> getConcertLinks() {
+        Set<String> concertLinks = new HashSet<>();
 
         try {
-            String baseUrl = "https://www.feierwerk.de/";
+            String baseUrl = "https://www.feierwerk.de";
             String feierwerkDirectory = "/tmp/feierwerk/";
             Set<String> strings = listFilesUsingJavaIO(feierwerkDirectory);
             log.info("got {} {} pages", strings.size(), VENUE_NAME);
@@ -42,54 +42,65 @@ public class FeierwerkService {
             for (String file : strings) {
 
                 File input = new File(feierwerkDirectory + file);
-                Document doc;
-                try {
-                    doc = Jsoup.parse(input, "UTF-8", "https://www.feierwerk.de/");
-                } catch (IOException e) {
-                    return List.of();
-                }
 
-                Elements concerts = doc.select("div.event.cp-view");
+                Document doc = Jsoup.parse(input, "UTF-8", "https://www.feierwerk.de/");
+
+
+                Elements concerts = doc.select("a[href]");
                 for (Element concert : concerts) {
-                    String title = "";
-                    String concertDetail = "";
-                    Element titleElement = concert.select("h2.event-artist-name").first();
-                    if (titleElement != null) {
-                        concertDetail = titleElement.text();
-                    } else {
-                        continue;
+                    String href = concert.attr("href");
+                    if (href.startsWith("/konzert-kulturprogramm/detail/")) {
+                        concertLinks.add(baseUrl + href);
                     }
-
-                    // result: » The Peach Cans [ Funk, Disco, Jazz … | München ]
-                    title = StringUtils.substringBetween(concertDetail, "»", "[").trim();
-
-                    String genre = StringUtils.substringBetween(concertDetail, "[", "…").trim();
-
-                    if (genre.contains("Illustrationen") || genre.contains("Ausstellung") || genre.contains("Malerei")) {
-                        continue;
-                    }
-
-                    Set<String> genres = Arrays.stream(genre.split(",")).collect(Collectors.toSet());
-                    String select2 = concert.select("div.event-date-location").first().text();
-                    String link = baseUrl + concert.select("a[href]").getFirst().attr("href");
-
-                    String substring = select2.substring(3, 13);
-
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-                    LocalDate localDate = LocalDate.parse(substring, formatter);
-
-                    ConcertDTO concertDTO = new ConcertDTO(title, localDate, link, genres, VENUE_NAME, null);
-                    allConcerts.add(concertDTO);
                 }
-
             }
-            log.info("received {} {} concerts", allConcerts.size(), VENUE_NAME);
         } catch (Exception ex) {
-            log.warn("error getting feierwerk-concerts", ex);
-            return allConcerts;
+            log.warn("exception", ex);
         }
-        log.info("received {} {} concerts", allConcerts.size(), VENUE_NAME);
-        return allConcerts;
+        log.info("found {} {} links", concertLinks.size(), VENUE_NAME);
+        return concertLinks;
+    }
+
+    public Optional<ConcertDTO> getConcert(String url) {
+
+        try {
+            Document doc = Jsoup.connect(url).get();
+            List<String> bands = getBands(doc);
+            LocalDate date = getDate(doc);
+            Set<String> genres = getGenres(doc);
+            if (bands.isEmpty()) {
+                return Optional.empty();
+            }
+
+
+            for (String genre : genres) {
+                if (genre.contains("Ausstellung") || genre.contains("Malerei") || genre.contains("Illustrationen") || genre.contains("Workshops")) {
+                    return Optional.empty();
+                }
+            }
+            String supportBands = String.join(", ", bands);
+
+            return Optional.of(new ConcertDTO(bands.getFirst(), date, url, genres, VENUE_NAME, supportBands));
+        } catch (IOException e) {
+            return Optional.empty();
+        }
+    }
+
+    private Set<String> getGenres(Document doc) {
+        String genres = doc.select("p.artiststyle").text();
+        genres = StringUtils.substringBetween(genres, "Stil: ", "|");
+        if (genres == null) {
+            return Set.of();
+        }
+        String[] split = genres.split(",");
+        return Set.of(split);
+    }
+
+    private LocalDate getDate(Document doc) {
+
+        String date = doc.select("div.event-date-location-detail").text();
+
+        return LocalDate.parse(date.substring(3, 13), formatter);
     }
 
     private Set<String> listFilesUsingJavaIO(String dir) {
@@ -104,15 +115,18 @@ public class FeierwerkService {
                 .collect(Collectors.toSet());
     }
 
-    public String getPrice(String url) {
-        Document doc;
+    private List<String> getBands(Document doc) {
+        List<String> bands = new ArrayList<>();
         try {
-            doc = Jsoup.connect(url).get();
-        } catch (IOException e) {
-            return null;
-        }
-        String details = doc.select("div.further-details").getFirst().text();
-        return StringUtils.substringBetween(details, "VVK: ", "zzgl.");
 
+            Elements select = doc.select("h3.artistname");
+            for (Element band : select) {
+                bands.add(band.text());
+            }
+
+        } catch (Exception ex) {
+            log.warn("exception: ", ex);
+        }
+        return bands;
     }
 }

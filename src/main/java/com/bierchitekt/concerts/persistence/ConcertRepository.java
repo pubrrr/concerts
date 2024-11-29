@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -22,4 +23,6 @@ public interface ConcertRepository extends JpaRepository<ConcertEntity, String> 
     List<ConcertEntity> findByTitleAndDate(String title, LocalDate date);
 
     List<ConcertEntity> findByGenreIn(Set<String> s);
+
+    Optional<ConcertEntity> findByLink(String url);
 }

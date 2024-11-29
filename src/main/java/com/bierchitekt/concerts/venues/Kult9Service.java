@@ -2,7 +2,6 @@ package com.bierchitekt.concerts.venues;
 
 import com.bierchitekt.concerts.ConcertDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -55,19 +54,12 @@ public class Kult9Service {
 
                 day = day.substring(4);
                 LocalDate date = LocalDate.parse(day, formatter);
-                String price = event.select("div.price").text();
-                price = StringUtils.substringBetween(price, "VVK", "AK");
-                if (price != null) {
-                    price = price.replaceFirst(":", "");
-                    price = price.trim();
-                    price = price.replace(":", ",");
-                }
                 Elements linkElement = event.select("div.btnarea").select("a[href]");
                 String link = "";
                 if (!linkElement.isEmpty()) {
                     link = event.select("div.btnarea").select("a[href]").getFirst().attr("href");
                 }
-                ConcertDTO concertDTO = new ConcertDTO(title, date, link, allGenres, VENUE_NAME, price);
+                ConcertDTO concertDTO = new ConcertDTO(title, date, link, allGenres, VENUE_NAME, "");
                 allConcerts.add(concertDTO);
             }
         } catch (Exception ex) {

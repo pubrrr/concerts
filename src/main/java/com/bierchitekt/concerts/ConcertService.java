@@ -11,13 +11,13 @@ import com.bierchitekt.concerts.venues.OlympiaparkService;
 import com.bierchitekt.concerts.venues.StromService;
 import com.bierchitekt.concerts.venues.Theaterfabrik;
 import com.bierchitekt.concerts.venues.ZenithService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -49,7 +49,6 @@ public class ConcertService {
     private final GenreService genreService;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
-
 
     public void notifyNewConcerts() {
         log.info("notifying for new concerts");
@@ -84,8 +83,12 @@ public class ConcertService {
             for (ConcertEntity concert : newConcerts) {
                 message += "<b>" + concert.getTitle() + "</b> \n" +
                         "on " + concert.getDate().format(formatter) + " \n" +
-                        "genre is " + concert.getGenre() + " \n" +
-                        "playing at <a href=\"" + concert.getLink() + "\">" + concert.getLocation() + "</a>\n\n";
+                        "genre is " + concert.getGenre() + " \n";
+                if (!concert.getSupportBands().isEmpty()) {
+                    message += "support bands are " + concert.getSupportBands() + "\n";
+
+                }
+                message += "playing at <a href=\"" + concert.getLink() + "\">" + concert.getLocation() + "</a>\n\n";
             }
             telegramService.sendMessage(channelName, message);
         }
@@ -131,14 +134,14 @@ public class ConcertService {
         log.info("starting");
 
         List<ConcertDTO> allConcerts = new ArrayList<>();
+        allConcerts.addAll(getFeierwerkConcerts());
+        allConcerts.addAll(getBackstageConcerts());
         allConcerts.addAll(getOlympiaparkConcerts());
         allConcerts.addAll(getKult9Concerts());
         allConcerts.addAll(getZenithConcerts());
         allConcerts.addAll(getTheaterfabrikConcerts());
         allConcerts.addAll(getStromConcerts());
-        allConcerts.addAll(getBackstageConcerts());
         allConcerts.addAll(getMuffathalleConcerts());
-        allConcerts.addAll(getFeierwerkConcerts());
 
         log.info("found {} concerts, saving now", allConcerts.size());
         for (ConcertDTO concertDTO : allConcerts) {
@@ -148,14 +151,14 @@ public class ConcertService {
                 concertRepository.save(concertEntity);
             }
         }
-
+        generateHtml();
     }
 
     private Collection<ConcertDTO> getKult9Concerts() {
         List<ConcertDTO> kult9Concerts = new ArrayList<>();
         kult9Service.getConcerts().forEach(concert -> {
             if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
-                kult9Concerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), concert.price()));
+                kult9Concerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), ""));
             }
         });
         return kult9Concerts;
@@ -166,7 +169,7 @@ public class ConcertService {
         theaterfabrikService.getConcerts().forEach(concert -> {
             if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
                 Set<String> genres = genreService.getGenres(concert.title());
-                theaterfabrikConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), concert.price()));
+                theaterfabrikConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), ""));
             }
         });
         return theaterfabrikConcerts;
@@ -177,31 +180,34 @@ public class ConcertService {
         olympiaparkService.getConcerts().forEach(concert -> {
             if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
                 Set<String> genres = genreService.getGenres(concert.title());
-                olypiaparkConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), null));
+                olypiaparkConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), ""));
             }
         });
         return olypiaparkConcerts;
     }
 
     public Collection<ConcertDTO> getFeierwerkConcerts() {
+
         List<ConcertDTO> feierwerkConcerts = new ArrayList<>();
-        feierwerkService.getConcerts().forEach(concert -> {
-            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) { // new concert, query for price
-                String price = feierwerkService.getPrice(concert.link());
-                feierwerkConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), price));
+
+        Set<String> concertLinks = feierwerkService.getConcertLinks();
+        for (String url : concertLinks) {
+            if (concertRepository.findByLink(url).isEmpty()) {
+                Optional<ConcertDTO> concertOptional = feierwerkService.getConcert(url);
+                concertOptional.ifPresent(feierwerkConcerts::add);
             }
-        });
+        }
         return feierwerkConcerts;
     }
 
-    List<ConcertDTO> getBackstageConcerts() {
+    public List<ConcertDTO> getBackstageConcerts() {
         List<ConcertDTO> backstageConcerts = new ArrayList<>();
         List<ConcertDTO> concerts = backstageService.getConcerts();
 
         concerts.forEach(concert -> {
-            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) { // new concert, query for price
-                String price = backstageService.getPrice(concert.link());
-                backstageConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), price));
+            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
+                String supportBands = backstageService.getSupportBands(concert.link());
+                backstageConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), supportBands));
             }
         });
         return backstageConcerts;
@@ -210,9 +216,9 @@ public class ConcertService {
     List<ConcertDTO> getZenithConcerts() {
         List<ConcertDTO> zenithConcerts = new ArrayList<>();
         zenithService.getConcerts().forEach(concert -> {
-            if (concertRepository.findByTitle(concert.title()).isEmpty()) { // new concert, query for price
+            if (concertRepository.findByTitle(concert.title()).isEmpty()) {
                 Set<String> genres = genreService.getGenres(concert.title());
-                zenithConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), null));
+                zenithConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), ""));
 
             }
         });
@@ -224,7 +230,7 @@ public class ConcertService {
         for (ConcertDTO concert : stromService.getConcerts()) {
             if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
                 Set<String> genres = genreService.getGenres(concert.title());
-                ConcertDTO concertDTO = new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, "Strom", null);
+                ConcertDTO concertDTO = new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, "Strom", "");
                 stromConcerts.add(concertDTO);
             }
         }
@@ -239,7 +245,7 @@ public class ConcertService {
             if (concertRepository.findByTitle(muffathalleConcert.title()).isEmpty()) { // new Concert found, need to get date and genre
                 LocalDate date = muffathalleService.getDate(muffathalleConcert.link());
                 Set<String> genres = genreService.getGenres(muffathalleConcert.title());
-                ConcertDTO concertDTO = new ConcertDTO(muffathalleConcert.title(), date, muffathalleConcert.link(), genres, muffathalleConcert.location(), null);
+                ConcertDTO concertDTO = new ConcertDTO(muffathalleConcert.title(), date, muffathalleConcert.link(), genres, muffathalleConcert.location(), "");
                 muffatHalleConcerts.add(concertDTO);
             }
         }
@@ -247,7 +253,9 @@ public class ConcertService {
 
     }
 
-    public void generateHtml() throws FileNotFoundException {
+    @PostConstruct
+    public void generateHtml() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLL yyyy");
 
         String tdOpenTag = "<td>";
         String tdCloseTag = "</td>";
@@ -258,14 +266,149 @@ public class ConcertService {
                   <meta http-equiv="Content-Type"
                         content="text/html; charset=utf-8"/>
                       <title>All Concerts in munich</title>
+                       <style>
+                        body {
+                          font-family: Arial, sans-serif;
+                          margin: 0;
+                          padding: 0;
+                          background-color: #121212;
+                          color: #e0e0e0;
+                        }
+                        .collapsible {
+                          background-color: #000;
+                          color: #ff4081;
+                          cursor: pointer;
+                          padding: 10px;
+                          width: 100%;
+                          border: none;
+                          text-align: left;
+                          outline: none;
+                          font-size: 18px;
+                        }
+                        .active, .collapsible:hover {
+                          background-color: #444;
+                        }
+                        .content {
+                          padding: 0 15px;
+                          display: block;
+                          overflow: hidden;
+                          background-color: #1e1e1e;
+                        }
+                        table {
+                          width: 95%;
+                          margin: 20px auto;
+                          border-collapse: collapse;
+                          background-color: #1e1e1e;
+                          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+                          table-layout: fixed;  /* Ermöglicht flexiblere Darstellung der Spalten */
+                        }
+                        th, td {
+                          padding: 12px;
+                          text-align: left;
+                          border-bottom: 1px solid #444;
+                          white-space: normal;  /* Normaler Textumbruch */
+                          overflow-wrap: break-word; /* Umbruch innerhalb der Zellen */
+                        }
+                        th {
+                          background-color: #000;
+                          color: #ff4081;
+                        }
+                        tr:hover {
+                          background-color: #333;
+                        }
+                        a {
+                          color: #82b1ff;
+                          text-decoration: none;
+                        }
+                        a:hover {
+                          text-decoration: underline;
+                        }
+                      </style>
+                
+                        <script>
+                          document.addEventListener("DOMContentLoaded", function() {
+                            var coll = document.getElementsByClassName("collapsible");
+                            for (var i = 0; i < coll.length; i++) {
+                              coll[i].addEventListener("click", function() {
+                                this.classList.toggle("active");
+                                var content = this.nextElementSibling;
+                                if (content.style.display === "block") {
+                                  content.style.display = "none";
+                                } else {
+                                  content.style.display = "block";
+                                }
+                              });
+                            }
+                          });
+                        </script>
                   </head>
                 
-                  <table>
+                
+                    Filter for Metal: <input type="checkbox" id="filterMetalCheckBox"> <a href="https://t.me/MunichMetalConcerts">join the telegram METAL channel to get the newest updates</a><br>
+                    Filter for Rock:  <input type="checkbox" id="filterRockCheckBox">  <a href="https://t.me/MunichRockConcerts">join the telegram ROCK channel to get the newest updates</a> <br>
+                    Filter for Punk:  <input type="checkbox" id="filterPunkCheckBox">  <a href="https://t.me/MunichPunkConcerts">join the telegram PUNK channel to get the newest updates</a><br>
+                
+                    <button onclick="filterMetal()">Apply Filter</button>
+                
+                
+                  <script >
+                
+                      function filterMetal() {
+                
+                          var checkBox = document.getElementById("filterMetalCheckBox");
+                
+                          const filterList = new Array();
+                
+                          if (document.getElementById("filterMetalCheckBox").checked == true) {
+                              filterList.push("METAL")
+                          }
+                          if (document.getElementById("filterRockCheckBox").checked == true) {
+                              filterList.push("ROCK")
+                          }
+                          if (document.getElementById("filterPunkCheckBox").checked == true) {
+                              filterList.push("PUNK")
+                          }
+                
+                          console.log(filterList);
+                          var input, table, tr, td, i, txtValue;
+                          input = document.getElementById("myInput");
+                          table = document.getElementById("concertTable");
+                          tr = table.getElementsByTagName("tr");
+                
+                
+                          for (i = 0; i < tr.length; i++) {
+                              tr[i].style.display = "";
+                          }
+                
+                          if (filterList.length != 0) {
+                              // Loop through all table rows, and hide those who don't match the search query
+                              for (i = 0; i < tr.length; i++) {
+                                  td = tr[i].getElementsByTagName("td")[2];
+                                  if (td) {
+                                      txtValue = td.textContent || td.innerText;
+                
+                                      if (txtValue.toUpperCase().indexOf(filterList[0]) > -1 || txtValue.toUpperCase().indexOf(filterList[1]) > -1 || txtValue.toUpperCase().indexOf(filterList[2]) > -1) {
+                                          tr[i].style.display = "";
+                                      } else {
+                                          tr[i].style.display = "none";
+                                      }
+                
+                
+                
+                                  }
+                              }
+                          }
+                      }
+                
+                      </script>
+                
+                   <table id="concertTable">
                      <tr>
-                        <th>Datum</th>
+                        <th width=95>Datum</th>
                         <th>Band</th>
                         <th>Genre</th>
-                        <th>Location</th>
+                        <th>Support</th>
+                        <th width=120>Location</th>
                      </tr>
                 """);
         for (ConcertEntity concertEntity : concertRepository.findByDateAfterOrderByDate(LocalDate.now().minusDays(1))) {
@@ -277,12 +420,15 @@ public class ConcertService {
             String genre = String.join(", ", concertEntity.getGenre());
 
             result.append(tdOpenTag).append(genre).append(tdCloseTag);
+            result.append(tdOpenTag).append(concertEntity.getSupportBands()).append(tdCloseTag);
             result.append(tdOpenTag).append(concertEntity.getLocation()).append(tdCloseTag);
             result.append("</tr>");
         }
         result.append("</table></html>");
         try (PrintWriter out = new PrintWriter("result.html")) {
             out.println(result);
+        } catch (Exception ex) {
+
         }
     }
 

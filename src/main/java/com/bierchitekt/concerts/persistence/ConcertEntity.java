@@ -31,12 +31,12 @@ public class ConcertEntity implements Comparable<ConcertEntity> {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String title;
+    private String supportBands;
     private LocalDate date;
     private String link;
     @JdbcTypeCode(SqlTypes.JSON)
     private Set<String> genre;
     private String location;
-    private String price;
     private boolean notified;
 
     @Override

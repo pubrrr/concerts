@@ -57,7 +57,7 @@ public class StromService {
                     title = capitalizeWords(title);
                     String link = JsonParser.parseString(answer).getAsJsonObject().get("permalink").getAsString();
 
-                    ConcertDTO concertDTO = new ConcertDTO(title, date, link, null, VENUE_NAME, null);
+                    ConcertDTO concertDTO = new ConcertDTO(title, date, link, null, VENUE_NAME, "");
                     allConcerts.add(concertDTO);
                 }
 

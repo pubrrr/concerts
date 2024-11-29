@@ -46,7 +46,7 @@ public class MuffathalleService {
                     String link = BASE_URL + select.select("a[href]").getFirst().attr("href");
 
 
-                    ConcertDTO concertDTO = new ConcertDTO(title, null, link, null, VENUE_NAME, null);
+                    ConcertDTO concertDTO = new ConcertDTO(title, null, link, null, VENUE_NAME,  "");
 
                     allConcerts.add(concertDTO);
                 }

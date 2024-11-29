@@ -7,8 +7,11 @@ import lombok.NoArgsConstructor;
 public class StringUtil {
 
     public static String capitalizeWords(String input) {
+        if(input.equalsIgnoreCase("")){
+            return "";
+        }
         // split the input string into an array of words
-        input = input.toLowerCase();
+        input = input.toLowerCase().trim();
         String[] words = input.split("\\s");
 
         // StringBuilder to store the result

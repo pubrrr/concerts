@@ -45,20 +45,17 @@ public class Theaterfabrik {
                     dates.add(LocalDate.parse(StringUtils.substringBetween(concertDetail, "Datum 2: ", " Einlass"), formatter));
                 }
 
-                String price = StringUtils.substringBetween(concertDetail, "Ticketpreis: ", "€");
-                price += "€";
-
                 if (dates.isEmpty()) {
                     // some dates are missing the complete year. 14.09.25 => 14.09.2024
                     if (dateString.length() == 9) {
                         dateString = new StringBuilder(dateString).insert(dateString.length() - 3, "20").toString();
                     }
                     LocalDate date = LocalDate.parse(dateString.trim(), formatter);
-                    ConcertDTO concertDTO = new ConcertDTO(title, date, link, null, VENUE_NAME, price);
+                    ConcertDTO concertDTO = new ConcertDTO(title, date, link, null, VENUE_NAME,  "");
                     allConcerts.add(concertDTO);
                 } else {
                     for (LocalDate singleDate : dates) {
-                        ConcertDTO concertDTO = new ConcertDTO(title, singleDate, link, null, VENUE_NAME, price);
+                        ConcertDTO concertDTO = new ConcertDTO(title, singleDate, link, null, VENUE_NAME,  "");
                         allConcerts.add(concertDTO);
 
                     }

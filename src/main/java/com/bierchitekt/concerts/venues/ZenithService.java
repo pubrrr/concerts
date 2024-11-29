@@ -63,7 +63,7 @@ public class ZenithService {
                     continue;
                 }
 
-                ConcertDTO concertDTO = new ConcertDTO(title, date, link, null, VENUE_NAME, null);
+                ConcertDTO concertDTO = new ConcertDTO(title, date, link, null, VENUE_NAME,  "");
                 allConcerts.add(concertDTO);
             }
         } catch (Exception ex) {
