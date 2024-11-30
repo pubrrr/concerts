@@ -19,7 +19,7 @@ public class HtmlGenerator {
                   <html lang="de">
                   <head>
                   <meta http-equiv="Content-Type"
-                        content="text/html; charset=utf-8"/>
+                        content="text/html; charset=utf-8">
                       <title>All Concerts in munich</title>
                        <style>
                         body {
@@ -75,6 +75,9 @@ public class HtmlGenerator {
                           color: #82b1ff;
                           text-decoration: none;
                         }
+                        p {
+                          text-align: center;
+                        }
                         a:hover {
                           text-decoration: underline;
                         }
@@ -98,18 +101,18 @@ public class HtmlGenerator {
                         </script>
                   </head>
                 <div>
-                    <p align=center><a href="https://t.me/MunichMetalConcerts">join the telegram METAL channel to get the newest updates</a></p>
-                    <p align=center><a href="https://t.me/MunichRockConcerts">join the telegram ROCK channel to get the newest updates</a></p>
-                    <p align=center><a href="https://t.me/MunichPunkConcerts">join the telegram PUNK channel to get the newest updates</a></p>
+                    <p><a href="https://t.me/MunichMetalConcerts">join the telegram METAL channel to get the newest updates</a></p>
+                    <p><a href="https://t.me/MunichRockConcerts">join the telegram ROCK channel to get the newest updates</a></p>
+                    <p><a href="https://t.me/MunichPunkConcerts">join the telegram PUNK channel to get the newest updates</a></p>
                 </div>
                 <div>
-                    <p align=center>Filter for Metal: <input type="checkbox" id="filterMetalCheckBox"></p>
-                    <p align=center>Filter for Rock:  <input type="checkbox" id="filterRockCheckBox"></p>
-                    <p align=center>Filter for Punk:  <input type="checkbox" id="filterPunkCheckBox"></p> 
-                    <p align=center><button onclick="filterMetal()">Apply Filter</button>
+                    <p>Filter for Metal: <input type="checkbox" id="filterMetalCheckBox"></p>
+                    <p>Filter for Rock:  <input type="checkbox" id="filterRockCheckBox"></p>
+                    <p>Filter for Punk:  <input type="checkbox" id="filterPunkCheckBox"></p>
+                    <p><button onclick="filterMetal()">Apply Filter</button>
                 </div>
                 
-                  <script >
+                  <script>
                 
                       function filterMetal() {
                 
@@ -174,7 +177,7 @@ public class HtmlGenerator {
             String title = concertDTO.title();
 
             result.append(tdOpenTag).append(concertDTO.date().format(formatter)).append(tdCloseTag);
-            result.append(tdOpenTag).append("<a href=\"").append(concertDTO.link()).append("\">").append(title).append("</a>").append(tdCloseTag);
+            result.append(tdOpenTag).append("<a target=\\”_blank\\” href=\"").append(concertDTO.link()).append("\">").append(title).append("</a>").append(tdCloseTag);
             String genre = String.join(", ", concertDTO.genre());
 
             result.append(tdOpenTag).append(genre).append(tdCloseTag);
