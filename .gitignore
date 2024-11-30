@@ -18,3 +18,4 @@ buildNumber.properties
 .idea/
 
 /logs.txt
+/logs.txt.*
