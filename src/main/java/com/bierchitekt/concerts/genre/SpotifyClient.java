@@ -69,7 +69,6 @@ public class SpotifyClient {
             }
             return genres;
         } catch (Exception ex) {
-
             return Set.of();
         }
 

@@ -2,13 +2,21 @@
 
 Getting upcoming concerts in munich. Getting the artist genre using spotify api and lastfm api 
 
+These venues are currently downloaded:
+- Backstage
+- Feierwerk
+- Kult9
+- Muffathalle
+- Olympiapark
+- Strom
+- Theaterfabrik
+- Zenith
+
 # Installation
 
 You need 
 java > 21
 wget
-
-Only working on linux and probably on MAC. Feierwerk cannot be downloaded in windows
 
 # Spotify and LastFM
 
@@ -29,11 +37,4 @@ add an api key for spotify and lastfm. Create an account, create a key and paste
 
 ```
 java -jar target/concerts-0.0.1-SNAPSHOT.jar
-```
-
-# Native build
-
-Install graalvm and run
-```
-mvn -Pnative native:compile
 ```

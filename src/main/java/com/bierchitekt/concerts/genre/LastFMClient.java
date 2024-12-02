@@ -18,8 +18,7 @@ import java.util.Set;
 @Slf4j
 public class LastFMClient {
 
-    RestClient restClient = RestClient.create();
-
+    private final RestClient restClient = RestClient.create();
 
     @Value("${lastfm.apikey}")
     @NotEmpty
@@ -33,6 +32,9 @@ public class LastFMClient {
                             "&api_key=" + apiKey + "&format=json")
                     .retrieve()
                     .body(String.class);
+            if (result == null) {
+                return Set.of();
+            }
 
             JsonElement jsonElement = JsonParser.parseString(result).getAsJsonObject()
                     .get("artist").getAsJsonObject()
@@ -41,9 +43,11 @@ public class LastFMClient {
             JsonArray asJsonArray = jsonElement.getAsJsonArray();
 
             Set<String> genres = new HashSet<>();
-            for (int i = 0; i < asJsonArray.size(); i++) {
-                genres.add(StringUtil.capitalizeWords(asJsonArray.get(i).getAsJsonObject().get("name").getAsString()));
+
+            for (JsonElement element : asJsonArray) {
+                genres.add(StringUtil.capitalizeWords(element.getAsJsonObject().get("name").getAsString()));
             }
+
             return genres;
         } catch (Exception ex) {
             log.warn("error getting artist {} from lastFM", artist);

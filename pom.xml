@@ -28,7 +28,7 @@
     </scm>
     <properties>
         <java.version>21</java.version>
-        <jsoup.version>1.18.2</jsoup.version>
+        <jsoup.version>1.18.3</jsoup.version>
         <sqlite-jdbc.version>3.47.1.0</sqlite-jdbc.version>
         <hibernate-community-dialects.version>6.6.3.Final</hibernate-community-dialects.version>
         <htmlcleaner.version>2.29</htmlcleaner.version>
