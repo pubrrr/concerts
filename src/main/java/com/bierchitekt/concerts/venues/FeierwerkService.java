@@ -9,18 +9,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -29,22 +25,14 @@ public class FeierwerkService {
     private static final String VENUE_NAME = "Feierwerk";
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    String baseUrl = "https://www.feierwerk.de";
 
     public Set<String> getConcertLinks() {
         Set<String> concertLinks = new HashSet<>();
 
         try {
-            String baseUrl = "https://www.feierwerk.de";
-            String feierwerkDirectory = "/tmp/feierwerk/";
-            Set<String> strings = listFilesUsingJavaIO(feierwerkDirectory);
-            log.info("got {} {} pages", strings.size(), VENUE_NAME);
-
-            for (String file : strings) {
-
-                File input = new File(feierwerkDirectory + file);
-
-                Document doc = Jsoup.parse(input, "UTF-8", "https://www.feierwerk.de/");
-
+            for (String url : getLinks()) {
+                Document doc = Jsoup.connect(url).get();
 
                 Elements concerts = doc.select("a[href]");
                 for (Element concert : concerts) {
@@ -72,7 +60,6 @@ public class FeierwerkService {
                 return Optional.empty();
             }
 
-
             for (String genre : genres) {
                 if (genre.contains("Ausstellung") || genre.contains("Malerei") || genre.contains("Illustrationen") || genre.contains("Workshops")) {
                     return Optional.empty();
@@ -84,6 +71,22 @@ public class FeierwerkService {
         } catch (IOException e) {
             return Optional.empty();
         }
+    }
+
+    private Set<String> getLinks() throws IOException {
+        String url = "https://www.feierwerk.de/konzert-kulturprogramm/kkp";
+
+        Document doc = Jsoup.connect(url).get();
+
+        Elements select = doc.select("ul.f3-widget-paginator").select("a[href]");
+
+        Set<String> urls = new HashSet<>();
+        for (Element element : select) {
+            String href = element.attr("href");
+            urls.add(baseUrl + href);
+        }
+        urls.add(url);
+        return urls;
     }
 
     private Set<String> getGenres(Document doc) {
@@ -103,17 +106,6 @@ public class FeierwerkService {
         return LocalDate.parse(date.substring(3, 13), formatter);
     }
 
-    private Set<String> listFilesUsingJavaIO(String dir) {
-        File[] files = new File(dir).listFiles();
-        if (files == null || files.length == 1) {
-            log.warn("no feierwerk concerts downloaded so far, trying it now");
-            return Set.of();
-        }
-        return Stream.of(Objects.requireNonNull(new File(dir).listFiles()))
-                .filter(file -> !file.isDirectory())
-                .map(File::getName)
-                .collect(Collectors.toSet());
-    }
 
     private List<String> getBands(Document doc) {
         List<String> bands = new ArrayList<>();
