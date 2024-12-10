@@ -4,7 +4,9 @@ Getting upcoming concerts in munich. Getting the artist genre using spotify api 
 
 These venues are currently downloaded:
 - Backstage
+- Circus Krone
 - Feierwerk
+- Event Fabrik
 - Kult9
 - Muffathalle
 - Olympiapark

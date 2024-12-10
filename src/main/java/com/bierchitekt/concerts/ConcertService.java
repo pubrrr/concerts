@@ -4,6 +4,8 @@ import com.bierchitekt.concerts.genre.GenreService;
 import com.bierchitekt.concerts.persistence.ConcertEntity;
 import com.bierchitekt.concerts.persistence.ConcertRepository;
 import com.bierchitekt.concerts.venues.BackstageService;
+import com.bierchitekt.concerts.venues.CircusKroneService;
+import com.bierchitekt.concerts.venues.EventFabrikService;
 import com.bierchitekt.concerts.venues.FeierwerkService;
 import com.bierchitekt.concerts.venues.Kult9Service;
 import com.bierchitekt.concerts.venues.MuffathalleService;
@@ -11,6 +13,7 @@ import com.bierchitekt.concerts.venues.OlympiaparkService;
 import com.bierchitekt.concerts.venues.StromService;
 import com.bierchitekt.concerts.venues.Theaterfabrik;
 import com.bierchitekt.concerts.venues.ZenithService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
@@ -43,6 +46,8 @@ public class ConcertService {
     private final OlympiaparkService olympiaparkService;
     private final Theaterfabrik theaterfabrikService;
     private final Kult9Service kult9Service;
+    private final EventFabrikService eventFabrikService;
+    private final CircusKroneService circusKroneService;
 
     private final ConcertMapper concertMapper;
 
@@ -79,18 +84,19 @@ public class ConcertService {
     }
 
     private void notifyNewConcerts(String message, TreeSet<ConcertEntity> newConcerts, String channelName) {
+        StringBuilder stringBuilder = new StringBuilder(message);
         if (!newConcerts.isEmpty()) {
             for (ConcertEntity concert : newConcerts) {
-                message += "<b>" + concert.getTitle() + "</b> \n" +
-                        "on " + concert.getDate().format(formatter) + " \n" +
-                        "genre is " + concert.getGenre() + " \n";
+                stringBuilder
+                        .append("<b>").append(concert.getTitle()).append("</b> \n")
+                        .append("on ").append(concert.getDate().format(formatter)).append(" \n")
+                        .append("genre is ").append(concert.getGenre()).append(" \n");
                 if (!concert.getSupportBands().isEmpty()) {
-                    message += "support bands are " + concert.getSupportBands() + "\n";
-
+                    stringBuilder.append("support bands are ").append(concert.getSupportBands()).append("\n");
                 }
-                message += "playing at <a href=\"" + concert.getLink() + "\">" + concert.getLocation() + "</a>\n\n";
+                stringBuilder.append("playing at <a href=\"").append(concert.getLink()).append("\">").append(concert.getLocation()).append("</a>\n\n");
             }
-            telegramService.sendMessage(channelName, message);
+            telegramService.sendMessage(channelName, stringBuilder.toString());
         }
     }
 
@@ -105,7 +111,6 @@ public class ConcertService {
     public void notifyNextWeekMetalConcerts() {
         notifyConcerts("metal", "@MunichMetalConcerts");
     }
-
 
     public void notifyNextWeekRockConcerts() {
         notifyConcerts("rock", "@MunichRockConcerts");
@@ -134,6 +139,8 @@ public class ConcertService {
         log.info("starting");
 
         List<ConcertDTO> allConcerts = new ArrayList<>();
+        allConcerts.addAll(getEventfabrikConcerts());
+        allConcerts.addAll(getCircusKroneConcerts());
         allConcerts.addAll(getFeierwerkConcerts());
         allConcerts.addAll(getBackstageConcerts());
         allConcerts.addAll(getOlympiaparkConcerts());
@@ -154,11 +161,33 @@ public class ConcertService {
         generateHtml();
     }
 
+    private Collection<ConcertDTO> getCircusKroneConcerts() {
+        List<ConcertDTO> circusKroneConcerts = new ArrayList<>();
+        circusKroneService.getConcerts().forEach(concert -> {
+            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
+                Set<String> genres = genreService.getGenres(concert.title());
+                circusKroneConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), ""));
+            }
+        });
+        return circusKroneConcerts;
+    }
+
+    private Collection<ConcertDTO> getEventfabrikConcerts() {
+        List<ConcertDTO> eventFabrikConcerts = new ArrayList<>();
+        eventFabrikService.getConcerts().forEach(concert -> {
+            if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
+                Set<String> genres = genreService.getGenres(concert.title());
+                eventFabrikConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), ""));
+            }
+        });
+        return eventFabrikConcerts;
+    }
+
     private Collection<ConcertDTO> getKult9Concerts() {
         List<ConcertDTO> kult9Concerts = new ArrayList<>();
         kult9Service.getConcerts().forEach(concert -> {
             if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
-                kult9Concerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), ""));
+                kult9Concerts.add(concert);
             }
         });
         return kult9Concerts;
@@ -202,9 +231,8 @@ public class ConcertService {
 
     public List<ConcertDTO> getBackstageConcerts() {
         List<ConcertDTO> backstageConcerts = new ArrayList<>();
-        List<ConcertDTO> concerts = backstageService.getConcerts();
 
-        concerts.forEach(concert -> {
+        backstageService.getConcerts().forEach(concert -> {
             if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
                 String supportBands = backstageService.getSupportBands(concert.link());
                 backstageConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), concert.genre(), concert.location(), supportBands));
@@ -219,7 +247,6 @@ public class ConcertService {
             if (concertRepository.findByTitle(concert.title()).isEmpty()) {
                 Set<String> genres = genreService.getGenres(concert.title());
                 zenithConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, concert.location(), ""));
-
             }
         });
         return zenithConcerts;
@@ -230,8 +257,7 @@ public class ConcertService {
         for (ConcertDTO concert : stromService.getConcerts()) {
             if (concertRepository.findByTitleAndDate(concert.title(), concert.date()).isEmpty()) {
                 Set<String> genres = genreService.getGenres(concert.title());
-                ConcertDTO concertDTO = new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, "Strom", "");
-                stromConcerts.add(concertDTO);
+                stromConcerts.add(new ConcertDTO(concert.title(), concert.date(), concert.link(), genres, "Strom", ""));
             }
         }
         return stromConcerts;
@@ -245,14 +271,13 @@ public class ConcertService {
             if (concertRepository.findByTitle(muffathalleConcert.title()).isEmpty()) { // new Concert found, need to get date and genre
                 LocalDate date = muffathalleService.getDate(muffathalleConcert.link());
                 Set<String> genres = genreService.getGenres(muffathalleConcert.title());
-                ConcertDTO concertDTO = new ConcertDTO(muffathalleConcert.title(), date, muffathalleConcert.link(), genres, muffathalleConcert.location(), "");
-                muffatHalleConcerts.add(concertDTO);
+                muffatHalleConcerts.add(new ConcertDTO(muffathalleConcert.title(), date, muffathalleConcert.link(), genres, muffathalleConcert.location(), ""));
             }
         }
         return muffatHalleConcerts;
 
     }
-
+    @PostConstruct
     public void generateHtml() {
         List<ConcertEntity> concerts = concertRepository.findByDateAfterOrderByDate(LocalDate.now().minusDays(1));
 

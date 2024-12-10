@@ -1,14 +1,20 @@
 package com.bierchitekt.concerts;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static java.util.Locale.ENGLISH;
+
+@Slf4j
 @Service
 public class HtmlGenerator {
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLL yyyy");
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE dd LLLL yyyy").localizedBy(ENGLISH);
 
     public void generateHtml(List<ConcertDTO> concertDTOS) {
 
@@ -165,18 +171,23 @@ public class HtmlGenerator {
                 
                    <table id="concertTable">
                      <tr>
-                        <th width=95>Datum</th>
-                        <th>Band</th>
+                        <th>Band/Date</th>
                         <th>Genre</th>
                         <th>Support</th>
                         <th width=120>Location</th>
                      </tr>
                 """);
+        LocalDate lastDate = LocalDate.MIN;
         for (ConcertDTO concertDTO : concertDTOS) {
+            if (lastDate.isBefore(concertDTO.date())) {
+                result.append("<tr><td><b>").append(concertDTO.date().format(formatter)).append("</b><td><td><td></tr>");
+                lastDate = concertDTO.date();
+            }
+
             result.append("<tr>\n");
             String title = concertDTO.title();
 
-            result.append(tdOpenTag).append(concertDTO.date().format(formatter)).append(tdCloseTag);
+
             result.append(tdOpenTag).append("<a target=\\”_blank\\” href=\"").append(concertDTO.link()).append("\">").append(title).append("</a>").append(tdCloseTag);
             String genre = String.join(", ", concertDTO.genre());
 
@@ -189,6 +200,7 @@ public class HtmlGenerator {
         try (PrintWriter out = new PrintWriter("result.html")) {
             out.println(result);
         } catch (Exception ex) {
+            log.warn("exception while generating html", ex);
 
         }
     }
