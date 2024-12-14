@@ -197,7 +197,7 @@ public class HtmlGenerator {
             result.append("</tr>");
         }
         result.append("</table></html>");
-        try (PrintWriter out = new PrintWriter("result.html")) {
+        try (PrintWriter out = new PrintWriter("public/index.html")) {
             out.println(result);
         } catch (Exception ex) {
             log.warn("exception while generating html", ex);
