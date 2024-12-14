@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import concerts from '../concerts.json';
+import {getGenre} from "../getGenre";
 
 type Concert = typeof concerts[number];
 const concertsByDate = new Map<string, Concert[]>();
@@ -24,29 +25,54 @@ for (const concert of concerts) {
     <div class="flex flex-col items-center m-8">
         <h1 class="text-4xl font-bold mb-4">All Concerts in Munich</h1>
         <div class="mb-4">
-            <p><a class="link" href="https://t.me/MunichMetalConcerts">join the telegram METAL channel to get the newest updates</a>
+            <p><a class="link" href="https://t.me/MunichMetalConcerts">join the telegram METAL channel to get the newest
+                updates</a>
             </p>
-            <p><a class="link" href="https://t.me/MunichRockConcerts">join the telegram ROCK channel to get the newest updates</a>
+            <p><a class="link" href="https://t.me/MunichRockConcerts">join the telegram ROCK channel to get the newest
+                updates</a>
             </p>
-            <p><a class="link" href="https://t.me/MunichPunkConcerts">join the telegram PUNK channel to get the newest updates</a>
+            <p><a class="link" href="https://t.me/MunichPunkConcerts">join the telegram PUNK channel to get the newest
+                updates</a>
             </p>
         </div>
 
-        <label class="label cursor-pointer">
+        <label class="label cursor-pointer" for="filter-metal">
             <span class="label-text mr-2">Filter for Metal:</span>
-            <input type="checkbox" class="toggle"/>
+            <input type="checkbox" class="toggle" id="filter-metal"/>
         </label>
-        <label class="label cursor-pointer">
+        <label class="label cursor-pointer" for="filter-rock">
             <span class="label-text mr-2">Filter for Rock:</span>
-            <input type="checkbox" class="toggle"/>
+            <input type="checkbox" class="toggle" id="filter-rock"/>
         </label>
-        <label class="label cursor-pointer">
+        <label class="label cursor-pointer" for="filter-punk">
             <span class="label-text mr-2">Filter for Punk:</span>
-            <input type="checkbox" class="toggle"/>
+            <input type="checkbox" class="toggle" id="filter-punk"/>
+        </label>
+        <label class="label cursor-pointer" for="filter-punk">
+            <span class="label-text mr-2">Filter for unknown:</span>
+            <input type="checkbox" class="toggle" id="filter-unknown"/>
         </label>
 
         <style>
+            .genre-metal, .genre-rock, .genre-punk, .genre-unknown {
+                display: none;
+            }
 
+            label:has(#filter-metal:checked) ~ .table .genre-metal {
+                display: table-row;
+            }
+
+            label:has(#filter-rock:checked) ~ .table .genre-rock {
+                display: table-row;
+            }
+
+            label:has(#filter-punk:checked) ~ .table .genre-punk {
+                display: table-row;
+            }
+
+            label:has(#filter-unknown:checked) ~ .table .genre-unknown {
+                display: table-row;
+            }
         </style>
 
         <table class="table max-w-7xl ">
@@ -61,16 +87,17 @@ for (const concert of concerts) {
                         <tr>
                             <td colspan="4" class="bg-gray-700 font-bold">{date}</td>
                         </tr>
-                        {
-                            concertsOfDate.map((concert) => (
-                                    <tr class={`hover genre-${concert.genre.toLowerCase()}`}>
-                                        <td><a class="link" href={concert.link}> {concert.title}</a></td>
-                                        <td>{concert.genre}</td>
-                                        <td>{concert.supportBands}</td>
-                                        <td>{concert.location}</td>
-                                    </tr>
-                            ))
-                        }
+
+                            {
+                                concertsOfDate.map((concert) => (
+                                        <tr class={`hover genre-${getGenre(concert.genre)}`}>
+                                            <td><a class="link" href={concert.link}> {concert.title}</a></td>
+                                            <td>{concert.genre}</td>
+                                            <td>{concert.supportBands}</td>
+                                            <td>{concert.location}</td>
+                                        </tr>
+                                ))
+                            }
                     </>
             ))}
         </table>
