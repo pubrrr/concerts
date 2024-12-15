@@ -1,4 +1,5 @@
 import { ConcertList } from './ConcertList.tsx';
+import { StyledLink } from './StyledLink.tsx';
 
 function App() {
     return (
@@ -23,6 +24,18 @@ function App() {
                 </p>
             </div>
             <ConcertList />
+            <p className='text-xs'>
+                Emoji artwork is provided by <StyledLink href='https://emojitwo.github.io/'>Emojitwo</StyledLink>,
+                originally released as <StyledLink href='https://www.emojione.com/'>Emojione 2.2</StyledLink> by{' '}
+                <StyledLink href='http://www.ranks.com/'>Ranks.com</StyledLink> with contributions from the Emojitwo
+                community and is licensed under{' '}
+                <StyledLink href='https://creativecommons.org/licenses/by/4.0/legalcode'>CC-BY 4.0</StyledLink>.
+            </p>
+            <p className='text-xs'>
+                Game icon artwork is provided by <StyledLink href='https://game-icons.net/'>Game Icons</StyledLink> and
+                is licensed under{' '}
+                <StyledLink href='https://creativecommons.org/licenses/by/3.0/legalcode'>CC-BY 3.0</StyledLink>.
+            </p>
         </div>
     );
 }
