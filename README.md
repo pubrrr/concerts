@@ -17,8 +17,7 @@ These venues are currently downloaded:
 # Installation
 
 You need 
-java > 21
-wget
+java >= 21
 
 # Spotify and LastFM
 
