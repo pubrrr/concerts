@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeSet;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,19 +55,19 @@ public class ConcertService {
 
     public void notifyNewConcerts() {
         log.info("notifying for new concerts");
-        TreeSet<ConcertEntity> newMetalConcerts = new TreeSet<>();
-        TreeSet<ConcertEntity> newRockConcerts = new TreeSet<>();
-        TreeSet<ConcertEntity> newPunkConcerts = new TreeSet<>();
-        for (ConcertEntity concertEntity : concertRepository.findByNotified(false)) {
+        List<ConcertEntity> newMetalConcerts = new ArrayList<>();
+        List<ConcertEntity> newRockConcerts = new ArrayList<>();
+        List<ConcertEntity> newPunkConcerts = new ArrayList<>();
+        for (ConcertEntity concertEntity : concertRepository.findByNotifiedOrderByDate(false)) {
             Set<String> genres = concertEntity.getGenre();
             for (String genre : genres) {
-                if (genre.toLowerCase().contains("rock")) {
-                    newRockConcerts.add(concertEntity);
-                }
-                if (genre.toLowerCase().contains("metal")) {
+                if (genre.toLowerCase().contains("rock") && !newRockConcerts.contains(concertEntity)){
+                        newRockConcerts.add(concertEntity);}
+
+                if (genre.toLowerCase().contains("metal") && !newMetalConcerts.contains(concertEntity)) {
                     newMetalConcerts.add(concertEntity);
                 }
-                if (genre.toLowerCase().contains("punk")) {
+                if (genre.toLowerCase().contains("punk")  && !newPunkConcerts.contains(concertEntity)) {
                     newPunkConcerts.add(concertEntity);
                 }
             }
@@ -82,7 +81,7 @@ public class ConcertService {
         notifyNewConcerts("Good news everyone! I found some new punk concerts for you\n\n", newPunkConcerts, "@MunichPunkConcerts");
     }
 
-    private void notifyNewConcerts(String message, TreeSet<ConcertEntity> newConcerts, String channelName) {
+    private void notifyNewConcerts(String message, List<ConcertEntity> newConcerts, String channelName) {
         StringBuilder stringBuilder = new StringBuilder(message);
         if (!newConcerts.isEmpty()) {
             for (ConcertEntity concert : newConcerts) {
@@ -120,13 +119,16 @@ public class ConcertService {
     }
 
     private void notifyConcerts(String genreName, String channelName) {
-        TreeSet<ConcertEntity> concerts = new TreeSet<>();
+
+        List<ConcertEntity> concerts = new ArrayList<>();
         for (ConcertEntity concertEntity : concertRepository.findByDateAfterAndDateBeforeOrderByDate(LocalDate.now().minusDays(1), LocalDate.now().plusDays(8))) {
 
             Set<String> genres = concertEntity.getGenre();
             for (String genre : genres) {
                 if (genre.toLowerCase().contains(genreName)) {
-                    concerts.add(concertEntity);
+                    if (!concerts.contains(concertEntity)) {
+                        concerts.add(concertEntity);
+                    }
                     break;
                 }
             }

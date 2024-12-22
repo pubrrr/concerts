@@ -12,7 +12,7 @@ import java.util.Set;
 public interface ConcertRepository extends JpaRepository<ConcertEntity, String> {
     List<ConcertEntity> findAllByDateBefore(LocalDate now);
 
-    List<ConcertEntity> findByNotified(boolean notified);
+    List<ConcertEntity> findByNotifiedOrderByDate(boolean notified);
 
     List<ConcertEntity> findByDateAfterOrderByDate(LocalDate date);
 
