@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { Concert } from './types.ts';
+import { Concert, iconMap } from './types.ts';
+import { cleanGenres } from './matchesGenre.ts';
 
 type ConcertItemProps = {
     concert: Concert;
@@ -9,16 +10,33 @@ const ConcertItem: FC<ConcertItemProps> = ({ concert }) => {
     const { title, link, genre, location, supportBands } = concert;
 
     return (
-        <tr className='hover'>
-            <td>
-                <a className='link' href={link} target='_blank' rel='noopener noreferrer'>
-                    {title}
-                </a>
-            </td>
-            <td>{genre.join(', ')}</td>
-            <td>{supportBands}</td>
-            <td>{location}</td>
-        </tr>
+        <>
+            <tr>
+                <td>
+                    <div className='card card-compact bg-neutral shadow-xl'>
+                        <div className='card-body'>
+                            <div className='flex w-full items-center font-bold'>
+                                <div className='flex-grow'>
+                                    <a className='link' href={link} target='_blank' rel='noopener noreferrer'>
+                                        {title}
+                                    </a>
+                                </div>
+                                {cleanGenres(genre)
+                                    .filter((it) => it !== 'unknown')
+                                    .map((it) => (
+                                        <span className={`iconify ${iconMap[it]} mr-1 text-xl`} />
+                                    ))}
+                            </div>
+                            <div className='grid grid-cols-3 gap-4'>
+                                <p>{genre.join(', ')}</p>
+                                <p>{supportBands}</p>
+                                <p className='text-end'>{location}</p>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </>
     );
 };
 

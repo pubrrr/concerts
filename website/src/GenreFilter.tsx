@@ -1,4 +1,4 @@
-import { GenreFilters } from './types.ts';
+import { GenreFilters, iconMap } from './types.ts';
 import { Dispatch, FC, SetStateAction } from 'react';
 
 type GenreFilterProps = {
@@ -11,7 +11,10 @@ type GenreFilterProps = {
 export const GenreFilter: FC<GenreFilterProps> = ({ genre, genreName, filters, setFilters }) => {
     return (
         <label className='label cursor-pointer py-2'>
-            <span className='mx-2'>{genreName}</span>
+            <div className='mx-2 flex items-center'>
+                <span className={`iconify ${iconMap[genre]} mr-1`} />
+                {genreName}
+            </div>
             <input
                 className='toggle toggle-primary'
                 type='checkbox'

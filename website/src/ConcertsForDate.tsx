@@ -1,6 +1,7 @@
-import { Concert, Genre, GenreFilters, initialGenreFilters } from './types.ts';
+import { Concert, GenreFilters } from './types.ts';
 import ConcertItem from './ConcertItem.tsx';
 import { FC, useMemo } from 'react';
+import { matchesGenre } from './matchesGenre.ts';
 
 type ConcertsForDateProps = {
     date: string;
@@ -20,39 +21,16 @@ export const ConcertsForDate: FC<ConcertsForDateProps> = ({ date, concerts, filt
 
     return (
         <>
-            <tr className='bg-base-200 font-bold'>
-                <td colSpan={4}>{date}</td>
-            </tr>
-            {filteredConcerts.map((concert, index) => (
-                <ConcertItem key={index} concert={concert} />
-            ))}
+            <thead>
+                <tr className='sticky top-0 text-primary'>
+                    <th className='p-4'>{date}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {filteredConcerts.map((concert, index) => (
+                    <ConcertItem key={index} concert={concert} />
+                ))}
+            </tbody>
         </>
     );
 };
-
-function matchesGenre(concert: Concert, filters: GenreFilters) {
-    if (Object.values(filters).every((filter) => !filter)) {
-        return true;
-    }
-
-    const cleanedGenres = cleanGenres(concert.genre);
-    return cleanedGenres.some((genre) => filters[genre]);
-}
-
-function cleanGenres(genres: string[]): Genre[] {
-    const knownGenres = Object.keys(initialGenreFilters).filter((it) => it !== 'unknown') as Genre[];
-
-    const cleanedGenres = new Set<Genre>();
-    for (const genre of genres) {
-        const matchingGenre = knownGenres.find((knownGenre) => genre.toLowerCase().includes(knownGenre.toLowerCase()));
-        if (matchingGenre) {
-            cleanedGenres.add(matchingGenre);
-        }
-    }
-
-    if (cleanedGenres.size === 0) {
-        return ['unknown'];
-    }
-
-    return [...cleanedGenres];
-}

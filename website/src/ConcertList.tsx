@@ -64,28 +64,18 @@ const ConcertListInner: FC<{ concerts: Concert[] }> = ({ concerts }) => {
     }, [concerts]);
 
     return (
-        <div className='p-8'>
+        <>
             <div className='flex flex-col items-center'>
                 <GenreFilter genre='metal' genreName='Metal' filters={filters} setFilters={setFilters} />
                 <GenreFilter genre='rock' genreName='Rock' filters={filters} setFilters={setFilters} />
                 <GenreFilter genre='punk' genreName='Punk' filters={filters} setFilters={setFilters} />
                 <GenreFilter genre='unknown' genreName='Unknown' filters={filters} setFilters={setFilters} />
             </div>
-            <table className='table max-w-[1600px]'>
-                <thead className='bg-neutral text-lg font-bold text-primary'>
-                    <tr>
-                        <th>Band/Date</th>
-                        <th>Genre</th>
-                        <th>Support</th>
-                        <th>Location</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {[...concertsByDate.entries()].map(([date, concerts]) => (
-                        <ConcertsForDate key={date} filters={filters} date={date} concerts={concerts} />
-                    ))}
-                </tbody>
+            <table className='table table-pin-rows max-w-3xl'>
+                {[...concertsByDate.entries()].map(([date, concerts]) => (
+                    <ConcertsForDate key={date} filters={filters} date={date} concerts={concerts} />
+                ))}
             </table>
-        </div>
+        </>
     );
 };

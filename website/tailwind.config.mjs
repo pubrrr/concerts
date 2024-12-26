@@ -1,4 +1,5 @@
 import daisyui from 'daisyui';
+import { addIconSelectors } from '@iconify/tailwind';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -6,7 +7,7 @@ export default {
     theme: {
         extend: {},
     },
-    plugins: [daisyui],
+    plugins: [daisyui, addIconSelectors(['mdi', 'fluent-emoji-high-contrast', 'emojione-monotone', 'game-icons'])],
     daisyui: {
         themes: ['dark'],
     },
