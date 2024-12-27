@@ -21,7 +21,7 @@ const ConcertItem: FC<ConcertItemProps> = ({ concert }) => {
                     {cleanGenres(genre)
                         .filter((it) => it !== 'unknown')
                         .map((it) => (
-                            <span className={`iconify ${iconMap[it]} mr-1 text-xl`} />
+                            <span key={it} className={`iconify ${iconMap[it]} mr-1 text-xl`} />
                         ))}
                 </div>
                 <div className='grid grid-cols-3 gap-4'>

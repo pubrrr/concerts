@@ -2,18 +2,28 @@ import { ConcertList } from './ConcertList.tsx';
 import { StyledLink } from './StyledLink.tsx';
 import { GenreFilters, iconMap } from './types.ts';
 import { FC } from 'react';
+import { ThemeToggle } from './ThemeToggle.tsx';
 
 function App() {
     return (
-        <div className='relative flex flex-col items-center text-center text-base-content'>
+        <div className='relative flex flex-col justify-center text-center text-base-content'>
             <ScrollToTop />
-            <div className='m-8 flex flex-col items-center gap-2'>
+            <div className='mx-8 my-4 flex flex-col justify-center gap-2'>
+                <div className='flex justify-end gap-2'>
+                    <ThemeToggle />
+                    <a
+                        href='https://github.com/bierchitekt/concerts'
+                        className='iconify mdi--github float-end text-2xl'
+                    />
+                </div>
                 <h1 className='mb-4 text-3xl font-bold text-primary'>All Concerts in Munich</h1>
 
-                <p>Join the Telegram channels to get the newest updates:</p>
-                <TelegramButton genre='metal' href='https://t.me/MunichMetalConcerts' />
-                <TelegramButton genre='rock' href='https://t.me/MunichRockConcerts' />
-                <TelegramButton genre='punk' href='https://t.me/MunichPunkConcerts' />
+                <div className='flex flex-col items-center gap-2'>
+                    <p>Join the Telegram channels to get the newest updates:</p>
+                    <TelegramButton genre='metal' href='https://t.me/MunichMetalConcerts' />
+                    <TelegramButton genre='rock' href='https://t.me/MunichRockConcerts' />
+                    <TelegramButton genre='punk' href='https://t.me/MunichPunkConcerts' />
+                </div>
             </div>
             <ConcertList />
             <p className='mb-16 text-xs'>
@@ -38,7 +48,7 @@ const ScrollToTop = () => (
             className='btn btn-circle btn-accent sticky bottom-4 z-[999]'
             aria-label='Scroll to top'
         >
-            <span className='iconify text-2xl mdi--chevron-up' />
+            <span className='iconify mdi--chevron-up text-2xl' />
         </a>
     </div>
 );

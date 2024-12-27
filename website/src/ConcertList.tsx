@@ -66,6 +66,7 @@ const ConcertListInner: FC<{ concerts: Concert[] }> = ({ concerts }) => {
     return (
         <>
             <div className='flex flex-col items-center'>
+                <p className='font-bold'>Filter by genre:</p>
                 <GenreFilter genre='metal' genreName='Metal' filters={filters} setFilters={setFilters} />
                 <GenreFilter genre='rock' genreName='Rock' filters={filters} setFilters={setFilters} />
                 <GenreFilter genre='punk' genreName='Punk' filters={filters} setFilters={setFilters} />

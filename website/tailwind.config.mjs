@@ -9,6 +9,6 @@ export default {
     },
     plugins: [daisyui, addIconSelectors(['mdi', 'fluent-emoji-high-contrast', 'emojione-monotone', 'game-icons'])],
     daisyui: {
-        themes: ['dark'],
+        themes: ['light', 'dark'],
     },
 };
