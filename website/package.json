@@ -8,7 +8,7 @@
         "build": "tsc -b && vite build",
         "lint": "eslint .",
         "preview": "vite preview",
-        "format": "prettier --ignore-path \"../.gitignore\" --write \"./**/*.{ts,tsx,json,md,mdx,mjs,cjs,js,jsx}\""
+        "format": "prettier --ignore-path \"../.gitignore\" --write \"./**/*.{ts,tsx,json,md,mdx,mjs,cjs,js,jsx,html}\""
     },
     "dependencies": {
         "react": "^18.3.1",

@@ -47,7 +47,7 @@ const ConcertListInner: FC<{ concerts: Concert[] }> = ({ concerts }) => {
 
         for (const concert of concerts) {
             const [year, month, day] = concert.date;
-            let dateString = new Date(year, month - 1, day).toLocaleDateString('en-us', {
+            const dateString = new Date(year, month - 1, day).toLocaleDateString('en-us', {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
