@@ -72,11 +72,11 @@ const ConcertListInner: FC<{ concerts: Concert[] }> = ({ concerts }) => {
                 <GenreFilter genre='punk' genreName='Punk' filters={filters} setFilters={setFilters} />
                 <GenreFilter genre='unknown' genreName='Unknown' filters={filters} setFilters={setFilters} />
             </div>
-            <table className='table table-pin-rows max-w-3xl'>
+            <div>
                 {[...concertsByDate.entries()].map(([date, concerts]) => (
                     <ConcertsForDate key={date} filters={filters} date={date} concerts={concerts} />
                 ))}
-            </table>
+            </div>
         </>
     );
 };

@@ -6,14 +6,14 @@ import { ThemeToggle } from './ThemeToggle.tsx';
 
 function App() {
     return (
-        <div className='relative flex flex-col justify-center text-center text-base-content'>
+        <div className='relative mx-auto flex max-w-3xl flex-col justify-center p-1 text-base-content'>
             <ScrollToTop />
-            <div className='mx-8 my-4 flex flex-col justify-center gap-2'>
+            <div className='mx-8 my-4 flex flex-col justify-center gap-2 text-center'>
                 <div className='flex justify-end gap-2'>
                     <ThemeToggle />
                     <a
                         href='https://github.com/bierchitekt/concerts'
-                        className='iconify mdi--github float-end text-2xl'
+                        className='iconify float-end text-2xl mdi--github'
                     />
                 </div>
                 <h1 className='mb-4 text-3xl font-bold text-primary'>All Concerts in Munich</h1>
@@ -26,7 +26,7 @@ function App() {
                 </div>
             </div>
             <ConcertList />
-            <p className='mb-16 text-xs'>
+            <p className='mb-16 text-center text-xs sm:mb-0'>
                 Emoji artwork is provided by <StyledLink href='https://emojitwo.github.io/'>Emojitwo</StyledLink>,
                 originally released as <StyledLink href='https://www.emojione.com/'>Emojione 2.2</StyledLink> by{' '}
                 <StyledLink href='http://www.ranks.com/'>Ranks.com</StyledLink> with contributions from the Emojitwo
@@ -48,7 +48,7 @@ const ScrollToTop = () => (
             className='btn btn-circle btn-accent sticky bottom-4 z-[999]'
             aria-label='Scroll to top'
         >
-            <span className='iconify mdi--chevron-up text-2xl' />
+            <span className='iconify text-2xl mdi--chevron-up' />
         </a>
     </div>
 );
