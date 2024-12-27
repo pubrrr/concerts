@@ -20,17 +20,11 @@ export const ConcertsForDate: FC<ConcertsForDateProps> = ({ date, concerts, filt
     }
 
     return (
-        <>
-            <thead>
-                <tr className='sticky top-0 text-primary'>
-                    <th className='p-4'>{date}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {filteredConcerts.map((concert, index) => (
-                    <ConcertItem key={index} concert={concert} />
-                ))}
-            </tbody>
-        </>
+        <div>
+            <div className='sticky top-0 z-10 bg-base-100 p-4 font-bold text-primary'>{date}</div>
+            {filteredConcerts.map((concert, index) => (
+                <ConcertItem key={index} concert={concert} />
+            ))}
+        </div>
     );
 };
