@@ -6,9 +6,11 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc -b && vite build",
-        "lint": "eslint .",
         "preview": "vite preview",
-        "format": "prettier --ignore-path \"../.gitignore\" --write \"./**/*.{ts,tsx,json,md,mdx,mjs,cjs,js,jsx,html}\""
+        "format": "prettier --ignore-path \"../.gitignore\" --write \"./**/*.{ts,tsx,json,md,mdx,mjs,cjs,js,jsx,html}\"",
+        "check-lint": "eslint .",
+        "check-types": "tsc --noEmit",
+        "check-format": "prettier --ignore-path \"../.gitignore\" --check \"./**/*.{ts,tsx,json,md,mdx,mjs,cjs,js,jsx,html}\""
     },
     "dependencies": {
         "react": "^18.3.1",
