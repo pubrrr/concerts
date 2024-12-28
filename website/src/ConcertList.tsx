@@ -9,7 +9,7 @@ export const ConcertList: FC = () => {
     useEffect(() => {
         (async () => {
             try {
-                const response = await fetch('https://pubrrr.github.io/concert-html/concerts.json');
+                const response = await fetch(import.meta.env.VITE_CONCERTS_JSON_URL);
 
                 if (!response.ok) {
                     if (response.status === 404) {
@@ -33,6 +33,7 @@ export const ConcertList: FC = () => {
     }
 
     if (concerts instanceof Error) {
+        console.error(concerts);
         return <span className='alert alert-error'>{concerts.message}</span>;
     }
 
