@@ -130,7 +130,7 @@ type ResetButtonProps = { hidden: boolean; onClick: () => void };
 
 const ResetButton: FC<ResetButtonProps> = ({ hidden, onClick }) => {
     return (
-        <button type='button' className={`text-xl ${hidden ? 'hidden' : ''}`} onClick={onClick}>
+        <button type='button' className={`z-10 text-xl ${hidden ? 'hidden' : ''}`} onClick={onClick}>
             <svg
                 xmlns='http://www.w3.org/2000/svg'
                 className='h-6 w-6'
