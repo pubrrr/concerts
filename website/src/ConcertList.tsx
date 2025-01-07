@@ -114,7 +114,7 @@ const ConcertFilters: FC<ConcertFiltersProps> = ({ setConcertsFilter }: ConcertF
                             value={textFilter}
                             onChange={(e) => setTextFilter(e.target.value)}
                         />
-                        <ResetButton hidden={textFilter.length > 0} onClick={() => setTextFilter('')} />
+                        <ResetButton hidden={textFilter.length == 0} onClick={() => setTextFilter('')} />
                     </label>
                 </FilterGroupContainer>
             </div>
@@ -130,7 +130,7 @@ type ResetButtonProps = { hidden: boolean; onClick: () => void };
 
 const ResetButton: FC<ResetButtonProps> = ({ hidden, onClick }) => {
     return (
-        <button className={`text-xl ${hidden ? '' : 'hidden'}`} onClick={onClick}>
+        <button className={`text-xl ${hidden ? 'hidden' : ''}`} onClick={onClick}>
             <svg
                 xmlns='http://www.w3.org/2000/svg'
                 className='h-6 w-6'
